@@ -10,14 +10,24 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from api.models  import User
+from flask_cors import CORS 
 
-# from models import Person
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+# from models import Person ACA VAN LOS NAMES DE LAS TABLAS
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+CORS(app)
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_KEY")
+jwt = JWTManager(app)
+
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -55,6 +65,73 @@ def sitemap():
     if ENV == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
+
+
+# Post: nuevo usuario
+@app.route('/user', methods=['POST'])
+def create_user():
+    body = request.get_json(silent=True)
+    if body is None: 
+        return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
+    if 'name' not in body: 
+        return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
+    if 'email' not in body: 
+        return jsonify({'msg': "El campo 'email' es obligatorio"}), 400
+    if 'password' not in body:
+        return jsonify({'msg': "El campo 'password' es obligatiro"}), 400
+    # if 'is_active' not in body:
+    #     return jsonify({"msg": "El campo 'is_active' es obligatorio"}), 400
+
+    new_user = User(
+        name = body['name'],
+        email = body['email'],
+        password= body['password'],
+        is_active=body['is_active']
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'msg':'Usuario creado exitosamente', 'data': new_user.serialize()}), 201
+
+#LOGIN: 
+@app.route('/login', methods=['POST'])
+def login():
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'Debes enviar informacion '}), 400
+    if 'email'  not in body:
+        return jsonify({'msg': 'El campo email es obligatorio'}), 400
+    if 'password' not in body:
+        return jsonify({'msg': 'El campo password es obligatorio'}), 400
+    user = User.query.filter_by(email=body['email']).first()
+    if user is None:
+        return jsonify({'msg': "email is invalid"}), 400 #CAMBIAR por email or password is invalid
+    if user.password != body['password']:
+        return jsonify({'msg': "password is invalid"}), 400 #CAMBIAR por email or password is invalid
+    access_token = create_access_token(identity=user.email) 
+    return jsonify({'msg': 'ok', 'token': access_token}), 200 
+
+
+@app.route('/user/<int:id>', methods=['PUT'])
+def update_password(id):
+    body= request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'Debes enviar informacion '}), 400
+    if 'new_password' not in body:
+        return jsonify({'msg': "El campo 'new_password' es obligatorio"}), 400 #Hasta ahora no hay limite de caracteres ni requerimientos especiales para la password
+    user = User.query.get(id)
+    user.password = body['new_password']
+    db.session.commit()
+    return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
+
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    users = User.query.all()
+    users_serialized = []
+    for user in users:
+        users_serialized.append(user.serialize())
+    return jsonify({'msg': 'ok', 'data': users_serialized}), 200
+
+
 
 # any other endpoint will try to serve it like a static file
 @app.route('/<path:path>', methods=['GET'])
