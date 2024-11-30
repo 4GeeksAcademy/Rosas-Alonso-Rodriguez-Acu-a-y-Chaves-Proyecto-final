@@ -10,7 +10,7 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
-from api.models  import User
+from api.models  import User, Pet
 from flask_cors import CORS 
 
 from flask_jwt_extended import create_access_token
@@ -131,6 +131,35 @@ def get_all_users():
         users_serialized.append(user.serialize())
     return jsonify({'msg': 'ok', 'data': users_serialized}), 200
 
+###############################
+
+#PET
+#Creación de nueva mascota:
+@app.route('/pet', methods=['POST'])
+def create_pet():
+    body = request.get_json(silent=True)
+    if body is None: 
+        return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
+    if 'name' not in body: 
+        return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
+    if 'breed' not in body: 
+        return jsonify({'msg': "El campo 'breed' es obligatorio"}), 400
+    if 'gender' not in body:
+        return jsonify({'msg': "El campo 'gender' es obligatorio"}), 400
+    if 'photo_1' not in body:
+        return jsonify({'msg': "El campo 'photo_1' es obligatorio"}), 400
+
+    new_pet = Pet(
+        name = body['name'],
+        breed = body['breed'],
+        gender= body['gender'],
+        photo_1=body['photo_1']
+    )
+    db.session.add(new_pet)
+    db.session.commit()
+    return jsonify({'msg':'Mascota creada exitosamente', 'data': new_pet.serialize()}), 201
+
+#Descripción del post de la mascota: va dentro de la ruta de arriba?
 
 
 # any other endpoint will try to serve it like a static file
