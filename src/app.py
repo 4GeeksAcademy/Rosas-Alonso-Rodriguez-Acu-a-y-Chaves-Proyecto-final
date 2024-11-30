@@ -10,14 +10,13 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
-from api.models import db, User, Pet, Post_Description, PetStatus, Genders
+from api.models import db, User, Pet, Post_Description, Breed, Genders
 from flask_cors import CORS 
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
-# from models import Person ACA VAN LOS NAMES DE LAS TABLAS
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -76,9 +75,6 @@ def get_users():
     return jsonify({'msg': 'ok', 'usuarios: ': users_serialized}),200
 
 
-
-
-
 # Post: nuevo usuario
 @app.route('/user', methods=['POST'])
 def create_user():
@@ -99,9 +95,6 @@ def create_user():
         email = body['email'],
         password= body['password'],
         is_active=True,
-        phone=body['phone'],
-        facebook= body['facebook'],
-        instagram=body['instagram'],
         security_question=body['security_question']
     )
 
@@ -153,6 +146,15 @@ def get_all_users():
         users_serialized.append(user.serialize())
     return jsonify({'msg': 'ok', 'data': users_serialized}), 200
 
+#Private access
+@app.route('/private', methods=['GET'])
+@jwt_required()
+def private():
+    current_user = get_jwt_identity()
+    print('Este es el usuario que esta haciendo la peticion: ', current_user)
+    if current_user:
+        return jsonify({'msg': 'Bienvenido', 'Este es el usuario que esta haciendo la peticion: ': current_user})
+    return jsonify({'msg': 'Acceso denegado'}), 400
 
 
 # any other endpoint will try to serve it like a static file
