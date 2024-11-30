@@ -138,13 +138,6 @@ def update_password(id):
     db.session.commit()
     return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
 
-@app.route('/users', methods=['GET'])
-def get_all_users():
-    users = User.query.all()
-    users_serialized = []
-    for user in users:
-        users_serialized.append(user.serialize())
-    return jsonify({'msg': 'ok', 'data': users_serialized}), 200
 
 #Private access
 @app.route('/private', methods=['GET'])
