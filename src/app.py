@@ -10,14 +10,13 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
-from api.models  import User, Pet
+from api.models import db, User, Pet, Post_Description, Breed, Genders
 from flask_cors import CORS 
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
-# from models import Person ACA VAN LOS NAMES DE LAS TABLAS
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -66,6 +65,15 @@ def sitemap():
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 
+#Traer usuarios
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    users_serialized = []
+    for user in users:
+        users_serialized.append(user.serialize())
+    return jsonify({'msg': 'ok', 'usuarios: ': users_serialized}),200
+
 
 # Post: nuevo usuario
 @app.route('/user', methods=['POST'])
@@ -79,15 +87,17 @@ def create_user():
         return jsonify({'msg': "El campo 'email' es obligatorio"}), 400
     if 'password' not in body:
         return jsonify({'msg': "El campo 'password' es obligatiro"}), 400
-    # if 'is_active' not in body:
-    #     return jsonify({"msg": "El campo 'is_active' es obligatorio"}), 400
+    if 'security_question' not in body:
+        return jsonify({"msg": "El campo 'security_question' es obligatorio"}), 400
 
     new_user = User(
         name = body['name'],
         email = body['email'],
         password= body['password'],
-        is_active=body['is_active']
+        is_active=True,
+        security_question=body['security_question']
     )
+
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'msg':'Usuario creado exitosamente', 'data': new_user.serialize()}), 201
@@ -110,27 +120,34 @@ def login():
     access_token = create_access_token(identity=user.email) 
     return jsonify({'msg': 'ok', 'token': access_token}), 200 
 
-
+#Update password
 @app.route('/user/<int:id>', methods=['PUT'])
 def update_password(id):
     body= request.get_json(silent=True)
     if body is None:
         return jsonify({'msg': 'Debes enviar informacion '}), 400
+    if 'security_question' not in body:
+        return jsonify({'msg': 'Debes enviar el campo "security_question" y su respuesta'}), 400
     if 'new_password' not in body:
         return jsonify({'msg': "El campo 'new_password' es obligatorio"}), 400 #Hasta ahora no hay limite de caracteres ni requerimientos especiales para la password
+    user = User.query.filter_by(security_question=body['security_question']).first()
+    if user.security_question != body['security_question']:
+        return jsonify({'msg': 'Respuesta incorrecta a la security question'}),400
     user = User.query.get(id)
     user.password = body['new_password']
     db.session.commit()
     return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
 
-@app.route('/users', methods=['GET'])
-def get_all_users():
-    users = User.query.all()
-    users_serialized = []
-    for user in users:
-        users_serialized.append(user.serialize())
-    return jsonify({'msg': 'ok', 'data': users_serialized}), 200
 
+#Private access
+@app.route('/private', methods=['GET'])
+@jwt_required()
+def private():
+    current_user = get_jwt_identity()
+    print('Este es el usuario que esta haciendo la peticion: ', current_user)
+    if current_user:
+        return jsonify({'msg': 'Bienvenido', 'Este es el usuario que esta haciendo la peticion: ': current_user})
+    return jsonify({'msg': 'Acceso denegado'}), 400
 ###############################
 
 #PET
@@ -159,7 +176,47 @@ def create_pet():
     db.session.commit()
     return jsonify({'msg':'Mascota creada exitosamente', 'data': new_pet.serialize()}), 201
 
-#Descripción del post de la mascota: va dentro de la ruta de arriba?
+#Creación de un nuevo post con la descripción de la mascota:
+@app.route('/post_description', methods=['POST'])
+def create_post_description():
+    body = request.get_json(silent=True)
+    if body is None: 
+        return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
+    if 'pet_id' not in body: 
+        return jsonify({'msg': "El campo 'pet_id' es obligatorio"}), 400
+    ##latitud y longitud quedan definidas al hacer clic en el mapa?
+    if 'longitude' not in body: 
+        return jsonify({'msg': "El campo 'longitude' es obligatorio"}), 400
+    if 'latitude' not in body:
+        return jsonify({'msg': "El campo 'latitude' es obligatorio"}), 400
+    if 'description' not in body: 
+        return jsonify({'msg': "El campo 'description' es obligatorio"}), 400
+    if 'zone' not in body: 
+        return jsonify({'msg': "El campo 'zone' es obligatorio"}), 400
+    if 'event_date' not in body: 
+        return jsonify({'msg': "El campo 'event_date' es obligatorio"}), 400
+    if 'pet_status' not in body: 
+        return jsonify({'msg': "El campo 'pet_status' es obligatorio"}), 400
+
+    #verificación de la existencia de la mascota en la base de datos:
+    pet = Pet.query.get(body['pet_id'])
+    if not pet:
+        return jsonify({'msg': "Mascota no encontrada con ese ID"}), 404
+
+    #new post:
+    new_post = Post_Description(
+        pet_id = body['pet_id'],
+        longitude = body['longitude'],
+        latitude = body['latitude'],
+        description = body['description'],
+        zone = body['zone'],
+        event_date = body['event_date'],
+        pet_status = body['pet_status']
+    )
+    db.session.add(new_post)
+    db.session.commit()
+    return jsonify({'msg':'Post creado exitosamente', 'data': new_post.serialize()}), 201
+#######
 
 
 # any other endpoint will try to serve it like a static file
