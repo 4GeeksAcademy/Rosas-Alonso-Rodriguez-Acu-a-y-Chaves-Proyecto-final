@@ -176,6 +176,53 @@ def create_pet():
     db.session.commit()
     return jsonify({'msg':'Mascota creada exitosamente', 'data': new_pet.serialize()}), 201
 
+#Editar mascota:
+@app.route('/pet/<int:id>', methods=['PUT'])
+#@jwt_required()  para q sea accesible solo si el usuario tiene un token válido?
+def edit_pet(id):
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
+    pet = Pet.query.get(id) #
+    if not pet:
+        return jsonify({'msg': 'Mascota no encontrada'}), 404
+
+    if 'name' in body:
+        pet.name = body['name']
+    if 'breed' in body:
+        pet.breed = body['breed']
+    if 'gender' in body:
+        pet.gender = body['gender']
+    if 'color' in body:
+        pet.color = body['color']
+    if 'photo_1' in body:
+        pet.photo_1 = body['photo_1']
+    if 'photo_2' in body:
+        pet.photo_2 = body['photo_2']
+    if 'photo_3' in body:
+        pet.photo_3 = body['photo_3']
+    if 'photo_4' in body:
+        pet.photo_4 = body['photo_4']
+    
+    db.session.commit()
+    return jsonify({'msg': 'Mascota actualizada exitosamente', 'data': pet.serialize()}), 201
+
+#Eliminar mascota:
+@app.route('/pet/<int:id>', methods=['DELETE'])
+#@jwt_required()  para q sea accesible solo si el usuario tiene un token válido?
+def delete_pet(id):
+    pet = Pet.query.get(id)
+    if not pet:
+        return jsonify({'msg': 'Mascota no encontrada'}), 404
+    
+    for post in pet.post: #esto elimina los posts relacionados a esa mascota
+        db.session.delete(post)
+    
+    db.session.delete(pet)
+    db.session.commit()
+    return jsonify({'msg': 'Mascota eliminada exitosamente'}), 201
+##########
+
 #Creación de un nuevo post con la descripción de la mascota:
 @app.route('/post_description', methods=['POST'])
 def create_post_description():
