@@ -58,7 +58,6 @@ def handle_invalid_usage(error):
 
 # generate sitemap with all your endpoints
 
-
 @app.route('/')
 def sitemap():
     if ENV == "development":
@@ -114,9 +113,9 @@ def login():
         return jsonify({'msg': 'El campo password es obligatorio'}), 400
     user = User.query.filter_by(email=body['email']).first()
     if user is None:
-        return jsonify({'msg': "email is invalid"}), 400 #CAMBIAR por email or password is invalid
+        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
     if user.password != body['password']:
-        return jsonify({'msg': "password is invalid"}), 400 #CAMBIAR por email or password is invalid
+        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
     access_token = create_access_token(identity=user.email) 
     return jsonify({'msg': 'ok', 'token': access_token}), 200 
 
