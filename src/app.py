@@ -3,6 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
+from sqlalchemy.exc import IntegrityError
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
@@ -151,29 +152,64 @@ def private():
 
 #PET
 #Creación de nueva mascota:
-@app.route('/pet', methods=['POST'])
+@app.route('/create_pet', methods=['POST'])
 def create_pet():
-    body = request.get_json(silent=True)
-    if body is None: 
-        return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
-    if 'name' not in body: 
-        return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
-    if 'breed' not in body: 
-        return jsonify({'msg': "El campo 'breed' es obligatorio"}), 400
-    if 'gender' not in body:
-        return jsonify({'msg': "El campo 'gender' es obligatorio"}), 400
-    if 'photo_1' not in body:
-        return jsonify({'msg': "El campo 'photo_1' es obligatorio"}), 400
+    try:
+        body = request.get_json(silent=True)
+        if body is None: 
+            return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
+        if 'name' not in body: 
+            return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
+        if 'breed' not in body: 
+            return jsonify({'msg': "El campo 'breed' es obligatorio"}), 400
+        if 'gender' not in body:
+            return jsonify({'msg': "El campo 'gender' es obligatorio"}), 400
+        if 'photo_1' not in body:
+            return jsonify({'msg': "El campo 'photo_1' es obligatorio"}), 400
 
-    new_pet = Pet(
-        name = body['name'],
-        breed = body['breed'],
-        gender= body['gender'],
-        photo_1=body['photo_1']
-    )
-    db.session.add(new_pet)
-    db.session.commit()
-    return jsonify({'msg':'Mascota creada exitosamente', 'data': new_pet.serialize()}), 201
+        breed_name = body.get('breed')
+        species = body.get('species')
+        breed = Breed.query.filter_by(name=breed_name, species=species).first()
+        if not breed:
+            breed = Breed(name=breed_name, species=species)
+            db.session.add(breed)
+            db.session.flush()
+
+        new_pet = Pet(
+            name = body['name'],
+            breed = breed.id,
+            gender= body['gender'],
+            photo_1=body['photo_1'],
+            photo_2=body['photo_2'],
+            photo_3=body['photo_3'],
+            photo_4=body['photo_4'],
+            user_id = body['user_id'],
+        )
+        db.session.add(new_pet)
+        db.session.flush()
+
+        post_description = Post_Description(
+            pet_id = new_pet.id,
+            longitude = body['longitude'],
+            latitude = body['latitude'],
+            description = body['description'],
+            zone = body['zone'],
+            event_date = body['event_date'],
+            pet_status = body['pet_status']
+        )
+        db.session.add(post_description)
+        db.session.commit()
+
+        return jsonify({'msg':'Mascota, raza y post creados exitosamente', 'data': {'pet': 'new_pet.serialize()', 
+                                                                                    'breed': breed.serialize(),
+                                                                                    'post_description': post_description.serialize()}}), 201
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'msg':'Error', 'data': 'Posibles entradas duplicadas'}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'msg':'Error', 'data': str(e)}), 500
+
 
 #Editar mascota:
 @app.route('/pet/<int:id>', methods=['PUT'])

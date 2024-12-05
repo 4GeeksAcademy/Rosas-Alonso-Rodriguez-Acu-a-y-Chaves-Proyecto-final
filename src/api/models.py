@@ -27,7 +27,6 @@ class User(db.Model):
             "facebook" : self.facebook,
             "instagram" : self.instagram
         }
-    
 class PetStatus(Enum):
     lost = "Estoy perdido"
     find = "Busco a mi familia"
@@ -36,9 +35,6 @@ class PetStatus(Enum):
 class Genders (Enum):
     male = "macho"
     female = "hembra"
-
-    def __str__(self):
-        return self.value  # de enum a string
 
 class Species (Enum): 
      perro = "1"
@@ -52,7 +48,7 @@ class Pet(db.Model):
     id = db.Column (db.Integer, primary_key=True)
     name = db.Column (db.String(30))
     breed = db.Column (db.Integer, db.ForeignKey("breed.id"))
-    gender = db.Column(db.Enum(Genders), nullable=False) #Agregué el nullable
+    gender = db.Column (db.Enum(Genders))
     color = db.Column (db.String(15))
     photo_1 = db.Column (db.String(120), nullable=False)
     photo_2 = db.Column (db.String(120))
@@ -69,7 +65,6 @@ class Pet(db.Model):
     def serialize(self):
         return{
             "name" : self.name,
-            "species" : self.species,
             "breed" : self.breed,
             "color": self.color,
             "photo_1": self.photo_1,
@@ -106,19 +101,19 @@ class Post_Description (db.Model):
             }
 
 class Breed (db.Model):
-     __tablename__="breed"
-     id = db.Column(db.Integer, primary_key=True)
-     name = db.Column (db.String(30))
-     species = db.Column (db.Enum (Species), nullable=False)
-     pets= db.relationship ("Pet", back_populates="breed_relationship")
+    __tablename__="breed"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column (db.String(30))
+    species = db.Column (db.Enum (Species), nullable=False)
+    pets= db.relationship ("Pet", back_populates="breed_relationship")
     
-     def __repr__(self):
+    def __repr__(self):
             return f'<Breed: {self.name, self.species, self.pets}>'
 
-     def serialize(self):
+    def serialize(self):
             return{    
                 "breed_id": self.id,
                 "breed": self.name,
-                "specie" : self.species, #cambié "longitude" por species
+                "specie" : self.species,
                 "pet" : self.pets
             }
