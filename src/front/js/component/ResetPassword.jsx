@@ -36,9 +36,9 @@ const ResetPassword = () => {
 
   return (
 
-    <div className="container">
+    <div className="container mt-4">
       <div className="row justify-content-center">
-      <div className="col-12 col-md-7 border rounded-2 border-light bg-white p-4">
+      <div className="col-12 col-md-7 border  border-light forgot-password bg-white p-4">
       <h2 style={{ color: "darkblue", textAlign: "center" }}>¿Olvidó su contraseña?</h2>
           <form>
             <div className="form-group">
