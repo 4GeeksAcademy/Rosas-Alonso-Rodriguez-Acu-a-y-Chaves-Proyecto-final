@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logotipo from "../../img/PatasperdidasPNG.png"
+
+
 export const Navbar = () => {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
@@ -30,14 +32,12 @@ export const Navbar = () => {
 							</a>
 						</li>
 						<li className="nav-item">
-							<input class="form-control border-0  me-4" type="text" placeholder="🔎 Search" ></input>
+							<input className="form-control border-0  me-4" type="text" placeholder="🔎 Search" ></input>
 						</li>
 					</ul>
-					<button className=" adlam-display-regular btn btn-primary ms-3 rounded-pill btnStart">Iniciar sesión</button>
+					<Link to="/login" className=" adlam-display-regular btn btn-primary ms-3 rounded-pill btnStart">Iniciar sesión</Link>
 				</div>
 			</div>
 		</nav>
 	);
-};
-
-export default Navbar;
+}
