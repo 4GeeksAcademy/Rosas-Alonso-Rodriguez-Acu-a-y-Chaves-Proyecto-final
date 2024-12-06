@@ -1,31 +1,49 @@
 import React, { useState } from "react";
 
-
 const ResetPassword = () => {
-  // const { email, updateEmail } = usePasswordReset(); // Usamos el contexto
+  const [securityAnswer, setSecurityAnswer] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validación simple del formulario
+    if (!securityAnswer || !newPassword || !confirmPassword) {
+      setError("Todos los campos son obligatorios.");
+      setMessage("");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError("Las contraseñas no coinciden.");
+      setMessage("");
+      return;
+    }
+
     try {
       // Llamada a la API
-      const response = await fetch("https://miapi.com/api/reset-password", {
-        method: "POST",
+      const response = await fetch("http://localhost:5000/user/1", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          security_question: "¿Cuál es mi animal favorito?",
+          security_answer: securityAnswer,
+          new_password: newPassword,
+        }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        setMessage(data.message || "Correo enviado correctamente.");
+        setMessage(data.msg || "Contraseña cambiada correctamente.");
         setError("");
       } else {
         const errorData = await response.json();
-        setError(errorData.message || "Ocurrió un error. Intenta nuevamente.");
+        setError(errorData.msg || "Ocurrió un error. Intenta nuevamente.");
         setMessage("");
       }
     } catch (err) {
@@ -35,18 +53,19 @@ const ResetPassword = () => {
   };
 
   return (
-
     <div className="container mt-4">
       <div className="row justify-content-center">
-      <div className="col-12 col-md-7 border  border-light forgot-password bg-white p-4">
-      <h2 style={{ color: "darkblue", textAlign: "center" }}>¿Olvidó su contraseña?</h2>
-          <form>
+        <div className="col-12 col-md-7 border border-light forgot-password bg-white p-4">
+          <h2 style={{ color: "darkblue", textAlign: "center" }}>¿Olvidó su contraseña?</h2>
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>¿CÚAL ES MI ANIMAL FAVORITO?</label>
+              <label>¿CUÁL ES MI ANIMAL FAVORITO?</label>
               <input
                 type="text"
                 className="form-control"
                 placeholder="Ingresa tu respuesta"
+                value={securityAnswer}
+                onChange={(e) => setSecurityAnswer(e.target.value)}
               />
             </div>
 
@@ -55,34 +74,35 @@ const ResetPassword = () => {
               <input
                 type="password"
                 className="form-control"
-                placeholder="Ingresa tu respuesta"
+                placeholder="Ingresa tu nueva contraseña"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
               />
             </div>
+
             <div className="form-group">
-              <label>NUEVA CONTRASEÑA</label>
+              <label>CONFIRMAR CONTRASEÑA</label>
               <input
                 type="password"
                 className="form-control"
-                placeholder="Ingresa tu respuesta"
+                placeholder="Confirma tu nueva contraseña"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary mt-3"
+              style={{ backgroundColor: "darkblue", borderColor: "darkblue", borderRadius: "20px",}}
+            >Cambiar contraseña </button>
           </form>
 
-          <div className="reset-password-container mt-4 ">
-
-            <form onSubmit={handleSubmit} className="text-center">
-              <button type="submit" className="btn btn-primary"  style={{ backgroundColor: "darkblue", borderColor: "darkblue", borderRadius: "20px" }}>
-                Cambiar contraseña
-              </button>
-            </form>
-
-            {message && <p className="success-message">{message}</p>}
-            {error && <p className="error-message">{error}</p>}
-          </div>
+          {message && <p className="success-message text-success mt-3">{message}</p>}
+          {error && <p className="error-message text-danger mt-3">{error}</p>}
         </div>
       </div>
     </div>
-
   );
 };
 
