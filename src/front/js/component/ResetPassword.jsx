@@ -91,11 +91,19 @@ const ResetPassword = () => {
               />
             </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary mt-3"
-              style={{ backgroundColor: "darkblue", borderColor: "darkblue", borderRadius: "20px",}}
-            >Cambiar contraseña </button>
+            <div className="d-flex justify-content-center">
+              <button
+                type="submit"
+                className="btn btn-primary mt-3"
+                style={{
+                  backgroundColor: "darkblue",
+                  borderColor: "darkblue",
+                  borderRadius: "20px",
+                }}
+              >
+                Cambiar contraseña
+              </button>
+            </div>
           </form>
 
           {message && <p className="success-message text-success mt-3">{message}</p>}

@@ -61,12 +61,11 @@ class Pet(db.Model):
     breed_relationship = db.relationship("Breed", back_populates= "pets")
     
     def __repr__(self):
-        return f'<Pet {self.name, self.species, self.color, self.user}>'
+        return f'<Pet {self.name, self.color, self.user}>'
 
     def serialize(self):
         return{
             "name" : self.name,
-            "species" : self.species,
             "breed" : self.breed,
             "color": self.color,
             "photo_1": self.photo_1,
