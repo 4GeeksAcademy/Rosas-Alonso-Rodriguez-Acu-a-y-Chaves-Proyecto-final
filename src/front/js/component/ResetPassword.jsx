@@ -38,9 +38,8 @@ const ResetPassword = () => {
 
     <div className="container">
       <div className="row justify-content-center">
-        <div className="col-12 col-md-7 border border-light  bg-white p-4">
-          <h2> ¿Olvidó su contraseña?</h2>
-
+      <div className="col-12 col-md-7 border rounded-2 border-light bg-white p-4">
+      <h2 style={{ color: "darkblue", textAlign: "center" }}>¿Olvidó su contraseña?</h2>
           <form>
             <div className="form-group">
               <label>¿CÚAL ES MI ANIMAL FAVORITO?</label>
@@ -69,10 +68,10 @@ const ResetPassword = () => {
             </div>
           </form>
 
-          <div className="reset-password-container">
+          <div className="reset-password-container mt-4 ">
 
             <form onSubmit={handleSubmit} className="text-center">
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary"  style={{ backgroundColor: "darkblue", borderColor: "darkblue", borderRadius: "20px" }}>
                 Cambiar contraseña
               </button>
             </form>
