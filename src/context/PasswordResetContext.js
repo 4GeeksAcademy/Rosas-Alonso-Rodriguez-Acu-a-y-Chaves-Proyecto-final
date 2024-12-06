@@ -1,28 +1,25 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useContext } from 'react';
 
 // Crear el contexto
 const PasswordResetContext = createContext();
 
-// Proveedor del contexto
+// Crear un proveedor del contexto
 export const PasswordResetProvider = ({ children }) => {
-  const [email, setEmail] = useState(""); // Estado para el email ¿Hace falta?
-  const [password, setPassword] = useState(""); // Estado para la nueva contraseña
+  const [email, setEmail] = useState(""); // Estado para almacenar el correo electrónico
 
-  // Función para actualizar el email
   const updateEmail = (newEmail) => {
-    setEmail(newEmail);
-  };
-
-  // Función para actualizar la contraseña
-  const updatePassword = (newPassword) => {
-    setPassword(newPassword);
+    setEmail(newEmail); // Función para actualizar el correo electrónico
   };
 
   return (
-    <PasswordResetContext.Provider value={{ email, updateEmail, password, updatePassword }}>
+    <PasswordResetContext.Provider value={{ email, updateEmail }}>
       {children}
     </PasswordResetContext.Provider>
   );
 };
 
-export default PasswordResetContext;
+// Hook para usar el contexto
+export const usePasswordReset = () => {
+  return useContext(PasswordResetContext);
+};
+

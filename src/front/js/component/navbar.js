@@ -1,19 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import "../../styles/index.css"; // Usa estilos globales o crea nuevos si es necesario
 
-export const Navbar = () => {
-	return (
-		<nav className="navbar navbar-light bg-light">
-			<div className="container">
-				<Link to="/">
-					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
-				</Link>
-				<div className="ml-auto">
-					<Link to="/demo">
-						<button className="btn btn-primary">Check the Context in action</button>
-					</Link>
-				</div>
-			</div>
-		</nav>
-	);
+const Navbar = () => {
+  return (
+    <nav className="navbar">
+      <div className="navbar-brand">Monitō</div>// Nombre de la APP
+      <ul className="navbar-links">
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Mapa</a></li>
+        <li><a href="#">¿Qué es?</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+      <button className="btn-iniciar-sesion">Iniciar Sesión</button>
+    </nav>
+  );
 };
+
+export default Navbar;

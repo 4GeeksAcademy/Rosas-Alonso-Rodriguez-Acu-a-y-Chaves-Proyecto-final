@@ -1,81 +1,59 @@
-import React, { useContext } from "react";
-import PasswordResetContext from "../context/PasswordResetContext";
+import React, { useState } from "react";
+import { usePasswordReset } from "./PasswordResetContext";
 
-const Formulario = () => {
-  const { email, updateEmail, password, updatePassword } = useContext(PasswordResetContext);
+const ResetPassword = () => {
+  const { email, updateEmail } = usePasswordReset(); // Usamos el contexto
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Correo:", email);
-    console.log("Nueva contraseña:", password);
+
+    try {
+      // Llamada a la API
+      const response = await fetch("https://miapi.com/api/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessage(data.message || "Correo enviado correctamente.");
+        setError("");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Ocurrió un error. Intenta nuevamente.");
+        setMessage("");
+      }
+    } catch (err) {
+      setError("Error al conectar con el servidor.");
+      setMessage("");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.formContainer}>
-      <h2 style={styles.title}>Recuperar Contraseña</h2>
-      
-      <label style={styles.label}>Email:</label>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => updateEmail(e.target.value)}
-        style={styles.input}
-        required
-      />
-
-      <label style={styles.label}>Nueva Contraseña:</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => updatePassword(e.target.value)}
-        style={styles.input}
-        required
-      />
-
-      <button type="submit" style={styles.button}>
-        Enviar
-      </button>
-    </form>
+    <div className="reset-password-container">
+      <h2>Recuperar Contraseña</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            value={email} // Usamos el email del contexto
+            onChange={(e) => updateEmail(e.target.value)} // Actualizamos el email en el contexto
+            required
+          />
+        </div>
+        <button type="submit">Enviar</button>
+      </form>
+      {message && <p className="success-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>}
+    </div>
   );
 };
 
-// Estilos en línea
-const styles = {
-  formContainer: {
-    maxWidth: "400px",
-    margin: "0 auto",
-    padding: "20px",
-    backgroundColor: "#fff",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-  },
-  title: {
-    textAlign: "center",
-    color: "#05315b",
-    marginBottom: "20px",
-  },
-  label: {
-    display: "block",
-    marginBottom: "8px",
-    fontWeight: "bold",
-    color: "#05315b",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    marginBottom: "15px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-  },
-  button: {
-    width: "100%",
-    padding: "10px",
-    backgroundColor: "#05315b",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-};
-
-export default Formulario;
+export default ResetPassword;
