@@ -1,19 +1,43 @@
 import React from "react";
-import "../../styles/index.css"; // Usa estilos globales o crea nuevos si es necesario
-
-const Navbar = () => {
-  return (
-    <nav className="navbar">
-      <div className="navbar-brand">Monitō</div>// Nombre de la APP
-      <ul className="navbar-links">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Mapa</a></li>
-        <li><a href="#">¿Qué es?</a></li>
-        <li><a href="#">Contacto</a></li>
-      </ul>
-      <button className="btn-iniciar-sesion">Iniciar Sesión</button>
-    </nav>
-  );
+import { Link } from "react-router-dom";
+import logotipo from "../../img/PatasperdidasPNG.png"
+export const Navbar = () => {
+	return (
+		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+			<div className="container ">
+				<img className="ms-5" width="50" height="50" src={logotipo} alt="logo" classname="" />
+				
+				<div className="collapse navbar-collapse d-flex justify-content-evenly" id="navbarNav">
+					<ul className="navbar-nav ms-auto ">
+						<li className="nav-item">
+							<a className="adlam-display-regular nav-link me-4" href="#">
+								Inicio
+							</a>
+						</li>
+						<li className="nav-item">
+							<a className="adlam-display-regular nav-link  me-4" href="#">
+								Mapa
+							</a>
+						</li>
+						<li className="nav-item">
+							<a className="adlam-display-regular nav-link  me-4" href="#">
+								¿Qué es?
+							</a>
+						</li>
+						<li className="nav-item">
+							<a className="adlam-display-regular nav-link  me-4" href="#">
+								Contacto
+							</a>
+						</li>
+						<li className="nav-item">
+							<input class="form-control border-0  me-4" type="text" placeholder="🔎 Search" ></input>
+						</li>
+					</ul>
+					<button className=" adlam-display-regular btn btn-primary ms-3 rounded-pill btnStart">Iniciar sesión</button>
+				</div>
+			</div>
+		</nav>
+	);
 };
 
 export default Navbar;

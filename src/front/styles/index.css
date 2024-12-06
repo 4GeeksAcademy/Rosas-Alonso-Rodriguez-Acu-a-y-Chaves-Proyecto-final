@@ -1,50 +1,43 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+/* 
+    General Styles used on every website (Don't Repeat Yourself)
+*/
+
+.pet-form .form-label{
+    font-family: 'Aboreto';
+    font-weight: 400;
+    font-size: 16px;
+}
+.pet-form .form-control, .form-select{
+    font-family: 'Aboreto';
+    font-weight: 400;
+    font-size: 12px; 
 }
 
-form {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.btn-publicar {
+    background-color: #003459;
+   font-family: 'ADLaM Display';
 }
 
-h2 {
-  text-align: center;
-  color: #05315b;
-  margin-bottom: 20px;
+.post-title {
+    text-align: center;
+    font-family: 'ADLaM Display';
+    color: #003459; 
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 26px;
+}
+.fa-light {
+    font-size: 28px;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #05315b;
+.image-preview img {
+    width: 100px;
+    margin-right: 15px;
 }
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+.adlam-display-regular {
+    font-family: "ADLaM Display", system-ui;
+    font-weight: 400;
+    font-style: normal;
+  }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #05315b;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}

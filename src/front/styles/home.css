@@ -1,47 +1,21 @@
 /* src/front/styles/home.css */
 
-/* Estilo del contenedor de recuperación de contraseña */
-.password-reset-container {
-  width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
+    All pages share the styles on index.css but you should create 
+    one more css for each page that will contain the selected used 
+    on that page only (the ones not reused in other pages).
+*/
+.adlam-display-regular {
+    font-family: "ADLaM Display";
+    font-weight: 400;
+    font-style: normal;
+  }
 
-.password-reset-container h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
+body {
+    background-image: url('/workspaces/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/banner.PNG');
+    background-repeat: no-repeat;
 
-.password-reset-container label {
-  display: block;
-  text-align: left;
-  margin-top: 10px;
-  font-weight: bold;
-  color: #05315b;
-}
-
-.password-reset-container input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.primary-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #05315b;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.primary-button:hover {
-  background-color: #022a4a;
+  background-size: cover;
+  }
+.btnStart{
+  background-color: darkblue;
 }
