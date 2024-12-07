@@ -40,7 +40,7 @@ const Layout = () => {
                         <Route element={<ResetPassword/>} path="/forgot-password" />
                         <Route element={<PetView/>} path="/petview"/>
                         <Route element={<h1>Not found!</h1>} />
-                        <Route element= {<PetCard/>} path= "/petcard" />
+                        <Route element= {<PetCard/>} path="/petcard" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

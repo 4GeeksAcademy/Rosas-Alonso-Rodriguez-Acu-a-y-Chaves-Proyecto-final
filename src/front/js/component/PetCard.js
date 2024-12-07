@@ -1,23 +1,20 @@
-//import React from "react";
-//import { useParams } from "react-router-dom";
-//
-const PetCard = ({ pets }) => {
-  const { id } = useParams(); // Obtener el id de la mascota desde la URL
-  const pet = pets.find((p) => p.id === parseInt(id)); // Buscar la mascota por su id
-
-  if (!pet) {
-    return <h2>Mascota no encontrada</h2>;
-  }
-
+// PetCard.jsx
+import React from 'react';
+const PetCard = ({ pet }) => {
+  console.log(pet); // Esto nos ayudará a verificar si la mascota está llegando correctamente
   return (
-    <div>
-      <h1>{pet.name}</h1>
-      <img src={pet.image} alt={pet.name} style={{ width: "300px", height: "300px" }} />
+    <div className="pet-card">
+      <img src={pet.image} alt={pet.name} />
+      <h3>{pet.name}</h3>
       <p>Tipo: {pet.type}</p>
       <p>Color: {pet.color}</p>
       <p>Tamaño: {pet.size}</p>
     </div>
   );
 };
-
 export default PetCard;
+
+
+
+
+

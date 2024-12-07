@@ -7,7 +7,7 @@ export const Navbar = () => {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
 			<div className="container ">
-				<img className="ms-5" width="50" height="50" src={logotipo} alt="logo" classname="" />
+				<img className="ms-5" width="50" height="50" src={logotipo} alt="logo"  />
 				
 				<div className="collapse navbar-collapse d-flex justify-content-evenly" id="navbarNav">
 					<ul className="navbar-nav ms-auto ">
