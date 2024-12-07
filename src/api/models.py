@@ -19,6 +19,18 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.email}>'
 
+    # @classmethod
+    # def create(cls, data):
+    #     try:
+    #         new_data = cls(**data)
+    #         db.session.add(new_data)
+    #         db.session.commit()
+    #         return new_data
+    #     except Exception as error:
+    #         db.session.rollback()
+    #         print(error)
+    #         return None
+
     def serialize(self):
         return {
             "id": self.id,
@@ -50,22 +62,25 @@ class Pet(db.Model):
     breed = db.Column (db.Integer, db.ForeignKey("breed.id"))
     gender = db.Column (db.Enum(Genders))
     color = db.Column (db.String(15))
-    photo_1 = db.Column (db.String(120), nullable=False)
-    photo_2 = db.Column (db.String(120))
-    photo_3 = db.Column (db.String(120))
-    photo_4 = db.Column (db.String(120))
+    photo_1 = db.Column (db.String(320), nullable=False)
+    photo_2 = db.Column (db.String(320))
+    photo_3 = db.Column (db.String(320))
+    photo_4 = db.Column (db.String(320))
     user_id = db.Column (db.Integer, db.ForeignKey("user.id"))
     user = db.relationship ("User", back_populates="pet")
     post = db.relationship("Post_Description", back_populates="pet_relationship")
     breed_relationship = db.relationship("Breed", back_populates= "pets")
     
     def __repr__(self):
-        return f'<Pet {self.name, self.species, self.color, self.user}>'
+        return f'<Pet {self.name, self.color, self.user}>'
 
     def serialize(self):
         return{
+            "id":self.id,
             "name" : self.name,
-            "breed" : self.breed,
+            "breed" : self.breed_relationship.name if self.breed_relationship else None,
+            "species": self.breed_relationship.species.name if self.breed_relationship else None,
+            "gender": self.gender.name if self.gender else None,
             "color": self.color,
             "photo_1": self.photo_1,
             "photo_2" : self.photo_2,
@@ -91,13 +106,13 @@ class Post_Description (db.Model):
 
     def serialize(self):
             return{    
-                "pet_info": self.pet_id,
+                "pet_id": self.pet_id,
                 "pet_details": self.pet_relationship.serialize(),
                 "longitude" : self.longitude,
                 "latitude": self.latitude,
                 "description" : self.description,
                 "event_date" : self.event_date,
-                "pet_status" : self.pet_status
+                "pet_status" : self.pet_status.name if self.pet_status else None,
             }
 
 class Breed (db.Model):
@@ -111,9 +126,9 @@ class Breed (db.Model):
             return f'<Breed: {self.name, self.species, self.pets}>'
 
     def serialize(self):
-            return{    
+            return{
                 "breed_id": self.id,
                 "breed": self.name,
-                "specie" : self.species,
-                "pet" : self.pets
+                "specie" : self.species.name if self.species else None,
+                "pet" : [pet.serialize() for pet in self.pets], #List comprenhesion
             }

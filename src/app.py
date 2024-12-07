@@ -79,7 +79,7 @@ def get_users():
 @app.route('/user', methods=['POST'])
 def create_user():
     body = request.get_json(silent=True)
-    if body is None: 
+    if body is None:
         return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
     if 'name' not in body: 
         return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
@@ -158,14 +158,22 @@ def create_pet():
         body = request.get_json(silent=True)
         if body is None: 
             return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
-        if 'name' not in body: 
-            return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
-        if 'breed' not in body: 
-            return jsonify({'msg': "El campo 'breed' es obligatorio"}), 400
-        if 'gender' not in body:
-            return jsonify({'msg': "El campo 'gender' es obligatorio"}), 400
-        if 'photo_1' not in body:
-            return jsonify({'msg': "El campo 'photo_1' es obligatorio"}), 400
+
+        required_fields = ["name", "breed", "gender", "photo_1"]
+        for field in required_fields:
+            if field not in body:
+                return jsonify({'msg': f"El campo {field} es obligatorio"}), 400
+
+        # if body is None: 
+        #     return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
+        # if 'name' not in body: 
+        #     return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
+        # if 'breed' not in body: 
+        #     return jsonify({'msg': "El campo 'breed' es obligatorio"}), 400
+        # if 'gender' not in body:
+        #     return jsonify({'msg': "El campo 'gender' es obligatorio"}), 400
+        # if 'photo_1' not in body:
+        #     return jsonify({'msg': "El campo 'photo_1' es obligatorio"}), 400
 
         breed_name = body.get('breed')
         species = body.get('species')
@@ -179,6 +187,7 @@ def create_pet():
             name = body['name'],
             breed = breed.id,
             gender= body['gender'],
+            color=body.get('color', None),
             photo_1=body['photo_1'],
             photo_2=body['photo_2'],
             photo_3=body['photo_3'],
@@ -199,14 +208,18 @@ def create_pet():
         )
         db.session.add(post_description)
         db.session.commit()
-
-        return jsonify({'msg':'Mascota, raza y post creados exitosamente', 'data': {'pet': 'new_pet.serialize()', 
-                                                                                    'breed': breed.serialize(),
-                                                                                    'post_description': post_description.serialize()}}), 201
+        
+        return jsonify({
+            "msg": "Mascota, raza y post creados exitosamente",
+            "data": {
+                "post_description":post_description.serialize()
+                }
+                }), 201
     except IntegrityError:
         db.session.rollback()
         return jsonify({'msg':'Error', 'data': 'Posibles entradas duplicadas'}), 400
     except Exception as e:
+        print(e)
         db.session.rollback()
         return jsonify({'msg':'Error', 'data': str(e)}), 500
 
