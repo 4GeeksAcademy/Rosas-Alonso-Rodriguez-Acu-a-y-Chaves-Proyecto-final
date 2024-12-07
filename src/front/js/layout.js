@@ -14,6 +14,8 @@ import { Footer } from "./component/footer";
 import NewPetLost from "./pages/newPetLost.js";
 import NewFoundPet from "./pages/newFoundPet.js"; 
 import ResetPassword from "./component/ResetPassword.jsx";
+import PetView from "./component/PetView.jsx";
+import PetCard from "./component/PetCard.js";
 
 //create your first component
 const Layout = () => {
@@ -36,7 +38,9 @@ const Layout = () => {
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<ResetPassword/>} path="/forgot-password" />
+                        <Route element={<PetView/>} path="/petview"/>
                         <Route element={<h1>Not found!</h1>} />
+                        <Route element= {<PetCard/>} path= "/petcard" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>
