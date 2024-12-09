@@ -135,3 +135,21 @@ p {
 .share-icons a:hover {
   color: #007bff;
 }
+.filters-container {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.filters-container h5 {
+  margin-bottom: 15px;
+}
+
+.filter label {
+  font-weight: bold;
+}
+
+.filter input[type="radio"] {
+  margin-right: 10px;
+}
