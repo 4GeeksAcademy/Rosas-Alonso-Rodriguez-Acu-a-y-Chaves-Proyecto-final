@@ -27,10 +27,8 @@ export const Navbar = () => {
 							</a>
 						</li>
 						<li className="nav-item">
-						<Link to="/PetView">
-							<a className="adlam-display-regular nav-link  me-4" href="#">
-								Mascotas 
-							</a>
+							<Link to="/PetView" className="adlam-display-regular nav-link  me-4">
+								Mascotas 		
 							</Link>
 						</li>
 						<li className="nav-item">

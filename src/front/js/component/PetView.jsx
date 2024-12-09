@@ -106,9 +106,7 @@ const PetsView = () => {
                   Tamaño: {pet.size}
                 </p>
                 <Link to="/PetCard" >
-                  <button>
-                    Más información
-                  </button>
+                  Más información
                 </Link>
               </div>
             </div>

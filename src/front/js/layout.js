@@ -15,7 +15,7 @@ import NewPetLost from "./pages/newPetLost.js";
 import NewFoundPet from "./pages/newFoundPet.js"; 
 import ResetPassword from "./component/ResetPassword.jsx";
 import PetView from "./component/PetView.jsx";
-import PetCard from "./component/PetCard.js";
+import PetCard from "./component/PetCard.jsx";
 
 //create your first component
 const Layout = () => {

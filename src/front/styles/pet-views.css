@@ -10,7 +10,7 @@
 
 /* Contenedor de vista de mascotas (Filtros y tarjetas) */
 .pets-view {
-  display: flex;
+  display: flex; 
   gap: 20px;
   justify-content: space-between;
 }
