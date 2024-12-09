@@ -19,10 +19,10 @@ const PetsView = () => {
       { id: 3, name: "Rocky", type: "conejo", color: "marrón", size: "mediano", image: "/img/rocky.jpg" },
       { id: 4, name: "Spike", type: "reptil", color: "verde", size: "pequeño", image: "/img/spike.jpg" },
       { id: 5, name: "Luna", type: "otro", color: "gris", size: "grande", image: "/img/luna.jpg" },
-      { id: 2, name: "Bella", type: "gato", color: "blanco", size: "pequeño", image: "/img/bella.jpg" },
-      { id: 2, name: "Bella", type: "gato", color: "blanco", size: "pequeño", image: "/img/bella.jpg" },
-      { id: 2, name: "Bella", type: "gato", color: "blanco", size: "pequeño", image: "/img/bella.jpg" },
-      { id: 2, name: "Bella", type: "gato", color: "blanco", size: "pequeño", image: "/img/bella.jpg" },
+      { id: 6, name: "Bella", type: "gato", color: "blanco", size: "pequeño", image: "/img/bella.jpg" },
+      { id: 7, name: "Bella", type: "gato", color: "blanco", size: "pequeño", image: "/img/bella.jpg" },
+      { id: 8, name: "Bella", type: "gato", color: "blanco", size: "pequeño", image: "/img/bella.jpg" },
+      { id: 9, name: "Bella", type: "gato", color: "blanco", size: "pequeño", image: "/img/bella.jpg" },
       // Más datos...
     ];
     setPets(petData);
@@ -105,7 +105,7 @@ const PetsView = () => {
                   Color: {pet.color} <br />
                   Tamaño: {pet.size}
                 </p>
-                <Link to="/PetCard" >
+                <Link to={`/petcard/${pet.id}`} >
                   Más información
                 </Link>
               </div>

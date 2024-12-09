@@ -19,4 +19,119 @@ body {
   border-radius: 20px;
 }
 
+/* Contenedor principal */
+.pet-card-container {
+  max-width: 80%;
+  margin: 30px auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
 
+/* Diseño 50/50 */
+.pet-card {
+  display: flex;
+  gap: 20px;
+}
+
+.image-section {
+  flex: 1;
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.info-section {
+  flex: 1;
+  padding: 10px;
+}
+
+.info-section h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.text-danger {
+  color: #ff4d4d;
+  font-weight: bold;
+}
+
+a.btn-primary {
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+a.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.table {
+  margin-top: 15px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 0;
+}
+
+.table td {
+  padding: 5px 0;
+}
+
+p {
+  font-size: 14px;
+}
+
+.additional-info {
+  margin-top: 15px;
+  font-style: italic;
+}
+
+/* Galería */
+.gallery {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.gallery img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.gallery img:hover {
+  transform: scale(1.1);
+}
+
+/* Íconos de compartir */
+.share-icons span {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.share-icons a {
+  color: #6c757d;
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+.share-icons a:hover {
+  color: #007bff;
+}

@@ -39,8 +39,9 @@ const Layout = () => {
                         <Route element={<Login />} path="/login" />
                         <Route element={<ResetPassword/>} path="/forgot-password" />
                         <Route element={<PetView/>} path="/petview"/>
+                        <Route element= {<PetCard/>} path="/petcard/:theid" />
+
                         <Route element={<h1>Not found!</h1>} />
-                        <Route element= {<PetCard/>} path="/petcard" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>
