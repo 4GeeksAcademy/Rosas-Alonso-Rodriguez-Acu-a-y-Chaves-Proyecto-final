@@ -136,7 +136,7 @@ def update_password(id):
     user = User.query.get(id)
     user.password = body['new_password']
     db.session.commit()
-    return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
+    return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'}), 200
 
 
 #Private access
@@ -154,6 +154,10 @@ def private():
 #Creación de nueva mascota:
 @app.route('/pet', methods=['POST'])
 def create_pet():
+    #query a la raza o specie para verificar si existe
+    #Si no hay esa raza, se crea y se agrega a la base de datos
+    # Y ahi se saca el id
+    
     body = request.get_json(silent=True)
     if body is None: 
         return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
@@ -217,7 +221,37 @@ def create_post_description():
     db.session.commit()
     return jsonify({'msg':'Post creado exitosamente', 'data': new_post.serialize()}), 201
 #######
+#GET All pets Matias 17:46PM 3/12/24..Update: working 11:43AM 4/12/24
+@app.route('/pets', methods=['GET'])
+def get_all_pets():
+    pets = Pet.query.all()
+    pets_serialized = []
+    for pet in pets:
+       pets_serialized.append(pet.serialize())
+    return jsonify({'msg': 'ok', 'data': pets_serialized}), 200
 
+@app.route('/pet/<int:id>', methods=['PUT'])
+def update_pet(id):
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'Debes enviar informacion'}), 400
+    if 'name' not in body:
+        return jsonify({'msg': 'Debes enviar "name"'}),400
+    if 'breed'not in body:
+        return jsonify({'msg': 'Debes enviar "breed"'}),400
+    if 'gender' not in body:
+        return jsonify({'msg': 'Debes enviar "gender"'}),400
+    if 'photo_1' not in body:
+        return jsonify({'msg': 'Debes enviar "photo_1"'}),400
+    pet = Pet.query.get(id)
+    if not pet:
+        return jsonify({'msg': "Mascota no encontrada con ese ID"}), 404
+    pet.name = body['name']
+    pet.breed = body['breed']
+    pet.gender = body['gender']
+    pet.photo_1 = body['photo_1'] 
+    db.session.commit()
+    return jsonify({'msg': 'los datos han sido actualizados correctamente'}), 200
 
 # any other endpoint will try to serve it like a static file
 @app.route('/<path:path>', methods=['GET'])
@@ -233,3 +267,4 @@ def serve_any_other_file(path):
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+
