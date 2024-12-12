@@ -100,6 +100,7 @@ const PetCard = () => {
             href="https://example.com/contact"
             className="btn btn-primary mb-3"
           >
+                 {/* Conecta con la info de contacto??*/}
             Comunicarse
           </a>
           <table className="table">
