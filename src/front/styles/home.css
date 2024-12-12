@@ -153,3 +153,25 @@ p {
 .filter input[type="radio"] {
   margin-right: 10px;
 }
+.main-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.gallery img {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.gallery img:hover {
+  transform: scale(1.1);
+}
+.navigation-path a {
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.navigation-path a:hover {
+  text-decoration: underline;
+}
