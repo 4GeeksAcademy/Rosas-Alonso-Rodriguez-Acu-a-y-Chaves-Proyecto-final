@@ -21,7 +21,7 @@ export const Home = () => {
 					<h1 className=" adlam-display-regular fw-bolder fs-4 mb-3">
 						Una ayuda para encontrar mascotas perdidas en tu zona.
 					</h1>
-					<p className="text-muted fs-5 mb-4">
+					<p className="adlam-display-minusc text-muted fs-5 mb-4">
 						Encuentra a tu mascota o ayuda a otra persona a encontrarla. Miles
 						de historias felices nos respaldan.
 					</p>

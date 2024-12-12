@@ -7,7 +7,10 @@ import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
+import  User  from "./component/user";
 import  Login  from "./component/login";
+import  Signup  from "./component/signup";
+
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
@@ -16,6 +19,7 @@ import NewFoundPet from "./pages/newFoundPet.js";
 import ResetPassword from "./component/ResetPassword.jsx";
 import PetView from "./component/PetView.jsx";
 import PetCard from "./component/PetCard.jsx";
+import UbicationMap from "./component/ubication_map.js";
 
 //create your first component
 const Layout = () => {
@@ -34,13 +38,19 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element ={<NewPetLost />} path="/newpetlost" />
                         <Route element = {<NewFoundPet/>} path = "/newpetfound"/>
+                        <Route element = {<UbicationMap/>} path = "/ubicationmap"/>
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
+                        <Route element={<User />} path="/user" />
                         <Route element={<Login />} path="/login" />
+<<<<<<< HEAD
                         <Route element={<ResetPassword/>} path="/forgot-password" />
                         <Route element={<PetView/>} path="/petview"/>
                         <Route element= {<PetCard/>} path="/petcard/:theid" />
 
+=======
+                        <Route element={<Signup />} path="/signup" />
+>>>>>>> Development
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />

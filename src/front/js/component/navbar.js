@@ -7,8 +7,8 @@ export const Navbar = () => {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
 			<div className="container ">
-				<img className="ms-5" width="50" height="50" src={logotipo} alt="logo"  />
-				
+				<img className="ms-5" width="50" height="50" src={logotipo} alt="logo" />
+
 				<div className="collapse navbar-collapse d-flex justify-content-evenly" id="navbarNav">
 					<ul className="navbar-nav ms-auto ">
 						<li className="nav-item">
@@ -28,7 +28,7 @@ export const Navbar = () => {
 						</li>
 						<li className="nav-item">
 							<Link to="/PetView" className="adlam-display-regular nav-link  me-4">
-								Mascotas 		
+								Mascotas
 							</Link>
 						</li>
 						<li className="nav-item">

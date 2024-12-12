@@ -30,7 +30,7 @@ const Cloudinary = ({updatePhotos}) => {
                     const file = await response.json();
                     uploadedImages.push(file.secure_url);
                 }
-                console.log(uploadedImages);
+                
                 setImage(uploadedImages);
                 setLoading(false);
                 if (updatePhotos) {
@@ -46,8 +46,7 @@ const Cloudinary = ({updatePhotos}) => {
         
     };
    
-        console.log("Estado `image` actualizado:", image);
-    
+      
 
     return (
         <div className="mb-3">
