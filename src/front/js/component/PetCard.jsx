@@ -18,22 +18,35 @@ const PetCard = () => {
 
   return (
     <div className="pet-card-container">
+      {/* Navigation path */}
+      <div className="navigation-path mb-2">
+        <a href="/">Home</a> / <a href="/mascotas">Mascotas</a> / More Info
+      </div>
+
       <div className="row">
-        {/* Imagen principal y galería */}
+        {/* Main image and gallery */}
         <div className="col-md-6 image-section">
           <img
             className="main-image img-fluid rounded"
             src={detail?.image}
             alt={detail?.name}
           />
-          <div className="gallery d-flex mt-3">
-            {detail?.gallery?.map((img, index) => (
+          <div className="gallery d-flex mt-3 flex-wrap">
+            {/* Main image */}
+            <img
+              className="main-image img-fluid rounded mt-3"
+              src={detail?.image}
+              alt={detail?.name}
+              style={{ width: "33%", height: "100px" }}
+            />
+            {/* Additional photos from gallery */}
+            {detail?.gallery?.slice(0, 4).map((img, index) => (
               <img
                 key={index}
-                className="img-thumbnail mx-1"
+                className="img-thumbnail mx-1 mt-3"
                 src={img}
                 alt={`Gallery ${index}`}
-                style={{ width: "70px", height: "70px" }}
+                style={{ width: "33.33%", height: "100px" }}
               />
             ))}
           </div>
@@ -66,7 +79,7 @@ const PetCard = () => {
           </div>
         </div>
 
-        {/* Detalles de la mascota */}
+        {/* Pet details */}
         <div className="col-md-6 info-section">
           <h3 className="text-primary">{detail?.name}</h3>
           <p className="text-danger">
