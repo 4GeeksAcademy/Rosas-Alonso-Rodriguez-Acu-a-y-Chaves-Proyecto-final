@@ -6,17 +6,17 @@ const PetCard = () => {
   const { store } = useContext(Context);
   const { theid } = useParams();
   const [detail, setDetail] = useState(null);
-  const [mainImage, setMainImage] = useState(null); // Estado para la imagen principal
+  const [mainImage, setMainImage] = useState("https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Imagen principal inicial
 
   const findDetail = () => {
     const result = store.petData.find((item) => item.id == theid);
     setDetail(result);
-    setMainImage(result?.image); // Establecemos la imagen principal
+    setMainImage(result?.image || "https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Establecemos la imagen principal
   };
 
   useEffect(() => {
     findDetail();
-  }, []);
+  }, [theid]);
 
   return (
     <div className="pet-card-container">
@@ -39,53 +39,63 @@ const PetCard = () => {
       </div>
 
       <div className="row">
-        {/* Main image and gallery */}
+        {/* Imagen y carrousel */}
         <div className="col-md-6 image-section">
           {/* Imagen principal */}
-          <img
-            className="main-image img-fluid rounded"
-            src={mainImage}
-            alt={detail?.name}
-          />
-          <div className="gallery d-flex mt-3 flex-wrap justify-content-center">
-            {/* Galería de imágenes */}
-            {detail?.gallery?.slice(0, 4).map((img, index) => (
-              <img
-                key={index}
-                className="img-thumbnail mx-1 mt-3"
-                src={img}
-                alt={`Gallery ${index}`}
-                style={{ width: "23%", height: "100px", cursor: "pointer" }}
-                onClick={() => setMainImage(img)} // Cambia la imagen principal al hacer clic
-              />
-            ))}
+          <div className="main-image-container">
+            <img
+              className="main-image img-fluid rounded"
+              src={mainImage}
+              alt="Main Pet"
+            />
           </div>
-          <div className="share-icons mt-3">
-            <span>Share:</span>
-            <a
-              href="https://www.facebook.com"
-              className="text-secondary mx-1"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fa-brands fa-facebook"></i>
-            </a>
-            <a
-              href="https://www.twitter.com"
-              className="text-secondary mx-1"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fa-brands fa-twitter"></i>
-            </a>
-            <a
-              href="https://www.instagram.com"
-              className="text-secondary mx-1"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fa-brands fa-instagram"></i>
-            </a>
+
+          {/* Miniaturas debajo de la imagen principal */}
+          <div className="image-thumbnails mt-3 d-flex">
+            <img
+              className="thumbnail img-fluid mx-2"
+              src="https://via.placeholder.com/150x100"
+              alt="Thumbnail 1"
+              style={{ width: "80px", height: "auto", cursor: "pointer" }}
+              onClick={() => setMainImage("https://via.placeholder.com/600x400")}
+            />
+            <img
+              className="thumbnail img-fluid mx-2"
+              src="https://via.placeholder.com/150x100/ff7f7f"
+              alt="Thumbnail 2"
+              style={{ width: "80px", height: "auto", cursor: "pointer" }}
+              onClick={() => setMainImage("https://via.placeholder.com/600x400/ff7f7f")}
+            />
+            <img
+              className="thumbnail img-fluid mx-2"
+              src="https://via.placeholder.com/150x100/7fff7f"
+              alt="Thumbnail 3"
+              style={{ width: "80px", height: "auto", cursor: "pointer" }}
+              onClick={() => setMainImage("https://via.placeholder.com/600x400/7fff7f")}
+            />
+            <img
+              className="thumbnail img-fluid mx-2"
+              src="https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"
+              alt="Thumbnail 4"
+              style={{ width: "80px", height: "auto", cursor: "pointer" }}
+              onClick={() => setMainImage("https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg")}
+            />
+          </div>
+
+          {/* Botón Share debajo de la carrousel */}
+          <div className="share-section mt-3">
+            <h5>Share</h5>
+            <div className="social-share d-flex justify-content-start">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https://your-website.com" target="_blank" className="btn btn-outline-secondary mx-2">
+                <i className="fab fa-facebook"></i>
+              </a>
+              <a href="https://twitter.com/intent/tweet?url=https://your-website.com" target="_blank" className="btn btn-outline-secondary mx-2">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a href="https://wa.me/?text=https://your-website.com" target="_blank" className="btn btn-outline-secondary mx-2">
+                <i className="fab fa-whatsapp"></i>
+              </a>
+            </div>
           </div>
         </div>
 
@@ -93,14 +103,14 @@ const PetCard = () => {
         <div className="col-md-6 info-section">
           <h3 className="text-primary">{detail?.name}</h3>
           <p className="text-danger" style={{ fontSize: "1.5rem" }}>
-              {/* Se va a manejar como un estado?*/}
             Perdido/Encontrado el {detail?.lostDate}
           </p>
           <a
-            href="https://example.com/contact"
+            href="#contactForm"
             className="btn btn-primary mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#contactModal"
           >
-                 {/* Conecta con la info de contacto??*/}
             Comunicarse
           </a>
           <table className="table">
@@ -128,7 +138,6 @@ const PetCard = () => {
                 <td>{detail?.color}</td>
               </tr>
               <tr>
-                {/* Acá van a ir coordenadas? */}
                 <th scope="row">Se perdió en:</th>
                 <td>{detail?.location}</td>
               </tr>
@@ -137,6 +146,69 @@ const PetCard = () => {
           <p>
             <strong>Información adicional:</strong> {detail?.additionalInfo}
           </p>
+        </div>
+      </div>
+
+      {/* Modal para contacto */}
+      <div
+        className="modal fade"
+        id="contactModal"
+        tabIndex="-1"
+        aria-labelledby="contactModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="contactModalLabel">
+                Enviar un mensaje
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">
+                    Tu Correo Electrónico
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    placeholder="Tu correo"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="message" className="form-label">
+                    Tu Mensaje
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="message"
+                    rows="3"
+                    placeholder="Escribe tu mensaje aquí"
+                  ></textarea>
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="button" className="btn btn-primary">
+                Enviar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
