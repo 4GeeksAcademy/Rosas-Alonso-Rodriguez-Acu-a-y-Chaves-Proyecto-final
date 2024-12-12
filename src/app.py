@@ -133,7 +133,7 @@ def update_password(id):
     user = User.query.filter_by(security_question=body['security_question']).first()
     if user.security_question != body['security_question']:
         return jsonify({'msg': 'Respuesta incorrecta a la security question'}),400
-    user = User.query.get(id)
+    if user.id = User.query.get(id)
     user.password = body['new_password']
     db.session.commit()
     return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})

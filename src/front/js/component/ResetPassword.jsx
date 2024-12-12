@@ -25,14 +25,13 @@ const ResetPassword = () => {
 
     try {
       // Llamada a la API
-      const response = await fetch("http://localhost:5000/user/1", {
+      const response = await fetch("https://sturdy-space-invention-q7947gjpqj76fx57r-3001.app.github.dev/user/1", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          security_question: "¿Cuál es mi animal favorito?",
-          security_answer: securityAnswer,
+          security_question: securityAnswer,
           new_password: newPassword,
         }),
       });
