@@ -133,7 +133,7 @@ def update_password(id):
     user = User.query.filter_by(security_question=body['security_question']).first()
     if user.security_question != body['security_question']:
         return jsonify({'msg': 'Respuesta incorrecta a la security question'}),400
-    if user.id = User.query.get(id)
+    user = User.query.get(id)
     user.password = body['new_password']
     db.session.commit()
     return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
@@ -217,6 +217,15 @@ def create_post_description():
     db.session.commit()
     return jsonify({'msg':'Post creado exitosamente', 'data': new_post.serialize()}), 201
 #######
+
+#GET All pets Matias 17:46PM 3/12/24..Update: working 11:43AM 4/12/24
+@app.route('/pets', methods=['GET'])
+def get_all_pets():
+    pets = Pet.query.all()
+    pets_serialized = []
+    for pet in pets:
+       pets_serialized.append(pet.serialize())
+    return jsonify({'msg': 'ok', 'data': pets_serialized}), 200
 
 
 # any other endpoint will try to serve it like a static file
