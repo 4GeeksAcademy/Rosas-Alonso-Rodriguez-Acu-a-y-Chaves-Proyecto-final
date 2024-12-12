@@ -3,8 +3,8 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import Cloudinary from "../component/cloudinary";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet"
+// import "leaflet/dist/leaflet.css";
+// import L from "leaflet"
 import UbicationMap from "../component/ubication_map";
 
 const NewPetLost = () => {

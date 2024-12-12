@@ -1,15 +1,8 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-<<<<<<< HEAD
 			message: null,
 			demo: [
-=======
-
-			message: null,
-			demo: [
-
->>>>>>> Development
 				{
 					title: "FIRST",
 					background: "white",

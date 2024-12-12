@@ -12,6 +12,16 @@ const PetsView = () => {
     sex: "",   // Sexo de la mascota (macho o hembra)
   });
 
+const BringAllPetsAPI = () => {
+      fetch('https://super-duper-dollop-x5rqv9jj6pv7cvx4p-3001.app.github.dev/pets')
+      .then((resp) => resp.json())
+      .then((data) => {
+        setPets(data.data);
+        setFilteredPets(data.data); // Mostrar todo inicialmente      
+        })
+}
+
+
   // Simulación de datos o carga desde una API
   useEffect(() => {
     const petData = [
@@ -120,7 +130,7 @@ const PetsView = () => {
                   <input
                     type="radio"
                     name="color"
-                    value="negro"
+                    value="blanco"
                     className="form-check-input"
                     onChange={handleFilterChange}
                   />
@@ -139,7 +149,7 @@ const PetsView = () => {
                   <input
                     type="radio"
                     name="color"
-                    value="negro"
+                    value="gris"
                     className="form-check-input"
                     onChange={handleFilterChange}
                   />
@@ -236,13 +246,13 @@ const PetsView = () => {
             {filteredPets.map((pet) => (
               <div className="col-md-4 mb-3" key={pet.id}>
                 <div className="card">
-                  <img src={pet.image} className="card-img-top" alt={pet.name} />
+                  <img src={pet.photo_1} className="card-img-top" alt={pet.name} />
                   <div className="card-body">
                     <h5 className="card-title">{pet.name}</h5>
                     <p className="card-text">
                       Tipo: {pet.type} <br />
                       Color: {pet.color} <br />
-                      Tamaño: {pet.size}
+                      Sexo: {pet.size}
                     </p>
                     <Link to={`/petcard/${pet.id}`}>Más información</Link>
                   </div>
