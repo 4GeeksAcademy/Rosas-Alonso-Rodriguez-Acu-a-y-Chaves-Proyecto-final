@@ -16,6 +16,9 @@ import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import NewPetLost from "./pages/newPetLost.js";
 import NewFoundPet from "./pages/newFoundPet.js"; 
+import ResetPassword from "./component/ResetPassword.jsx";
+import PetView from "./component/PetView.jsx";
+import PetCard from "./component/PetCard.jsx";
 import UbicationMap from "./component/ubication_map.js";
 
 //create your first component
@@ -41,6 +44,10 @@ const Layout = () => {
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<User />} path="/user" />
                         <Route element={<Login />} path="/login" />
+                        <Route element={<ResetPassword/>} path="/forgot-password" />
+                        <Route element={<PetView/>} path="/petview"/>
+                        <Route element= {<PetCard/>} path="/petcard/:theid" />
+
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>

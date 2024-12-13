@@ -218,6 +218,15 @@ def create_post_description():
     return jsonify({'msg':'Post creado exitosamente', 'data': new_post.serialize()}), 201
 #######
 
+#GET All pets Matias 17:46PM 3/12/24..Update: working 11:43AM 4/12/24
+@app.route('/pets', methods=['GET'])
+def get_all_pets():
+    pets = Pet.query.all()
+    pets_serialized = []
+    for pet in pets:
+       pets_serialized.append(pet.serialize())
+    return jsonify({'msg': 'ok', 'data': pets_serialized}), 200
+
 
 # any other endpoint will try to serve it like a static file
 @app.route('/<path:path>', methods=['GET'])

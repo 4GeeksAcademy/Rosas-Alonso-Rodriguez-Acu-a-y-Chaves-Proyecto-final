@@ -48,7 +48,7 @@ class Pet(db.Model):
     __tablename__ ="pet"
     id = db.Column (db.Integer, primary_key=True)
     name = db.Column (db.String(30))
-    breed = db.Column (db.Integer, db.ForeignKey("breed.id"))
+    breed = db.Column (db.Integer, db.ForeignKey("breed.id")) # bread_id
     gender = db.Column (db.Enum(Genders))
     color = db.Column (db.String(15))
     photo_1 = db.Column (db.String(120), nullable=False)
@@ -58,15 +58,14 @@ class Pet(db.Model):
     user_id = db.Column (db.Integer, db.ForeignKey("user.id"))
     user = db.relationship ("User", back_populates="pet")
     post = db.relationship("Post_Description", back_populates="pet_relationship")
-    breed_relationship = db.relationship("Breed", back_populates= "pets")
+    breed_relationship = db.relationship("Breed", back_populates= "pets") # breed
     
     def __repr__(self):
-        return f'<Pet {self.name, self.species, self.color, self.user}>'
+        return f'<Pet {self.name, self.color, self.user}>'
 
     def serialize(self):
         return{
             "name" : self.name,
-            "species" : self.species,
             "breed" : self.breed,
             "color": self.color,
             "photo_1": self.photo_1,

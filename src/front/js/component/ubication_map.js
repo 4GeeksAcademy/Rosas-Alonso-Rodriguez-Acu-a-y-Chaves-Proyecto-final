@@ -1,25 +1,25 @@
 import React, { useState } from "react";
-import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet'
-import { Icon, divIcon, map } from "leaflet"
-import MarkerClusterGroup from 'react-leaflet-cluster';
-import L from "leaflet"
+// import "leaflet/dist/leaflet.css";
+// import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet'
+// import { Icon, divIcon, map } from "leaflet"
+// import MarkerClusterGroup from 'react-leaflet-cluster';
+// import L from "leaflet"
 
 const UbicationMap = ({ coordenates }) => {
 
-  const CustomIcon = L.divIcon({
-    html: '<i class="fa-solid fa-paw"></i>',
-    className: "custom-icon",
-    iconSize: [24, 24],
-    iconAnchor: [12, 24]
-  })
+  // const CustomIcon = L.divIcon({
+  //   html: '<i class="fa-solid fa-paw"></i>',
+  //   className: "custom-icon",
+  //   iconSize: [24, 24],
+  //   iconAnchor: [12, 24]
+  // })
 
   const [position, setPosition] = useState(null)
   function ClickHandler() {
     useMapEvents({
       click: (e) => {
         const { lat, lng } = e.latlng;
-        const newPosition = {lat, lng} 
+        const newPosition = { lat, lng }
         setPosition(newPosition);
         console.log(`Latitud: ${lat}, Longitud: ${lng}`);
         if (coordenates) {

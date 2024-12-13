@@ -377,7 +377,6 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==2.10.1"
-
         },
         "python-dotenv": {
             "hashes": [
