@@ -41,6 +41,28 @@
     font-style: normal;
   }
 
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  #root {
+    height: 100vh;
+  }
+
+  /*Tama;o del mapa*/
+  .leaflet-container {
+    height: 100vh;
+  }
+
+  .custom-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 37px;
+    color: red;
+  }
+
   .leaflet-container {
     height: 400px; 
     width: 100%;

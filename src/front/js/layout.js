@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
-
+import Map from "./component/Map";
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
@@ -35,7 +35,8 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
-                        <Route element={<Home />} path="/" />
+                        <Route element={<Home />} path="/" />                        
+                        <Route element={<Map />} path="/map" />  
                         <Route element ={<NewPetLost />} path="/newpetlost" />
                         <Route element = {<NewFoundPet/>} path = "/newpetfound"/>
                         <Route element = {<UbicationMap/>} path = "/ubicationmap"/>
