@@ -189,3 +189,21 @@ p {
 color: darkblue;
 font-size: 30px;
 }
+
+
+.btn-primary:hover {
+  background-color: #004a99; /* Azul oscuro más claro al pasar el cursor */
+}
+
+/* Color del nombre */
+.text-primary {
+  color: #002f6c !important; /* Azul oscuro */
+}
+
+/* Iconos sin recuadro */
+.btn-outline-secondary {
+  border: none; /* Sin recuadro */
+  background: none; /* Sin fondo */
+  padding: 0;
+}
+

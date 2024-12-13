@@ -28,14 +28,14 @@ const PetCard = () => {
         >
           Home
         </a>{" "}
-        /{" "}
+        >{" "}
         <a
           href="https://sturdy-space-invention-q7947gjpqj76fx57r-3000.app.github.dev/PetView"
           className="text-secondary mx-2"
         >
           Mascotas
         </a>{" "}
-        / More Info
+         > Más información
       </div>
 
       <div className="row">
@@ -110,41 +110,48 @@ const PetCard = () => {
             className="btn btn-primary mb-3"
             data-bs-toggle="modal"
             data-bs-target="#contactModal"
+            style={{
+              backgroundColor: "darkblue", // Azul marino
+              borderRadius: "20px", // Bordes curvos
+              color: "white", // Texto blanco
+              padding: "10px 20px", // Espaciado interno
+              border: "none", // Sin borde adicional
+              fontSize: "16px", // Tamaño del texto
+            }}
           >
             Comunicarse
           </a>
           <table className="table">
             <tbody>
               <tr>
-                <th scope="row">Nombre:</th>
+                <th scope="row">NOMBRE:</th>
                 <td>{detail?.name}</td>
               </tr>
               <tr>
-                <th scope="row">Sexo:</th>
+                <th scope="row">SEXO:</th>
                 <td>{detail?.gender}</td>
               </tr>
               <tr>
-                <th scope="row">Edad:</th>
+                <th scope="row">EDAD:</th>
                 <td>{detail?.age}</td>
               </tr>
               <tr>
-                <th scope="row">
-                  <span style={{ fontSize: "1.3rem" }}>Tamaño:</span>
+                <th scope="row">TAMAÑO:
                 </th>
                 <td>{detail?.size}</td>
               </tr>
               <tr>
-                <th scope="row">Color:</th>
+                <th scope="row">COLOR:</th>
                 <td>{detail?.color}</td>
               </tr>
               <tr>
-                <th scope="row">Se perdió en:</th>
+                <th scope="row">SE PERDIÓ EN:</th>
                 <td>{detail?.location}</td>
               </tr>
             </tbody>
           </table>
           <p>
-            <strong>Información adicional:</strong> {detail?.additionalInfo}
+            <strong>INFORMACIÓN ADICIONAL:</strong> {detail?.additionalInfo}
           </p>
         </div>
       </div>
