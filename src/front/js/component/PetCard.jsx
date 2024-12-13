@@ -84,7 +84,7 @@ const PetCard = () => {
 
           {/* Botón Share debajo de la carrousel */}
           <div className="share-section mt-3">
-            <h5>Share</h5>
+            <h5>Compartir</h5>
             <div className="social-share d-flex justify-content-start">
               <a href="https://www.facebook.com/sharer/sharer.php?u=https://your-website.com" target="_blank" className="btn btn-outline-secondary mx-2">
                 <i className="fab fa-facebook"></i>
