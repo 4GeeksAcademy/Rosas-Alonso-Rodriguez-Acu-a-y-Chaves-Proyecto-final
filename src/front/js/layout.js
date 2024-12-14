@@ -7,15 +7,16 @@ import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
-import  User  from "./component/user";
-import  Login  from "./component/login";
-import  Signup  from "./component/signup";
+import User from "./component/user";
+import Login from "./component/login";
+import Signup from "./component/signup";
+import Que_es from "./component/signup";
 
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import NewPetLost from "./pages/newPetLost.js";
-import NewFoundPet from "./pages/newFoundPet.js"; 
+import NewFoundPet from "./pages/newFoundPet.js";
 import UbicationMap from "./component/ubication_map.js";
 
 import PetView from "./component/PetView.jsx";
@@ -28,7 +29,7 @@ const Layout = () => {
     // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
 
     return (
         <div>
@@ -36,18 +37,19 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
-                        <Route element={<Home />} path="/" />                        
-                        <Route element={<Map />} path="/map" />  
-                        <Route element ={<NewPetLost />} path="/newpetlost" />
-                        <Route element = {<NewFoundPet/>} path = "/newpetfound"/>
-                        <Route element = {<UbicationMap/>} path = "/ubicationmap"/>
+                        <Route element={<Home />} path="/" />
+                        <Route element={<Map />} path="/map" />
+                        <Route element={<NewPetLost />} path="/newpetlost" />
+                        <Route element={<NewFoundPet />} path="/newpetfound" />
+                        <Route element={<UbicationMap />} path="/ubicationmap" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<User />} path="/user" />
                         <Route element={<Login />} path="/login" />
+                        <Route element={<Que_es />} path="/que_es" />
                         <Route element={<Signup />} path="/signup" />
-                        <Route element={<PetView/>} path="/petview"/>
-                        <Route element= {<PetCard/>} path="/petcard/:theid"/>
+                        <Route element={<PetView />} path="/petview" />
+                        <Route element={<PetCard />} path="/petcard/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>
