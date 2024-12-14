@@ -74,13 +74,13 @@ export const Navbar = () => {
 							</Link>
 						</li>
 						<li className="nav-item">
-							<Link to="/map" className="adlam-display-regular nav-link  me-2" href="#">
-								Mapa
+							<Link to="/que_es" className="adlam-display-regular nav-link  me-2" href="#">
+								¿Qué es?
 							</Link>
 						</li>
 						<li className="nav-item">
-							<Link to="/que_es" className="adlam-display-regular nav-link  me-2" href="#">
-								¿Qué es?
+							<Link to="/map" className="adlam-display-regular nav-link  me-2" href="#">
+								Mapa
 							</Link>
 						</li>
 						<li className="nav-item">

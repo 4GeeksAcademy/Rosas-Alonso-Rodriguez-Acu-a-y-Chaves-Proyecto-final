@@ -10,7 +10,7 @@ import injectContext from "./store/appContext";
 import User from "./component/user";
 import Login from "./component/login";
 import Signup from "./component/signup";
-import Que_es from "./component/signup";
+import Que_es from "./component/que_es";
 
 
 import { Navbar } from "./component/navbar";
