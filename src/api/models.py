@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from enum import Enum
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
@@ -98,7 +99,7 @@ class Post_Description (db.Model):
                 "latitude": self.latitude,
                 "description" : self.description,
                 "event_date" : self.event_date,
-                "pet_status" : self.pet_status
+                "pet_status" : self.pet_status.value if self.pet_status else None
             }
 
 class Breed (db.Model):
@@ -115,6 +116,6 @@ class Breed (db.Model):
             return{    
                 "breed_id": self.id,
                 "breed": self.name,
-                "specie" : self.longitude,
+                "species" : self.species,
                 "pet" : self.pets
             }

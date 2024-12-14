@@ -3,6 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
+from sqlalchemy.exc import IntegrityError
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
@@ -10,7 +11,7 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
-from api.models import db, User, Pet, Post_Description, Breed, Genders
+from api.models import db, User, Pet, Post_Description, Breed, Genders, PetStatus
 from flask_cors import CORS 
 
 from flask_jwt_extended import create_access_token
@@ -58,7 +59,6 @@ def handle_invalid_usage(error):
 
 # generate sitemap with all your endpoints
 
-
 @app.route('/')
 def sitemap():
     if ENV == "development":
@@ -79,7 +79,7 @@ def get_users():
 @app.route('/user', methods=['POST'])
 def create_user():
     body = request.get_json(silent=True)
-    if body is None: 
+    if body is None:
         return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
     if 'name' not in body: 
         return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
@@ -114,9 +114,9 @@ def login():
         return jsonify({'msg': 'El campo password es obligatorio'}), 400
     user = User.query.filter_by(email=body['email']).first()
     if user is None:
-        return jsonify({'msg': "email is invalid"}), 400 #CAMBIAR por email or password is invalid
+        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
     if user.password != body['password']:
-        return jsonify({'msg': "password is invalid"}), 400 #CAMBIAR por email or password is invalid
+        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
     access_token = create_access_token(identity=user.email) 
     return jsonify({'msg': 'ok', 'token': access_token}), 200 
 
@@ -152,29 +152,118 @@ def private():
 
 #PET
 #Creación de nueva mascota:
-@app.route('/pet', methods=['POST'])
+@app.route('/create_pet', methods=['POST'])
+@jwt_required()
 def create_pet():
-    body = request.get_json(silent=True)
-    if body is None: 
-        return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
-    if 'name' not in body: 
-        return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
-    if 'breed' not in body: 
-        return jsonify({'msg': "El campo 'breed' es obligatorio"}), 400
-    if 'gender' not in body:
-        return jsonify({'msg': "El campo 'gender' es obligatorio"}), 400
-    if 'photo_1' not in body:
-        return jsonify({'msg': "El campo 'photo_1' es obligatorio"}), 400
+    try:
+        jwt_email = get_jwt_identity()
+        user = User.query.filter_by(email=jwt_email).first()
+        
+        body = request.get_json(silent=True)
+        print(body)
+        if body is None: 
+            return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
 
-    new_pet = Pet(
-        name = body['name'],
-        breed = body['breed'],
-        gender= body['gender'],
-        photo_1=body['photo_1']
-    )
-    db.session.add(new_pet)
+        required_fields = ["name", "breed", "gender", "photo_1"]
+        for field in required_fields:
+            if field not in body:
+                return jsonify({'msg': f"El campo {field} es obligatorio"}), 400
+
+        breed_name = body.get('breed')
+        species = body.get('species')
+        breed = Breed.query.filter_by(name=breed_name, species=species).first()
+        if not breed:
+            breed = Breed(name=breed_name, species=species)
+            db.session.add(breed)
+            db.session.flush()
+
+        new_pet = Pet(
+            name = body['name'],
+            breed = breed.id,
+            gender= body['gender'],
+            color=body['color'],
+            photo_1=body['photo_1'],
+            photo_2=body.get ('photo_2'),
+            photo_3=body.get ('photo_3'),
+            photo_4=body.get ('photo_4'),
+            user_id = user.id,
+        )
+        db.session.add(new_pet)
+        db.session.flush()
+
+        post_description = Post_Description(
+            pet_id = new_pet.id,
+            longitude = body['longitude'],
+            latitude = body['latitude'],
+            description = body['description'],
+            zone = body['zone'],
+            event_date = body['event_date'],
+            pet_status = PetStatus[body['pet_status']]
+        )
+        db.session.add(post_description)
+        db.session.commit()
+        
+        return jsonify({
+            "msg": "Mascota, raza y post creados exitosamente",
+            "data": {
+                "post_description":post_description.serialize()
+                }
+                }), 201
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'msg':'Error', 'data': 'Posibles entradas duplicadas'}), 400
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return jsonify({'msg':'Error', 'data': str(e)}), 500
+
+
+#Editar mascota:
+@app.route('/pet/<int:id>', methods=['PUT'])
+#@jwt_required()  para q sea accesible solo si el usuario tiene un token válido?
+def edit_pet(id):
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
+    pet = Pet.query.get(id) #
+    if not pet:
+        return jsonify({'msg': 'Mascota no encontrada'}), 404
+
+    if 'name' in body:
+        pet.name = body['name']
+    if 'breed' in body:
+        pet.breed = body['breed']
+    if 'gender' in body:
+        pet.gender = body['gender']
+    if 'color' in body:
+        pet.color = body['color']
+    if 'photo_1' in body:
+        pet.photo_1 = body['photo_1']
+    if 'photo_2' in body:
+        pet.photo_2 = body['photo_2']
+    if 'photo_3' in body:
+        pet.photo_3 = body['photo_3']
+    if 'photo_4' in body:
+        pet.photo_4 = body['photo_4']
+    
     db.session.commit()
-    return jsonify({'msg':'Mascota creada exitosamente', 'data': new_pet.serialize()}), 201
+    return jsonify({'msg': 'Mascota actualizada exitosamente', 'data': pet.serialize()}), 201
+
+#Eliminar mascota:
+@app.route('/pet/<int:id>', methods=['DELETE'])
+#@jwt_required()  para q sea accesible solo si el usuario tiene un token válido?
+def delete_pet(id):
+    pet = Pet.query.get(id)
+    if not pet:
+        return jsonify({'msg': 'Mascota no encontrada'}), 404
+    
+    for post in pet.post: #esto elimina los posts relacionados a esa mascota
+        db.session.delete(post)
+    
+    db.session.delete(pet)
+    db.session.commit()
+    return jsonify({'msg': 'Mascota eliminada exitosamente'}), 201
+##########
 
 #Creación de un nuevo post con la descripción de la mascota:
 @app.route('/post_description', methods=['POST'])

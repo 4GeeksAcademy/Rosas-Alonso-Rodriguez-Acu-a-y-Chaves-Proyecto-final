@@ -31,6 +31,7 @@ const NewFoundPet = () => {
       ...newPet, [e.target.id]: e.target.value
     })
   }
+
   console.log(newPet);
 
 
@@ -38,7 +39,7 @@ const NewFoundPet = () => {
     e.preventDefault();
     console.log("enviando post", newPet);
     actions.addNewPet(newPet);
-    navigate("/map");
+    //navigate("/map");
   };
 
   return (

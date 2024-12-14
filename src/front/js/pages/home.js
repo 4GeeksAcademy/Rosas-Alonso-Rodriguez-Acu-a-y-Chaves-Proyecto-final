@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/home.css";
 import "../../styles/home.css";
+import { Link } from "react-router-dom";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
@@ -26,9 +27,13 @@ export const Home = () => {
 						de historias felices nos respaldan.
 					</p>
 					<div className=" row d-flex justify-content">
-						<Link to="/newpetlost"><button className="btn btn-danger col-sm-3 rounded-pill btn-md shadow">Perdí a mi mascota</button></Link>
+						<Link to = "/newpetlost">
+						<button className="btn btn-danger col-sm-3 rounded-pill btn-md shadow">Perdí a mi mascota</button>
+						</Link>
 						<div className="w-100 mt-3"></div>
-						<Link to="/newpetfound"><button className="btn btn-success col-sm-3 rounded-pill btn-md shadow">Encontré una mascota</button></Link>
+						<Link to="/newpetfound">
+						<button className="btn btn-success col-sm-3 rounded-pill btn-md shadow">Encontré una mascota</button>
+						</Link>
 					</div>
 				</div>
 			</div>

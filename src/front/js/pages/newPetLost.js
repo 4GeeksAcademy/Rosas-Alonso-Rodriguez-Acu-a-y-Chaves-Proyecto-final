@@ -12,7 +12,7 @@ const NewPetLost = () => {
   const { store, actions } = useContext(Context)
 
   const [newPet, setNewPet] = useState({
-    "user_id": 2,
+    
     "name": "",
     "species": "",
     "breed": "",
@@ -45,7 +45,7 @@ const NewPetLost = () => {
     console.log("enviando post", newPet);
     actions.addNewPet(newPet);
     console.log("enviado");
-    navigate("/map")
+    // navigate("/map")
   };
 
   const CustomIcon = L.divIcon({
