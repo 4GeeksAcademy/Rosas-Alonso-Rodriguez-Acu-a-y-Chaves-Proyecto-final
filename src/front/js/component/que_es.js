@@ -25,7 +25,7 @@ const Que_es = () => {
             </div>
 
             {/* Sección 2: Cómo publicar una mascota */}
-            <div className="row md-5 bg-light bg-opacity-75 rounded-1 mb-4 p-4">
+            <div className="par row md-5 bg-light bg-opacity-75 rounded-1 mb-4 p-4">
                 <div className="col-md-6 order-md-2">
                     <h3 className="adlam-display-regular user-title">¿Cómo publicar una mascota perdida o encontrada?</h3>
                     <p>
@@ -64,7 +64,7 @@ const Que_es = () => {
             </div>
 
             {/* Sección 4: Contacto con los usuarios */}
-            <div className="row md-5 bg-light bg-opacity-75 rounded-1 mb-4 p-4">
+            <div className="par row md-5 bg-light bg-opacity-75 rounded-1 mb-4 p-4">
                 <div className="col-md-6 order-md-2">
                     <h3 className="adlam-display-regular user-title">¿Cómo contactar con el usuario?</h3>
                     <p>
