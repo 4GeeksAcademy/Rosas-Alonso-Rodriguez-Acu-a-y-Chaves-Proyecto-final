@@ -1,26 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logotipo from "../../img/PatasperdidasPNG.png"
 
 
 export const Navbar = () => {
 	const [logged, setLogged] = useState(false)
-	const [user, setUser] = useState("Usuario");
+	const [user, setUser] = useState(null);
 
-	const loginStatus = () => {
-		// Aquí podrías integrar lógica de autenticación
-		setUser("Juan Pérez"); // Simula que obtuviste el nombre del usuario
-		setLogged(true); // Cambia el estado a "logueado"
+	useEffect(() => {
+		//comprueba si el usuario está logueado o no
+		const checkAuthStatus = () => {
+			const token = sessionStorage.getItem("token");
+			if (token) {
+				setLogged(true);
+				/*fetchUserProfile(token)*/
+			} else {
+				setLogged(false);
+				setUser("Usuario");
+			}
+		};
+
+		checkAuthStatus(); //chequeo al inicio
+
+		//revisa cada 1 segundo si el token cambió
+		const intervalId = setInterval(checkAuthStatus, 1000); // 1 segundo
+
+		return () => clearInterval(intervalId);
+	}, []); // se ejecuta solo una vez cuando el componente se monta
+
+
+	/* const fetchUserProfile = async (token) => {
+		try {
+			const response = await fetch(`${process.env.BACKEND_URL}/logged_user`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${token}`  // Enviar el token en los headers
+				}
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				setUser(data.usuario); // Guardar la información del usuario (nombre, etc.)
+			} else {
+				console.error("Error al obtener el perfil", data.msg);
+			}
+		} catch (error) {
+			console.error("Error de conexión", error);
+		}
+	}; */
+
+	const handleLogout = () => {
+		sessionStorage.removeItem("token");
+		setLogged(false);
+		setUser(null); // Limpiar el estado de usuario al cerrar sesión
 	};
-	return (
 
+	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
 			<div className="container ">
-				<Link to="/" className="nav-link"  ><img width="50" height="50" src={logotipo} alt="logo"></img></Link>
+				<Link to="/" className="nav-link">
+					<img width="50" height="50" src={logotipo} alt="logo" />
+				</Link>
 				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<span className="navbar-toggler-icon"></span>
 				</button>
-				<div className="collapse navbar-collapse" id="navbarNav">
+				<div className="adlam-display-regular collapse navbar-collapse" id="navbarNav">
 					<ul className="navbar-nav ms-auto ">
 						<li className="nav-item">
 							<Link to="/" className="adlam-display-regular nav-link me-2" href="#">
@@ -42,17 +88,25 @@ export const Navbar = () => {
 								Mascotas
 							</Link>
 						</li>
-						<li className="nav-item d-flex align-items-center">
-							<input className="form-control border-0  me-2" type="text" placeholder="🔎 Search" ></input>
-						</li>
 					</ul>
+
+
+					{/* PRUEBA NAVBAR EDITAR PERFIL Y CERRAR SESIÓN */}
 					{logged ? (
-						<div className="navbar-nav ms-auto" >
-						<Link to="/user" href="#" className=" adlam-display-regular nav-link nav-item">{user}</Link>
-						<button className=" adlam-display-regular btn btn-warning  btn-sm nav-item " onClick={loginStatus} >Cerrar sesión</button>
-					</div>
+						<li className="nav-item dropdown">
+							<a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Mi perfil
+							</a>
+							<ul className="dropdown-menu">
+								<li><a className="dropdown-item" href="/user">Editar perfil</a></li>
+								<li><hr className="dropdown-divider" /></li>
+								<li>
+									<button className="adlam-display-regular btn nav-item dropdown-item" style={{ "color": "red" }} onClick={handleLogout}>Cerrar sesión</button>
+								</li>
+							</ul>
+						</li>
 					) : (
-						<Link to="/login"><button className=" adlam-display-regular btn btn-primary ms-2 rounded-pill btnStart" onClick={loginStatus} >Iniciar sesión</button></Link>
+						<Link to="/login"><button className=" adlam-display-regular btn btn-primary ms-2 rounded-pill btnStart">Iniciar sesión</button></Link>
 					)}
 				</div>
 			</div>
