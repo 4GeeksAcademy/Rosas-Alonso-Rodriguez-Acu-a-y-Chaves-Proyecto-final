@@ -33,7 +33,7 @@ const User = () => {
                             <label htmlFor="new-password" className="form-label">Nueva contraseña</label>
                             <input type="password" id="new-password" className="form-control" />
                         </div>
-                        <div class="d-grid gap-2 col-6 mx-auto">
+                        <div className="d-grid gap-2 col-6 mx-auto">
                             <button type="submit" className="  btn btn-primary rounded-pill btnStart">Guardar</button>
                         </div>
                     </form>
