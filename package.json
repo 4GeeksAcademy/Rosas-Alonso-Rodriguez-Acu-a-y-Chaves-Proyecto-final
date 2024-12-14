@@ -80,6 +80,7 @@
 		"react-leaflet": "^4.2.1",
 		"react-leaflet-cluster": "^2.1.0",
 		"react-polyfills": "0.0.1",
-		"react-router-dom": "^6.3.0"
+		"react-router-dom": "^6.3.0",
+		"sweetalert2": "^11.15.0"
 	}
 }

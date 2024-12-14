@@ -45,8 +45,7 @@ const NewPetLost = () => {
     console.log("enviando post", newPet);
     actions.addNewPet(newPet);
     console.log("enviado");
-    // navigate("/map")
-  };
+    };
 
   const CustomIcon = L.divIcon({
     html: '<i class="fa-solid fa-paw"></i>',

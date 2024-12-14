@@ -1,3 +1,6 @@
+import { Navigate } from "react-router-dom";
+import Swal from "sweetalert2";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -58,14 +61,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 				})
 					.then((response) => {
 						console.log(response);
+						if (!response.ok) {
+							throw new Error ("Error al realizar el registro")
+						}
 						return response.json()
 					})
 					.then((data) => {
 						console.log(data);
 						console.log("mascota y post creado");
-
+						Swal.fire({
+							position: "top-end",
+							icon: "success",
+							title: "La mascota fue registrada con exito",
+							showConfirmButton: 'False',
+							timer: 1500
+						  }). then (()=> {Navigate('/map')});
+n
 					})
 					.catch((error) => { console.log(error) })
+					Swal.fire({
+						icon: "error",
+						title: "Oops...",
+						text: "No se pudo realizar el registro. Inténtalo de nuevo",
+						});
+					
 			},
 
 

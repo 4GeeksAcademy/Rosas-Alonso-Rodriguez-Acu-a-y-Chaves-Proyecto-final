@@ -39,8 +39,7 @@ const NewFoundPet = () => {
     e.preventDefault();
     console.log("enviando post", newPet);
     actions.addNewPet(newPet);
-    //navigate("/map");
-  };
+     };
 
   return (
     <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light p-4">
