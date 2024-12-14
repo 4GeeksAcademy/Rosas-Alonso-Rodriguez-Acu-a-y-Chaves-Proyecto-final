@@ -329,6 +329,33 @@ def get_all_pets():
        pets_serialized.append(pet.serialize())
     return jsonify({'msg': 'ok', 'data': pets_serialized}), 200
 
+#endpoint para obtener la info de los posts, para usarla en el mapa.   -Flor
+@app.route('/pet_post', methods=['GET'])
+def get_pet_post():
+    posts = Post_Description.query.all()
+
+    pet_data = []
+    for post in posts:
+        pet = post.pet_relationship  # Relación con la mascota (Pet)
+        
+        pet_data.append({
+            "pet_id": pet.id,
+            "name": pet.name,
+            "breed": pet.breed_relationship.name if pet.breed_relationship else None,
+            "color": pet.color,
+            "photo_1": pet.photo_1,
+            "photo_2": pet.photo_2,
+            "photo_3": pet.photo_3,
+            "photo_4": pet.photo_4,
+            "user_id": pet.user_id,
+            "pet_status": post.pet_status.value,  # El estado de la mascota desde Post_Description
+            "latitude": post.latitude,
+            "longitude": post.longitude
+        })
+
+    return jsonify({'msg': 'ok', 'data': pet_data}), 200
+
+
 
 # any other endpoint will try to serve it like a static file
 @app.route('/<path:path>', methods=['GET'])
