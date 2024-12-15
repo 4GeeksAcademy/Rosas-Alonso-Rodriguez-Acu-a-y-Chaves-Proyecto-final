@@ -332,12 +332,12 @@ def get_all_pets():
 #endpoint para obtener la info de los posts, para usarla en el mapa.   -Flor
 @app.route('/pet_post', methods=['GET'])
 def get_pet_post():
-    posts = Post_Description.query.all()
-
+    posts = Post_Description.query.all()  
     pet_data = []
     for post in posts:
         pet = post.pet_relationship  # Relación con la mascota (Pet)
-        
+        user = pet.user
+        print("aca esta el objeto 'pet': ", pet.serialize())
         pet_data.append({
             "pet_id": pet.id,
             "name": pet.name,
@@ -350,9 +350,17 @@ def get_pet_post():
             "photo_3": pet.photo_3,
             "photo_4": pet.photo_4,
             "user_id": pet.user_id,
+            "user_details": {
+                "id": user.id,
+                "email": user.email,
+                "phone": user.phone,
+                "facebook": user.facebook,
+                "instagram": user.instagram
+            } if user else None, #Modificado
             "pet_status": post.pet_status.value,  # El estado de la mascota desde Post_Description
             "latitude": post.latitude,
-            "longitude": post.longitude
+            "longitude": post.longitude,
+            "description": post.description
         })
 
     return jsonify({'msg': 'ok', 'data': pet_data}), 200
