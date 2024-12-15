@@ -342,6 +342,8 @@ def get_pet_post():
             "pet_id": pet.id,
             "name": pet.name,
             "breed": pet.breed_relationship.name if pet.breed_relationship else None,
+            "species": pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None,  # Se agrego especie
+            "gender": pet.gender.value if pet.gender else None,  # Se agrego género
             "color": pet.color,
             "photo_1": pet.photo_1,
             "photo_2": pet.photo_2,
