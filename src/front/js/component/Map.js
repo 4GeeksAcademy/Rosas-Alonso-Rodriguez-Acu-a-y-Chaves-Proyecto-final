@@ -47,13 +47,6 @@ const Map = () => {
 
   useEffect(() => {
       actions.getAllPetPosts()
-    // fetch(`${process.env.BACKEND_URL}/pet_post`)
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log(data);
-    //     setPets(data.data);
-    //   })
-    //   .catch(error => console.error('Error fetching pets:', error));
   }, []);
 
 

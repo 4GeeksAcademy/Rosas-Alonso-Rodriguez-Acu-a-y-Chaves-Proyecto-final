@@ -332,17 +332,27 @@ def get_all_pets():
 #endpoint para obtener la info de los posts, para usarla en el mapa.   -Flor
 @app.route('/pet_post', methods=['GET'])
 def get_pet_post():
+    species_map = {
+        "1": "Perro",
+        "2": "Gato",
+        "3": "Ave",
+        "4": "Conejo",
+        "5": "Reptil",
+        "6": "Otro"
+    }
     posts = Post_Description.query.all()  
     pet_data = []
     for post in posts:
         pet = post.pet_relationship  # Relación con la mascota (Pet)
         user = pet.user
         print("aca esta el objeto 'pet': ", pet.serialize())
+        species_value = pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None
+        species_description = species_map.get(species_value,"Desconocido")
         pet_data.append({
             "pet_id": pet.id,
             "name": pet.name,
             "breed": pet.breed_relationship.name if pet.breed_relationship else None,
-            "species": pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None,  # Se agrego especie
+            "species": species_description,  # Se agrego especie
             "gender": pet.gender.value if pet.gender else None,  # Se agrego género
             "color": pet.color,
             "photo_1": pet.photo_1,
