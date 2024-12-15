@@ -7,10 +7,14 @@ import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
-import User from "./component/user";
-import Login from "./component/login";
-import Signup from "./component/signup";
+
+import  User  from "./component/user";
+import PrivateRoute from "./component/PrivateRoute.js";
+import  Login  from "./component/login";
+import  Signup  from "./component/signup";
+
 import Que_es from "./component/que_es";
+
 
 
 import { Navbar } from "./component/navbar";
@@ -37,16 +41,22 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
+
+                          
+                        <Route element ={<PrivateRoute><NewPetLost /></PrivateRoute>} path="/newpetlost" />
+                        <Route element = {<PrivateRoute><NewFoundPet/></PrivateRoute>} path = "/newpetfound"/>
+                        
+
                         <Route element={<Home />} path="/" />
                         <Route element={<Map />} path="/map" />
-                        <Route element={<NewPetLost />} path="/newpetlost" />
-                        <Route element={<NewFoundPet />} path="/newpetfound" />
+                        
                         <Route element={<UbicationMap />} path="/ubicationmap" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<User />} path="/user" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Que_es />} path="/que_es" />
+
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<PetView />} path="/petview" />
                         <Route element={<PetCard />} path="/petcard/:theid" />
