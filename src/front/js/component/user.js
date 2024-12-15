@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const User = () => {
+    const [showPasswordFields, setShowPasswordFields] = useState(false);
+    const togglePasswordFields = () => {
+        setShowPasswordFields(!showPasswordFields);
+    };
+
     return (
         <div className="container mt-4">
             <div className="row md-5 p-4 bg-success rounded-1 align-items-start">
@@ -26,16 +31,21 @@ const User = () => {
                                 <input type="email" id="email" className="form-control" placeholder="Ingresa tu email" readOnly />
                             </div>
                             <div className="mb-3">
-                                <a className="text-primary nunito">Cambiar contraseña</a>
+                                <a className="text-primary nunito" onClick={togglePasswordFields} style={{ cursor: 'pointer' }}>Cambiar contraseña</a>
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="current-password" className="form-label">Contraseña actual</label>
-                                <input type="password" id="current-password" className="form-control" />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="new-password" className="form-label">Nueva contraseña</label>
-                                <input type="password" id="new-password" className="form-control" />
-                            </div>
+                            {/* solo se muestran los campos de contraseña si showPasswordFields es true */}
+                            {showPasswordFields && (
+                                <>
+                                    <div className="mb-3">
+                                        <label htmlFor="current-password" className="form-label">Contraseña actual</label>
+                                        <input type="password" id="current-password" className="form-control" />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="new-password" className="form-label">Nueva contraseña</label>
+                                        <input type="password" id="new-password" className="form-control" />
+                                    </div>
+                                </>
+                            )}
                             <div className="d-grid gap-2 col-6 mx-auto">
                                 <button type="submit" className="btn btn-primary rounded-pill btnStart">Guardar</button>
                             </div>
@@ -65,7 +75,7 @@ const User = () => {
                                 Mascota perdida: Canela
                                 <span>
                                     <i className="fa-solid fa-pencil me-2"></i>
-                                    <i className="fa-regular fa-eye-slash"></i>
+                                    <i className="fa-regular fa-trash-can"></i>
                                 </span>
                             </li>
                         </ul>
@@ -73,7 +83,7 @@ const User = () => {
                 </div>
 
             </div>
-        </div>
+        </div >
     );
 };
 
