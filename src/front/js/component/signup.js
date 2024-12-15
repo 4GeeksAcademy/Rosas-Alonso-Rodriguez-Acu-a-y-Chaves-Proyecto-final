@@ -14,7 +14,7 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+console.log(name, email, password, security_question)
         if (password !== password2) {
             actions.setMessage("Las contraseñas no coinciden");
             return;

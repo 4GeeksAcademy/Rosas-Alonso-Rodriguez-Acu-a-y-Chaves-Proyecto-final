@@ -38,7 +38,7 @@ const NewFoundPet = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("enviando post", newPet);
-    actions.addNewPet(newPet);
+    actions.addNewPet(newPet, navigate);
      };
 
   return (
@@ -71,7 +71,7 @@ const NewFoundPet = () => {
                 <option value="" disabled>Selecciona</option>
                 <option value="male">Macho</option>
                 <option value="female">Hembra</option>
-                <option value="unknow">No lo sé</option>
+                
               </select>
             </div>
             <div className="col-md-6">
