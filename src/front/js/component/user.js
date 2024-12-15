@@ -1,5 +1,5 @@
 import React from 'react'
-
+//Saque el placeholder taylorswift
 const User = () => {
     return (
         <div className="container mt-4 ">
@@ -20,7 +20,7 @@ const User = () => {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">Email</label>
-                            <input type="email" id="email" className="form-control" placeholder="TAYLORSWIFT13@GMAIL.COM" readOnly />
+                            <input type="email" id="email" className="form-control" placeholder="Ingresa tu email" readOnly />
                         </div>
                         <div className="mb-3">
                             <a className="text-primary nunito">Cambiar contraseña</a>
@@ -33,7 +33,7 @@ const User = () => {
                             <label htmlFor="new-password" className="form-label">Nueva contraseña</label>
                             <input type="password" id="new-password" className="form-control" />
                         </div>
-                        <div class="d-grid gap-2 col-6 mx-auto">
+                        <div className="d-grid gap-2 col-6 mx-auto">
                             <button type="submit" className="  btn btn-primary rounded-pill btnStart">Guardar</button>
                         </div>
                     </form>

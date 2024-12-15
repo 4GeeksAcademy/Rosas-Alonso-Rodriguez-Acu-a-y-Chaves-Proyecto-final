@@ -22,7 +22,8 @@ const Login = () => {
                     email,
                     password,
                 }),
-            });
+            })
+            sessionStorage.setItem("usuario logueado", email);
 
             const data = await response.json();
             console.log(data);
@@ -43,9 +44,9 @@ const Login = () => {
         <div className="d-flex justify-content-center align-items-center vh-100">
             <div className="text-center">
                 <div className="container p-5 bg-white shadow rounded" style={{ width: "550px" }}>
-                    <h1 className="mb-4">Iniciar sesión</h1>
+                    <h1 className="mb-4 adlam-display-regular">Iniciar sesión</h1>
                     <form onSubmit={handleSubmit} >
-                        <div className="form-floating mb-3">
+                        <div className="adlam-display-regular form-floating mb-3">
                             <input
                                 type="email"
                                 className="form-control"
@@ -56,7 +57,7 @@ const Login = () => {
                             />
                             <label htmlFor="floatingInput">EMAIL</label>
                         </div>
-                        <div className="form-floating mb-3">
+                        <div className="adlam-display-regular form-floating mb-3">
                             <input
                                 type="password"
                                 className="form-control"
@@ -68,7 +69,7 @@ const Login = () => {
                             <label htmlFor="floatingPassword">CONTRASEÑA</label>
                         </div>
                         <Link to="/forgot-password" className="d-block mb-3">¿OLVIDÓ SU CONTRASEÑA?</Link>
-                        <button type="submit" className="btn btn-primary" style={{ width: "100%" }}>Iniciar sesión</button>
+                        <button type="submit" className="adlam-display-regular btn btn-primary ms-2 rounded-pill btnStart" style={{ width: "100%" }}>Iniciar sesión</button>
                     </form>
                     <p className="mt-3">¿NO TIENES UNA CUENTA? <Link to="/signup">REGÍSTRATE</Link></p>
                     {/* Mostrar mensaje si existe */}

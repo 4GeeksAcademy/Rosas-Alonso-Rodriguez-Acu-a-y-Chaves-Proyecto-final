@@ -75,6 +75,19 @@ def get_users():
         users_serialized.append(user.serialize())
     return jsonify({'msg': 'ok', 'usuarios: ': users_serialized}),200
 
+""" #Traer solo un usuario (autenticado)   -14/12 Flor (para navbar>editar perfil)
+@app.route('/logged_user', methods=['GET'])
+@jwt_required()
+def get_profile():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)  #busco al usuario por su ID en la base de datos
+
+    if not user:
+        return jsonify({'msg': 'Usuario no encontrado'}), 404
+    
+    return jsonify({'msg': 'ok', 'usuario': user.serialize()}), 200
+#Lo comento porque esto capaz se hace en Editar perfil """
+
 
 # Post: nuevo usuario
 @app.route('/user', methods=['POST'])
@@ -316,6 +329,53 @@ def get_all_pets():
     for pet in pets:
        pets_serialized.append(pet.serialize())
     return jsonify({'msg': 'ok', 'data': pets_serialized}), 200
+
+#endpoint para obtener la info de los posts, para usarla en el mapa.   -Flor
+@app.route('/pet_post', methods=['GET'])
+def get_pet_post():
+    species_map = {
+        "1": "Perro",
+        "2": "Gato",
+        "3": "Ave",
+        "4": "Conejo",
+        "5": "Reptil",
+        "6": "Otro"
+    }
+    posts = Post_Description.query.all()  
+    pet_data = []
+    for post in posts:
+        pet = post.pet_relationship  # Relación con la mascota (Pet)
+        user = pet.user
+        print("aca esta el objeto 'pet': ", pet.serialize())
+        species_value = pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None
+        species_description = species_map.get(species_value,"Desconocido")
+        pet_data.append({
+            "pet_id": pet.id,
+            "name": pet.name,
+            "breed": pet.breed_relationship.name if pet.breed_relationship else None,
+            "species": species_description,  # Se agrego especie
+            "gender": pet.gender.value if pet.gender else None,  # Se agrego género
+            "color": pet.color,
+            "photo_1": pet.photo_1,
+            "photo_2": pet.photo_2,
+            "photo_3": pet.photo_3,
+            "photo_4": pet.photo_4,
+            "user_id": pet.user_id,
+            "user_details": {
+                "id": user.id,
+                "email": user.email,
+                "phone": user.phone,
+                "facebook": user.facebook,
+                "instagram": user.instagram
+            } if user else None, #Modificado
+            "pet_status": post.pet_status.value,  # El estado de la mascota desde Post_Description
+            "latitude": post.latitude,
+            "longitude": post.longitude,
+            "description": post.description
+        })
+
+    return jsonify({'msg': 'ok', 'data': pet_data}), 200
+
 
 
 # any other endpoint will try to serve it like a static file

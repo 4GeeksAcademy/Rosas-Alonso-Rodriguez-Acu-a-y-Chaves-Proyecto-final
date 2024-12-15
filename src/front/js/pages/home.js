@@ -17,8 +17,8 @@ export const Home = () => {
 					overflow: "hidden",
 				}}
 			>
-				<div className="container  z-3" >
-					<h1 className=" adlam-display-regular fw-bolder fs-4 mb-3">
+				<div className="container md-5 bg-light bg-opacity-75 rounded-3 shadow mb-4 p-4 z-3" >
+					<h1 className="adlam-display-regular fw-bolder fs-4 mb-3">
 						Una ayuda para encontrar mascotas perdidas en tu zona.
 					</h1>
 					<p className="adlam-display-minusc text-muted fs-5 mb-4">
@@ -26,12 +26,12 @@ export const Home = () => {
 						de historias felices nos respaldan.
 					</p>
 					<div className=" row d-flex justify-content">
-						<Link to = "/newpetlost">
-						<button className="btn btn-danger col-sm-3 rounded-pill btn-md shadow">Perdí a mi mascota</button>
+						<Link to="/newpetlost">
+							<button className="btn btn-danger adlam-display-regular col-sm-3 rounded-pill btn-md shadow">Perdí a mi mascota</button>
 						</Link>
 						<div className="w-100 mt-3"></div>
 						<Link to="/newpetfound">
-						<button className="btn btn-success col-sm-3 rounded-pill btn-md shadow">Encontré una mascota</button>
+							<button className="btn btn-success adlam-display-regular col-sm-3 rounded-pill btn-md shadow">Encontré una mascota</button>
 						</Link>
 					</div>
 				</div>

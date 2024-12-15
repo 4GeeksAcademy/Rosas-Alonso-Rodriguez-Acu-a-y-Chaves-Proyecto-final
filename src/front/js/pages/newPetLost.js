@@ -25,8 +25,8 @@ const NewPetLost = () => {
     "photo_4": "",
     "event_date": "",
     "zone": "",
-    "longitude": "-56.159328",
-    "latitude": "-34.895992",
+    "longitude": "", //Esto contenia -56.159328 y lo saque 
+    "latitude": "", //Esto contenia -34.895992 y lo saque
     "pet_status": "lost"
 
   });
