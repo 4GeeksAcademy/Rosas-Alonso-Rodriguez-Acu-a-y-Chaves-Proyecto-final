@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon, divIcon, map } from "leaflet"
@@ -6,7 +6,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from "leaflet";
 import lostDogIcon from '/src/front/img/lost-dog-icon.png';
 import foundDogIcon from '/src/front/img/found-dog-icon.png';
-
+import {Context} from "../store/appContext"
 /* 
 Commands: 
  npm install 16 ~para bajar de version de node
@@ -41,20 +41,19 @@ const LostIcon = new L.Icon({
 
 const Map = () => {
 
-  const [pets, setPets] = useState([]);
-
-  const MarcadorDePrueba = { geocode: [-34.90937546329044, -56.17280532526599], popUp: "Hola soy un marcador de prueba" }
-  const MarcadorDePrueba2 = { geocode: [-34.91158014490245, -56.16774456039812], popUp: "Hola soy el  marcador de prueba 2" }
+  // const [pets, setPets] = useState([]);
+  const {store, actions} = useContext(Context);
 
 
   useEffect(() => {
-    fetch(`${process.env.BACKEND_URL}/pet_post`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setPets(data.data);
-      })
-      .catch(error => console.error('Error fetching pets:', error));
+      actions.getAllPetPosts()
+    // fetch(`${process.env.BACKEND_URL}/pet_post`)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log(data);
+    //     setPets(data.data);
+    //   })
+    //   .catch(error => console.error('Error fetching pets:', error));
   }, []);
 
 
@@ -68,7 +67,7 @@ const Map = () => {
         chunkedLoading
       // iconCreateFunction={createCustomClusterIcon}
       > {/* //Esto es para agrupar los markers. chunkedLoading es para la performance */}
-        {pets.map(pet => {
+        {store.fetchedPetPosts.map(pet => {
           //if para determinar el ícono según el estado de la mascota
           let petIcon;
           if (pet.pet_status === "Estoy perdido" || pet.pet_status === "Busco a mi familia") {
