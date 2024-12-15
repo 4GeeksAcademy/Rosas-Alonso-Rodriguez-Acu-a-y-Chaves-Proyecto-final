@@ -22,7 +22,8 @@ const Login = () => {
                     email,
                     password,
                 }),
-            });
+            })
+            sessionStorage.setItem("usuario logueado", email);
 
             const data = await response.json();
             console.log(data);

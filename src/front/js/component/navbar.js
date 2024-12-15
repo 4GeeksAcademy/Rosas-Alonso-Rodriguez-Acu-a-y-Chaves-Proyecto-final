@@ -29,30 +29,9 @@ export const Navbar = () => {
 	}, []); // se ejecuta solo una vez cuando el componente se monta
 
 
-	/* const fetchUserProfile = async (token) => {
-		try {
-			const response = await fetch(`${process.env.BACKEND_URL}/logged_user`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${token}`  // Enviar el token en los headers
-				}
-			});
-
-			const data = await response.json();
-
-			if (response.ok) {
-				setUser(data.usuario); // Guardar la información del usuario (nombre, etc.)
-			} else {
-				console.error("Error al obtener el perfil", data.msg);
-			}
-		} catch (error) {
-			console.error("Error de conexión", error);
-		}
-	}; */
-
 	const handleLogout = () => {
 		sessionStorage.removeItem("token");
+		sessionStorage.removeItem("usuario logueado")
 		setLogged(false);
 		setUser(null); // Limpiar el estado de usuario al cerrar sesión
 	};
