@@ -211,15 +211,6 @@ const PetsView = () => {
               </div>
             </div>
             {/* Filtro por tamaño */}
-            <div className="filter mb-3">
-              <label>Tamaño:</label>
-              <select name="size" className="form-control" onChange={handleFilterChange}>
-                <option value="">Todos</option>
-                <option value="pequeño">Pequeño</option>
-                <option value="mediano">Mediano</option>
-                <option value="grande">Grande</option>
-              </select>
-            </div>
           </div>
         </div>
 
