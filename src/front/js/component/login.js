@@ -68,9 +68,10 @@ const Login = () => {
                             />
                             <label htmlFor="floatingPassword">CONTRASEÑA</label>
                         </div>
-                        <Link to="/forgot-password" className="d-block mb-3">¿OLVIDÓ SU CONTRASEÑA?</Link>
+                        <Link to="/error" className="d-block mb-3">¿OLVIDÓ SU CONTRASEÑA?</Link>
                         <button type="submit" className="adlam-display-regular btn btn-primary ms-2 rounded-pill btnStart" style={{ width: "100%" }}>Iniciar sesión</button>
                     </form>
+
                     <p className="mt-3">¿NO TIENES UNA CUENTA? <Link to="/signup">REGÍSTRATE</Link></p>
                     {/* Mostrar mensaje si existe */}
                     {store.message && (
