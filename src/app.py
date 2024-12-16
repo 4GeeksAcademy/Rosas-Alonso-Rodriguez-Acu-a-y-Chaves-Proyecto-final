@@ -75,18 +75,18 @@ def get_users():
         users_serialized.append(user.serialize())
     return jsonify({'msg': 'ok', 'usuarios: ': users_serialized}),200
 
-""" #Traer solo un usuario (autenticado)   -14/12 Flor (para navbar>editar perfil)
+#Traer solo un usuario (autenticado)   -14/12 Flor (para navbar>editar perfil)
 @app.route('/logged_user', methods=['GET'])
 @jwt_required()
 def get_profile():
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)  #busco al usuario por su ID en la base de datos
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()  #busco al usuario por su email en la base de datos
 
     if not user:
         return jsonify({'msg': 'Usuario no encontrado'}), 404
     
     return jsonify({'msg': 'ok', 'usuario': user.serialize()}), 200
-#Lo comento porque esto capaz se hace en Editar perfil """
+#Lo comento porque esto capaz se hace en Editar perfil
 
 
 # Post: nuevo usuario
