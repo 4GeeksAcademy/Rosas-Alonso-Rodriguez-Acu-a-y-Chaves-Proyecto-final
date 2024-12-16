@@ -36,7 +36,13 @@ const PetCard = () => {
   }, [theid]); // Solo se vuelve a ejecutar si cambia el ID
 
   if (!detail) {
-    return <div>Cargando...</div>; // tamb podríamos agregar un spinner de carga?
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
   }
 
   //para darle formato a la fecha
@@ -135,7 +141,7 @@ const PetCard = () => {
         <div className="col-md-6 info-section">
           <h3 className="text-primary">{detail?.name}</h3>
           <p className="text-danger" style={{ fontSize: "1.5rem" }}>
-            Perdido/Encontrado el {formatDate(detail?.event_date)}
+          {detail?.pet_status === "Estoy perdido" ? "Perdido el: " : "Encontrado el: "} {formatDate(detail?.event_date)}
           </p>
           <a
             href="#contactForm"
