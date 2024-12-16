@@ -191,6 +191,9 @@ p {
   --bs-bg-opacity: 0.2;
   background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
 }
+.bg-verde {
+  background-color: green;
+}
 .user-title {
 color: darkblue;
 font-size: 30px;

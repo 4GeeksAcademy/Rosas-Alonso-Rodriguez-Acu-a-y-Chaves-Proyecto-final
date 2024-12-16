@@ -49,7 +49,7 @@ const Map = () => {
   const getStatusClass = (status) => {
     switch (status) {
       case "Encontrado":
-        return "bg-success"; // Fondo verde para "Encontrado"
+        return "bg-verde"; // Fondo verde para "Encontrado"
       case "Estoy perdido":
         return "bg-danger";  // Fondo rojo para "Estoy perdido"
       case "Busco a mi familia":
