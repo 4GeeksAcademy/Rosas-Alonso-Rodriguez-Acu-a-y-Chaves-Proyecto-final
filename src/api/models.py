@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from enum import Enum
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
@@ -48,7 +49,7 @@ class Pet(db.Model):
     __tablename__ ="pet"
     id = db.Column (db.Integer, primary_key=True)
     name = db.Column (db.String(30))
-    breed = db.Column (db.Integer, db.ForeignKey("breed.id"))
+    breed = db.Column (db.Integer, db.ForeignKey("breed.id")) # bread_id
     gender = db.Column (db.Enum(Genders))
     color = db.Column (db.String(15))
     photo_1 = db.Column (db.String(120), nullable=False)
@@ -58,22 +59,28 @@ class Pet(db.Model):
     user_id = db.Column (db.Integer, db.ForeignKey("user.id"))
     user = db.relationship ("User", back_populates="pet")
     post = db.relationship("Post_Description", back_populates="pet_relationship")
-    breed_relationship = db.relationship("Breed", back_populates= "pets")
+    breed_relationship = db.relationship("Breed", back_populates= "pets") # breed
     
     def __repr__(self):
-        return f'<Pet {self.name, self.species, self.color, self.user}>'
+        return f'<Pet {self.name, self.color, self.user}>'
 
     def serialize(self):
         return{
             "name" : self.name,
-            "species" : self.species,
             "breed" : self.breed,
             "color": self.color,
             "photo_1": self.photo_1,
             "photo_2" : self.photo_2,
             "photo_3": self.photo_3,
             "photo_4" : self.photo_4,
-            "user_id" : self.user_id    
+            "user_id" : self.user_id,
+            "user_details": {
+            "id": self.user.id,
+            "email": self.user.email,
+            "phone": self.user.phone,
+            "facebook": self.user.facebook,
+            "instagram": self.user.instagram
+        } if self.user else None, #Modificado
         }
 
 class Post_Description (db.Model):
@@ -92,6 +99,7 @@ class Post_Description (db.Model):
             return f'<Pet {self.pet_id, self.zone, self.pet_status}>'
 
     def serialize(self):
+            pet = self.pet_relationship #Agregado
             return{    
                 "pet_info": self.pet_id,
                 "pet_details": self.pet_relationship.serialize(),
@@ -99,7 +107,10 @@ class Post_Description (db.Model):
                 "latitude": self.latitude,
                 "description" : self.description,
                 "event_date" : self.event_date,
-                "pet_status" : self.pet_status
+                "zone": self.zone,
+                "pet_status" : self.pet_status.value if self.pet_status else None,
+                "gender": pet.gender.value if pet.gender else None, #Agregado
+                "species": pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None #Agregado
             }
 
 class Breed (db.Model):
@@ -116,6 +127,6 @@ class Breed (db.Model):
             return{    
                 "breed_id": self.id,
                 "breed": self.name,
-                "specie" : self.longitude,
+                "species" : self.species,
                 "pet" : self.pets
             }

@@ -31,15 +31,15 @@ const NewFoundPet = () => {
       ...newPet, [e.target.id]: e.target.value
     })
   }
+
   console.log(newPet);
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("enviando post", newPet);
-    actions.addNewPet(newPet);
-    navigate("/map");
-  };
+    actions.addNewPet(newPet, navigate);
+     };
 
   return (
     <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light p-4">
@@ -71,7 +71,7 @@ const NewFoundPet = () => {
                 <option value="" disabled>Selecciona</option>
                 <option value="male">Macho</option>
                 <option value="female">Hembra</option>
-                <option value="unknow">No lo sé</option>
+                
               </select>
             </div>
             <div className="col-md-6">
