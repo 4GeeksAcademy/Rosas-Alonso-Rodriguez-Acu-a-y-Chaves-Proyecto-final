@@ -7,40 +7,54 @@ import UbicationMap from "../component/ubication_map";
 const EditFoundPet = () => {
   const navigate = useNavigate();
   const { store, actions } = useContext(Context)
-  
+  const { id } = useParams();
 
-  const [newPet, setNewPet] = useState({
-    "name": "Encontrado",
-    "species": "",
-    "breed": "",
-    "color": "",
-    "gender": "",
-    "description": "",
-    "photo_1": "",
-    "photo_2": "",
-    "photo_3": "",
-    "photo_4": "",
-    "event_date": "",
-    "zone": "",
-    "longitude": "-56.159328",
-    "latitude": "-34.895992",
-    "pet_status": "find"
+  const [petData, setPetData] = useState();
+ 
+  useEffect(()=>{
+    const existingPet= store.petData.find((id) =>item.id== id);
+    if (existingPet) {
+      setPetData(existingPet);
+    } else {
+      // Si no está en el store, podrías hacer una llamada a la API
+      console.error("Mascota no encontrada");
+      navigate("/error"); // Redirigir si no se encuentra la mascota
+    }
+  }, [id, store.petData, navigate]);
+
+ const handleChange = (e) => {
+   setPetData({
+     ...petData,
+   [e.target.id]: e.target.value,
   });
+ };
+  // const [newPet, setNewPet] = useState({
+  //   "name": "Encontrado",
+  //   "species": "",
+  //   "breed": "",
+  //   "color": "",
+  //   "gender": "",
+  //   "description": "",
+  //   "photo_1": "",
+  //   "photo_2": "",
+  //   "photo_3": "",
+  //   "photo_4": "",
+  //   "event_date": "",
+  //   "zone": "",
+  //   "longitude": "-56.159328",
+  //   "latitude": "-34.895992",
+  //   "pet_status": "find"
+  // });
 
-  function handleChange(e) {
-    setNewPet({
-      ...newPet, [e.target.id]: e.target.value
-    })
-  }
-
-  console.log(newPet);
+//  console.log(newPet);
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("enviando post", newPet);
-    actions.addNewPet(newPet, navigate);
+    console.log("editando mascota", petData);
+    actions.editPet(petData, navigate);
      };
+    
 
   return (
     <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light p-4">
@@ -50,8 +64,8 @@ const EditFoundPet = () => {
       <div className=" container p-2 ">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="species" className="form-label">ESPECIE</label>
-            <select className="form-select" id="species" aria-label="select species" value={newPet.species} required onChange={handleChange} >
+            <label htmlFor="Species" className="form-label">ESPECIE</label>
+            <select className="form-select" id="Species" aria-label="select species" value={petData.species} required onChange={handleChange} >
               <option value="" disabled>Selecciona</option>
               <option value="perro">Perro</option>
               <option value="gato">Gato</option>
@@ -63,12 +77,12 @@ const EditFoundPet = () => {
           </div>
           <div className="mb-3">
             <label htmlFor="breed" className="form-label">RAZA</label>
-            <input type="text" className="form-control" id="breed" placeholder="Ingresa la raza de tu mascota" value={newPet.breed} required onChange={handleChange} />
+            <input type="text" className="form-control" id="breed" placeholder="Ingresa la raza de tu mascota" value={petData.breed} required onChange={handleChange} />
           </div>
           <div className="row g-3 mb-3 ">
             <div className="col-md-6">
               <label htmlFor="gender" className="form-label">GENERO</label>
-              <select className="form-select" id="gender" aria-label="Selecionar genero" required onChange={handleChange} >
+              <select className="form-select" id="gender" aria-label="Selecionar genero" value={petData.gender} required onChange={handleChange} >
                 <option value="" disabled>Selecciona</option>
                 <option value="male">Macho</option>
                 <option value="female">Hembra</option>
@@ -77,15 +91,15 @@ const EditFoundPet = () => {
             </div>
             <div className="col-md-6">
               <label htmlFor="color" className="form-label">COLOR</label>
-              <input type="text" className="form-control" id="color" placeholder="Ingresa el color" value={newPet.color} required onChange={handleChange} />
+              <input type="text" className="form-control" id="color" placeholder="Ingresa el color" value={petData.color} required onChange={handleChange} />
             </div>
           </div>
           <div className="mb-3">
             <label htmlFor="description" className="form-label">DESCRIPCION</label>
-            <textarea className="form-control" id="description" rows="3" value={newPet.description} required onChange={handleChange}></textarea>
+            <textarea className="form-control" id="description" rows="3" value={petData.description} required onChange={handleChange}></textarea>
           </div>
           <Cloudinary
-            updatePhotos={(image) => setNewPet((prev) => ({
+            updatePhotos={(image) => setPetData((prev) => ({
               ...prev,
               photo_1: image[0] || "",
               photo_2: image[1] || "",
@@ -96,29 +110,28 @@ const EditFoundPet = () => {
           />
           <div className="d-block mb-3">
             <label htmlFor="date" className="form-label ">¿CUANDO LO ENCONTRASTE?</label>
-            <input type="date" className="form-control" id="event_date" value={newPet.event_date} required onChange={handleChange} />
+            <input type="date" className="form-control" id="event_date" value={petData.event_date} required onChange={handleChange} />
           </div>
           <div className="d-block mb-3">
             <label htmlFor="zone" className="form-label">¿DÓNDE LO ENCONTRASTE?</label>
-            <input type="text" className="form-control" id="zone" placeholder="Barrio/zona" value={newPet.zone} required onChange={handleChange} />
+            <input type="text" className="form-control" id="zone" placeholder="Barrio/zona" value={petData.zone} required onChange={handleChange} />
           </div>
           <div>
             <p className="form-label">Indica la ubicación en el mapa</p>
             <UbicationMap
-              coordenates={(position) => setNewPet((prev) => ({
+              coordenates={(position) => setPetData((prev) => ({
                 ...prev,
                 latitude: position.lat || "",
                 longitude: position.lng || "",
               }))} />
           </div>
           <div className="d-grid gap-2 col-6 mx-auto ">
-            <button className="btn btn-primary btn-publicar rounded-pill m-2" type="submit">Publicar</button>
-
+            <button className="btn btn-primary btn-publicar rounded-pill m-2" type="submit">Guardar Cambios</button>
           </div>
         </form>
       </div>
     </div >
-  )
-}
+  );
+};
 
-export default EditFoundPet
+export default EditFoundPet;
