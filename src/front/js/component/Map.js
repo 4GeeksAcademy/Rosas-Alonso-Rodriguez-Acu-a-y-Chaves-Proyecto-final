@@ -93,17 +93,15 @@ const Map = () => {
           return (
             <Marker key={pet.pet_id} position={[pet.latitude, pet.longitude]} icon={petIcon}>
               <Popup>
-                <div className="card-body h-auto d-flex flex-column align-items-center" style={{ maxWidth: '250px', maxHeight: '300px', wordWrap: 'break-word', textOverflow: 'ellipsis' }}>
+                <div className="card-body h-auto d-flex flex-column align-items-center" style={{ maxWidth: '250px', height: 'auto', wordWrap: 'break-word', textOverflow: 'ellipsis', paddingBottom: '10px' }}>
                   {/* Contenedor de la img:   -Flor */}
                   <div className="d-flex justify-content-center mb-2" style={{ width: '100%', height: '120px' }}>
                     <img className="img-fluid square-img" src={petImage} alt={pet.name} style={{width: '120px', height: '120px', objectFit: 'cover'}}></img>
                   </div>
                 {/* Estado de la mascota:  -Flor */}
-                    <Link to="" style={{ textDecoration: 'none' }}>
-                      <p className={`mt-0 text-center text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`}>{pet.pet_status}</p>
-                    </Link>
+                    <p className={`mt-0 text-center adlam-display-regular text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`} style={{ paddingLeft: '10px', paddingRight: '10px' }}> {pet.pet_status} </p>
                 {/* Info adicional de mascota:  -Flor */}
-                  <ul className="list-unstyled adlam-display  ">
+                  <ul className="list-unstyled adlam-display" style={{ marginBottom: '5px' }}>
                     <li>
                       <span className=' fw-bold'>Nombre: </span><span className="text-black">{pet.name}</span>
                     </li>
@@ -119,6 +117,10 @@ const Map = () => {
                     <li>
                       <span className='fw-bold'>Especie: </span><span className="text-black">{pet.species}</span>
                     </li>
+                  {/* Botón más info */}
+                    <button type="submit" className="btn-sm btnStart btn-primary adlam-display-regular mb-3" style={{ width: "auto", maxWidth: "200px", maxHeight:"40px", marginBottom: '10px', marginTop: '10px' }}>
+                            Más información
+                    </button>
                   </ul>
                 </div>
               </Popup>
