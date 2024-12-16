@@ -206,3 +206,7 @@ font-size: 30px;
   background: none; /* Sin fondo */
   padding: 0;
 }
+
+.texto-grande {
+  font-size: 16px;
+}
