@@ -95,26 +95,35 @@ def create_user():
     body = request.get_json(silent=True)
     if body is None:
         return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
-    if 'name' not in body: 
+    if 'name' not in body or not body['name'].strip(): 
         return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
-    if 'email' not in body: 
+    if 'email' not in body or not body['email'].strip(): 
         return jsonify({'msg': "El campo 'email' es obligatorio"}), 400
-    if 'password' not in body:
-        return jsonify({'msg': "El campo 'password' es obligatiro"}), 400
-    if 'security_question' not in body:
+    if 'password' not in body or not body['password'].strip():
+        return jsonify({'msg': "El campo 'password' es obligatorio"}), 400
+    if 'security_question' not in body or not body['security_question'].strip():
         return jsonify({"msg": "El campo 'security_question' es obligatorio"}), 400
+    if 'phone' not in body or not body['phone'].strip():  #si no existe teléfono o es vacío o es un espacio
+        return jsonify({'msg': "El campo 'phone' es obligatorio"}), 400
 
-    new_user = User(
-        name = body['name'],
-        email = body['email'],
-        password= body['password'],
-        is_active=True,
-        security_question=body['security_question']
-    )
+    try:
+        new_user = User(
+            name = body['name'],
+            email = body['email'],
+            password= body['password'],
+            is_active=True,
+            security_question=body['security_question'],
+            phone=body['phone'],  
+            facebook=body.get('facebook', None),  # Obtener si existe o asignar None
+            instagram=body.get('instagram', None),  # Obtener si existe o asignar None
+        )
 
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({'msg':'Usuario creado exitosamente', 'data': new_user.serialize()}), 201
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'msg':'Usuario creado exitosamente', 'data': new_user.serialize()}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'msg': f'Error al crear el usuario: {str(e)}'}), 500
 
 #LOGIN: 
 @app.route('/login', methods=['POST'])
