@@ -251,7 +251,6 @@ def edit_pet(id):
     pet = Pet.query.get(id) #
     if not pet:
         return jsonify({'msg': 'Mascota no encontrada'}), 404
-
     if 'name' in body:
         pet.name = body['name']
     if 'breed' in body:
