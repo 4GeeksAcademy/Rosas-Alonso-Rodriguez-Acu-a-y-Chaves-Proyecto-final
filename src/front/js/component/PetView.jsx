@@ -65,12 +65,11 @@ const PetsView = () => {
               <label>Especie:</label>
               <select name="type" className="form-control" onChange={handleFilterChange}>
                 <option value="">Todos</option>
-                <option value="1">Perro</option>
-                <option value="2">Gato</option>
-                <option value="3">Ave</option>
-                <option value="4">Conejo</option>
-                <option value="5">Reptil</option>
-                <option value="6">Otro</option>
+                <option value="Perro">Perro</option>
+                <option value="Gato">Gato</option>
+                <option value="Ave">Ave</option>
+                <option value="Conejo">Conejo</option>
+                <option value="Otro">Otro</option>
               </select>
             </div>
 
@@ -172,7 +171,7 @@ const PetsView = () => {
                   <input
                     type="radio"
                     name="color"
-                    value="marrón"
+                    value="marron"
                     className="form-check-input"
                     onChange={handleFilterChange}
                   />
@@ -186,27 +185,6 @@ const PetsView = () => {
                     }}
                   ></span>
                   <span className="ms-2">Marrón</span>
-                </label>
-
-                <label className="d-flex align-items-center mb-2">
-                  <input
-                    type="radio"
-                    name="color"
-                    value="blanco-negro"
-                    className="form-check-input"
-                    onChange={handleFilterChange}
-                  />
-                  <span
-                    className="ms-2"
-                    style={{
-                      background: 'linear-gradient(45deg, black 50%, white 50%)',
-                      width: '15px',
-                      height: '15px',
-                      borderRadius: '50%',
-                      border: '1px solid black',
-                    }}
-                  ></span>
-                  <span className="ms-2">Blanco y Negro</span>
                 </label>
               </div>
             </div>
@@ -224,23 +202,11 @@ const PetsView = () => {
                   <div className="card-body">
                     <h5 className="card-title">{pet.name}</h5>
                     <p className="card-text">
-                      Tipo: {pet.species === "1"
-                              ? "Perro"
-                              : pet.species === "2"
-                              ? "Gato"
-                              : pet.species === "3"
-                              ? "Ave"
-                              : pet.species === "4"
-                              ? "Conejo"
-                              : pet.species === "5"
-                              ? "Reptil"
-                              : pet.species === "6"
-                              ? "Otro"
-                              : "Desconocido"} <br />
+                      Tipo: {pet.species} <br />
                       Color: {pet.color} <br />
                       Sexo: {pet.gender}
                     </p>
-                    <Link to={`/petcard/${pet.id}`}>Más información</Link>
+                    <Link to={`/petcard/${pet.pet_id}`}>Más información</Link>
                   </div>
                 </div>
               </div>

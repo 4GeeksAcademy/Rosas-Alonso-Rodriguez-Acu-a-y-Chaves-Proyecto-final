@@ -135,7 +135,7 @@ const PetCard = () => {
         <div className="col-md-6 info-section">
           <h3 className="text-primary">{detail?.name}</h3>
           <p className="text-danger" style={{ fontSize: "1.5rem" }}>
-            Perdido/Encontrado el {formatDate(detail?.event_date)}
+          {detail?.pet_status === "Estoy perdido" ? "Perdido el: " : "Encontrado el: "} {formatDate(detail?.event_date)}
           </p>
           <a
             href="#contactForm"
