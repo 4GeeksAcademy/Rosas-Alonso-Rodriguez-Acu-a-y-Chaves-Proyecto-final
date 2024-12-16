@@ -15,6 +15,66 @@ const User = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [petToDelete, setPetToDelete] = useState(null);
 
+    const [userData, setUserData] = useState({
+        email: '',
+        phone: '',
+        instagram: '',
+        facebook: ''
+    });
+
+    useEffect(() => {
+        fetch(`${process.env.BACKEND_URL}/logged_user`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.msg === 'ok') {
+                    setUserData(data.usuario); // Establece los datos del usuario en el estado
+                } else {
+                    console.error("Error al obtener los datos del usuario:", data.msg);
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar los datos del usuario:", error);
+            });
+    }, []);
+
+    // Función para manejar el envío del formulario de actualización
+    const handleSave = (e) => {
+        e.preventDefault(); // Evitar que la página se recargue al enviar el formulario
+
+        const updatedData = {
+            email: userData.email,
+            phone: userData.phone,
+            instagram: userData.instagram,
+            facebook: userData.facebook
+        };
+
+        fetch(`${process.env.BACKEND_URL}/update_user/${userData.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(updatedData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.msg === 'Usuario actualizado correctamente') {
+                    setUserData(data.user); // Actualizamos el estado con los datos actualizados
+                    alert('Perfil actualizado exitosamente');
+                } else {
+                    console.error('Error al actualizar el perfil:', data.msg);
+                }
+            })
+            .catch(error => {
+                console.error('Error al realizar la solicitud:', error);
+            });
+    };
+
     useEffect(() => {
         fetch(`${process.env.BACKEND_URL}/pet_post`)
             .then(response => response.json())
@@ -59,6 +119,15 @@ const User = () => {
         setShowDeleteModal(true);
     };
 
+    // Función para manejar el cambio en los inputs
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUserData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
     // Función para confirmar la eliminación de la mascota
     const handleDeleteConfirm = () => {
         if (petToDelete) {
@@ -97,7 +166,7 @@ const User = () => {
                                 <h6
                                     className="fa-solid fa-pencil mt-2 user-title"
                                     style={{ cursor: 'pointer' }}
-                                    onClick={toggleEditMode}
+                                    onClick={() => setIsEditable(!isEditable)}
                                 ></h6>
 
                                 {/* Texto "Editar perfil" solo visible cuando el cursor pasa por encima */}
@@ -110,14 +179,10 @@ const User = () => {
                     </div>
                     {/* Tabla de Mi Perfil */}
                     <div className="card shadow-sm p-4 rounded-5">
-                        <form>
-                            <div className="mb-3">
-                                <label htmlFor="nombre" className="form-label">Nombre</label>
-                                <input type="text" id="nombre" className="form-control" placeholder="Nombre de usuario" disabled={!isEditable} />
-                            </div>
+                        <form onSubmit={handleSave}>
                             <div className="mb-3">
                                 <label htmlFor="email" className="form-label">Email</label>
-                                <input type="email" id="email" className="form-control" placeholder="Ingresa tu email" disabled={!isEditable} />
+                                <input type="email" id="email" name="email" className="form-control" placeholder="Ingresa tu email" value={userData.email} onChange={handleChange} disabled={!isEditable} />
                             </div>
                             <div className="mb-3">
                                 <a className="text-primary nunito" onClick={togglePasswordFields} style={{ cursor: 'pointer' }}>Cambiar contraseña</a>
@@ -140,15 +205,15 @@ const User = () => {
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="phone" className="form-label">Teléfono</label>
-                                <input type="text" id="phone" className="form-control" placeholder="Ingresa tu teléfono" disabled={!isEditable} />
+                                <input type="text" id="phone" name="phone" className="form-control" placeholder="Ingresa tu teléfono" value={userData.phone} onChange={handleChange} disabled={!isEditable} />
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="instagram" className="form-label">Instagram</label>
-                                <input type="text" id="instagram" className="form-control" placeholder="Ingresa tu Instagram" disabled={!isEditable} />
+                                <input type="text" id="instagram" name="instagram" className="form-control" placeholder="Ingresa tu Instagram" value={userData.instagram !== undefined && userData.instagram !== null ? userData.instagram : ''} onChange={handleChange} disabled={!isEditable} />
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="facebook" className="form-label">Facebook</label>
-                                <input type="text" id="facebook" className="form-control" placeholder="Ingresa tu Facebook" disabled={!isEditable} />
+                                <input type="text" id="facebook" name="facebook" className="form-control" placeholder="Ingresa tu Facebook" value={userData.facebook !== undefined && userData.facebook !== null ? userData.facebook : ''} onChange={handleChange} disabled={!isEditable} />
                             </div>
                             <div className="d-grid gap-2 col-6 mx-auto">
                                 <button type="submit" className="btn btn-primary rounded-pill btnStart">Guardar</button>
