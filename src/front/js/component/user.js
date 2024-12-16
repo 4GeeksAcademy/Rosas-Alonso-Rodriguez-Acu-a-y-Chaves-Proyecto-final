@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const User = () => {
     const [showPasswordFields, setShowPasswordFields] = useState(false);
@@ -10,6 +10,76 @@ const User = () => {
     const toggleEditMode = () => {
         setIsEditable(!isEditable);
     }
+
+    const [userPets, setUserPets] = useState([]);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [petToDelete, setPetToDelete] = useState(null);
+
+    useEffect(() => {
+        fetch(`${process.env.BACKEND_URL}/pet_post`)
+            .then(response => response.json())
+            .then(data => {
+                setUserPets(data.data);
+            })
+            .catch(error => {
+                console.error("Hubo un error al cargar las publicaciones:", error);
+            });
+    }, []);
+
+    // Función para manejar el cambio de estado de la mascota (encendido/apagado)
+    const handleSwitchChange = (petId, newStatus) => {
+        fetch(`${process.env.BACKEND_URL}/pet/${petId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ pet_status: newStatus }),  // cambia el pet status según el switch
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Verificamos si la respuesta fue exitosa
+                if (data.msg === 'Mascota actualizada exitosamente') {
+                    // Actualizamos el estado de la mascota en el frontend
+                    setUserPets(prevPets => prevPets.map(pet =>
+                        pet.pet_id === petId ? { ...pet, pet_status: newStatus } : pet
+                    ));
+                    console.log("Estado actualizado exitosamente")
+                } else {
+                    console.error('Error al actualizar el estado:', data.msg);
+                }
+            })
+            .catch(error => {
+                console.error("Error al cambiar el estado de la mascota:", error);
+            });
+    };
+
+    // Función para abrir el modal de eliminación
+    const handleDeleteClick = (pet) => {
+        setPetToDelete(pet);
+        setShowDeleteModal(true);
+    };
+
+    // Función para confirmar la eliminación de la mascota
+    const handleDeleteConfirm = () => {
+        if (petToDelete) {
+            fetch(`${process.env.BACKEND_URL}/pet/${petToDelete.pet_id}`, {
+                method: 'DELETE',
+            })
+                .then(() => {
+                    // Filtramos la mascota eliminada de la lista de publicaciones
+                    setUserPets(prevPets => prevPets.filter(pet => pet.pet_id !== petToDelete.pet_id));
+                    setShowDeleteModal(false);  // Cerramos el modal
+                })
+                .catch(error => {
+                    console.error("Error al eliminar la mascota:", error);
+                });
+        }
+    };
+
+    // Función para cancelar la eliminación
+    const handleDeleteCancel = () => {
+        setShowDeleteModal(false);
+    };
 
     return (
         <div className="container mt-4">
@@ -98,26 +168,56 @@ const User = () => {
                     {/* Tabla de Mis Publicaciones */}
                     <div className="card shadow-sm p-4 rounded-5">
                         <ul className="list-group">
-                            <li className="list-group-item d-flex justify-content-between align-items-center">
-                                Mascota encontrada: OS...
-                                <span>
-                                    <i className="fa-solid fa-pencil me-2"></i>
-                                    <i className="fa-regular fa-trash-can"></i>
-                                </span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center">
-                                Mascota perdida: Canela
-                                <span>
-                                    <i className="fa-solid fa-pencil me-2"></i>
-                                    <i className="fa-regular fa-trash-can"></i>
-                                </span>
-                            </li>
+                            {userPets.map(pet => (
+                                <li className="list-group-item d-flex justify-content-between align-items-center" key={pet.pet_id}>
+                                    <span className="adlam-display-regular">{pet.name}</span>
+
+                                    <span className="d-flex align-items-center">
+                                        {/* Switch de estado (Checkbox) */}
+                                        <div className="form-check form-switch">
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                id={`switch-${pet.pet_id}`}
+                                                style={{ cursor: 'pointer' }}
+                                                checked={pet.pet_status !== "Encontrado"}  // Si no está encontrado, el switch está encendido
+                                                onChange={(e) => handleSwitchChange(pet.pet_id, e.target.checked ? "Estoy perdido" : "Encontrado")}
+                                            />
+                                            <label className="form-check-label" htmlFor={`switch-${pet.pet_id}`}>
+                                                {pet.pet_status === "Encontrado" ? "Mascota encontrada" : "Mascota perdida"}
+                                            </label>
+                                        </div>
+
+                                        {/* Íconos de acción */}
+                                        <i className="fa-regular fa-trash-can" style={{ cursor: 'pointer', paddingLeft: '10px' }} onClick={() => handleDeleteClick(pet)}></i>
+                                    </span>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
-
             </div>
-        </div >
+            {/* Modal para confirmar eliminación */}
+            {showDeleteModal && (
+                <div className="modal fade show" tabIndex="-1" aria-labelledby="exampleModalLabel" style={{ display: 'block' }} aria-hidden="false">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title adlam-display-regular" id="exampleModalLabel">Eliminar publicación</h5>
+                                <button type="button" className="btn-close" onClick={handleDeleteCancel}></button>
+                            </div>
+                            <div className="modal-body">
+                                ¿Estás seguro de que deseas eliminar esta publicación?
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={handleDeleteCancel}>Cancelar</button>
+                                <button type="button" className="btn btn-danger" onClick={handleDeleteConfirm}>Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };
 
