@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 import logo from "../../img/logoTransparentePNG.png";
+import publicarMascota from "../../img/gif_publicar_mascota.gif";
 
 const Que_es = () => {
 
@@ -42,7 +43,7 @@ const Que_es = () => {
                     </div>
                 </div>
                 <div className="col-md-6 order-md-1">
-                    <img src={logo} alt="Publicar mascota" className="img-fluid rounded" />
+                    <img src={publicarMascota} alt="Publicar mascota, proceso" className="img-fluid rounded" />
                 </div>
             </div>
 
