@@ -1,12 +1,17 @@
+
 import React, { useState, useEffect, useContext } from 'react'
+
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Icon, divIcon, map } from "leaflet"
+//import { Icon, divIcon, map } from "leaflet"
 import MarkerClusterGroup from 'react-leaflet-cluster';
+
+import { Link } from "react-router-dom";
 import L from "leaflet";
 import lostDogIcon from '/src/front/img/lost-dog-icon.png';
 import foundDogIcon from '/src/front/img/found-dog-icon.png';
-import {Context} from "../store/appContext"
+import { Context } from "../store/appContext"
+
 /* 
 Commands: 
  npm install 16 ~para bajar de version de node
@@ -41,12 +46,25 @@ const LostIcon = new L.Icon({
 
 const Map = () => {
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      //       case "Encontrado":
+      //     return "bg-success";
+      case "Estoy perdido":
+        return "bg-danger"; // Rojo
+      //   case "Buscando a su familia":
+      //      return "bg-warning"; // Amarillo
+      //     default:
+      //      return "bg-secondary"; // Gris
+    }
+  };
+
   // const [pets, setPets] = useState([]);
-  const {store, actions} = useContext(Context);
+  const { store, actions } = useContext(Context);
 
 
   useEffect(() => {
-      actions.getAllPetPosts()
+    actions.getAllPetPosts()
   }, []);
 
 
@@ -59,7 +77,8 @@ const Map = () => {
       <MarkerClusterGroup
         chunkedLoading
       // iconCreateFunction={createCustomClusterIcon}
-      > {/* //Esto es para agrupar los markers. chunkedLoading es para la performance */}
+
+      > {/* Esto es para agrupar los markers. chunkedLoading es para la performance */}
         {store.fetchedPetPosts.map(pet => {
           //if para determinar el ícono según el estado de la mascota
           let petIcon;
@@ -72,14 +91,31 @@ const Map = () => {
           return (
             <Marker key={pet.pet_id} position={[pet.latitude, pet.longitude]} icon={petIcon}>
               <Popup>
-                <h6>Se perdió: <span className='fw-bold'>{pet.name}</span></h6>
-                <ul>
-                  <img src={pet.photo_1} width={100} height={100} alt={pet.name} />
-                  <li><span className='fw-bold'>Raza: </span><span>{pet.breed}</span></li>
-                  <li><span className='fw-bold'>Color: </span><span>{pet.color}</span></li>
-                  <li><span className='fw-bold'>Sexo: </span><span>{pet.gender}</span></li>
-                  <li><span className='fw-bold'>Especie: </span><span>{pet.species}</span></li>
-                </ul>
+                <div className="card-body h-auto">
+                  <div className="rounded" >
+                    <img className="img-fluid" src='https://www.akc.org/wp-content/uploads/2020/07/Golden-Retriever-puppy-standing-outdoors-500x486.jpg'></img>
+                    <Link to="" style={{ textDecoration: 'none' }} ><p className={`mt-0 text-center text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`}>{pet.pet_status}</p></Link>
+                  </div>
+                  <ul className="list adlam-display  ">
+                    <li>
+                      <span className=' fw-bold'>Nombre: </span><span className="text-black">{pet.name}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Sexo: </span><span className="text-black">{pet.gender}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Raza: </span><span className="text-black">{pet.breed}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Color: </span><span className="text-black">{pet.color}</span>
+                    </li>
+
+                    <li>
+                      <span className='fw-bold'>Especie: </span><span className="text-black">{pet.species}</span>
+                    </li>
+                  </ul>
+
+                </div>
               </Popup>
             </Marker>
           );

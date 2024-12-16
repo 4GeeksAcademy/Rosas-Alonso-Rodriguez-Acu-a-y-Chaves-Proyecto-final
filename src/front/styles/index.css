@@ -93,9 +93,10 @@
     color: red;
   }
 
-  .leaflet-container {
+   .leaflet-container {
     height: 400px; 
     width: 100%;
+
   }
 
   .file-upload-icon {
@@ -105,3 +106,4 @@
   }
   
  
+
