@@ -42,7 +42,6 @@ class Species (Enum):
      gato = "2"
      ave= "3"
      conejo = "4"
-     reptil = "5"
      otro = "6"
      
 class Pet(db.Model):
@@ -68,6 +67,7 @@ class Pet(db.Model):
         return{
             "name" : self.name,
             "breed" : self.breed,
+            "gender": self.gender.value if self.gender else None,
             "color": self.color,
             "photo_1": self.photo_1,
             "photo_2" : self.photo_2,
@@ -102,7 +102,7 @@ class Post_Description (db.Model):
             pet = self.pet_relationship #Agregado
             return{    
                 "pet_info": self.pet_id,
-                "pet_details": self.pet_relationship.serialize(),
+                "pet_details": self.pet_relationship.serialize() if self.pet_relationship else None,
                 "longitude" : self.longitude,
                 "latitude": self.latitude,
                 "description" : self.description,
