@@ -191,6 +191,9 @@ p {
   --bs-bg-opacity: 0.2;
   background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
 }
+.bg-verde {
+  background-color: green;
+}
 .user-title {
 color: darkblue;
 font-size: 30px;
@@ -268,4 +271,8 @@ font-size: 30px;
   margin-right: 10px; /* Espaciado entre el texto y el ícono */
   top: 50%; /* Centrado vertical */
   transform: translateY(-50%); /* Alineación en el centro vertical */
+}
+
+.texto-grande {
+  font-size: 16px;
 }

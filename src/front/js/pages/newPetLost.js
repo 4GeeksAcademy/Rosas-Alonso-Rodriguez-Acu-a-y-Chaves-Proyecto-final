@@ -86,13 +86,13 @@ const NewPetLost = () => {
           </div>
           <div className="row g-3 mb-3 ">
             <div className="col-md-6">
-              <label htmlFor="gender" className="form-label">GENERO</label>
+              <label htmlFor="gender" className="form-label">GÉNERO</label>
 
-              <select className="form-select" id="gender" aria-label="Selecionar genero" value={newPet.gender} required onChange={handleChange} >
+              <select className="form-select" id="gender" aria-label="Selecionar genero" value={newPet.gender} placeholder="Selecciona" required onChange={handleChange} >
                 <option value="" disabled>Selecciona</option>
                 <option value="male">Macho</option>
                 <option value="female">Hembra</option>
-                <option value="unknow">No lo sé</option>
+                
               </select>
             </div>
             <div className="col-md-6">

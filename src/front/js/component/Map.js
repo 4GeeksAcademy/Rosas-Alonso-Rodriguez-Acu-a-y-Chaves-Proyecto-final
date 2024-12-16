@@ -1,16 +1,17 @@
 
 import React, { useState, useEffect, useContext } from 'react'
+import { useNavigate } from "react-router-dom";
 
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Icon, divIcon, map } from "leaflet"
+//import { Icon, divIcon, map } from "leaflet"
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
 import { Link } from "react-router-dom";
 import L from "leaflet";
 import lostDogIcon from '/src/front/img/lost-dog-icon.png';
 import foundDogIcon from '/src/front/img/found-dog-icon.png';
-import {Context} from "../store/appContext"
+import { Context } from "../store/appContext"
 
 /* 
 Commands: 
@@ -44,27 +45,28 @@ const LostIcon = new L.Icon({
   popupAnchor: [0, -32] // Ubicación del popup cuando se hace clic
 });
 
-const Map = () => {
 
-    const getStatusClass = (status) =>{
-      switch (status){
- //       case "Encontrado":
-   //     return "bg-success";
-        case "Estoy perdido":
-          return "bg-danger"; // Rojo
-     //   case "Buscando a su familia":
-    //      return "bg-warning"; // Amarillo
-   //     default:
-    //      return "bg-secondary"; // Gris
-      }
-    };
+const Map = () => {
+  const navigate = useNavigate();
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "Encontrado":
+        return "bg-verde"; // Fondo verde para "Encontrado"
+      case "Estoy perdido":
+        return "bg-danger";  // Fondo rojo para "Estoy perdido"
+      case "Busco a mi familia":
+        return "bg-warning"; // Fondo amarillo para "Busco a mi familia"
+      default:
+        return "bg-secondary"; // Fondo gris por defecto
+    }
+  };
 
   // const [pets, setPets] = useState([]);
-  const {store, actions} = useContext(Context);
+  const { store, actions } = useContext(Context);
 
 
   useEffect(() => {
-      actions.getAllPetPosts()
+    actions.getAllPetPosts()
   }, []);
 
 
@@ -77,8 +79,7 @@ const Map = () => {
       <MarkerClusterGroup
         chunkedLoading
       // iconCreateFunction={createCustomClusterIcon}
-      > 
-      {/* //Esto es para agrupar los markers. chunkedLoading es para la performance */}
+      > {/* Esto es para agrupar los markers. chunkedLoading es para la performance */}
         {store.fetchedPetPosts.map(pet => {
           //if para determinar el ícono según el estado de la mascota
           let petIcon;
@@ -88,40 +89,48 @@ const Map = () => {
             petIcon = FoundIcon; // Si está encontrado, usa el ícono de encontrado
           }
 
+          const petImage = pet.photo_1 || 'https://cdn.pixabay.com/photo/2020/03/26/19/50/dog-4971630_1280.png';  // Fallback a una imagen predeterminada si no hay foto
+
           return (
             <Marker key={pet.pet_id} position={[pet.latitude, pet.longitude]} icon={petIcon}>
-          <Popup>
-            <div className="card-body ">
-       <div classname="rounded" > 
-            <img className="img-fluid mx-auto d-block"  style={{
-    width: "100%",
-    height: "100%",
-  }}src='https://www.akc.org/wp-content/uploads/2020/07/Golden-Retriever-puppy-standing-outdoors-500x486.jpg'></img>
-            <Link to={`/petcard/${pet.id}`} style={{ textDecoration: 'none' }} ><p className={`mt-0 text-center text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`}>{pet.pet_status}</p></Link>
-            </div>
-              <ul className="list adlam-display  ">
-              <li>
-                  <span className=' fw-bold'>Nombre: </span><span className="text-black">{pet.name}</span>
-                </li>          
-                   <li>
-                  <span className='fw-bold'>Sexo: </span><span className="text-black">{pet.gender}</span>
-                </li>
-                <li>
-                  <span className='fw-bold'>Raza: </span><span className="text-black">{pet.breed}</span>
-                </li>
-                <li>
-                  <span className='fw-bold'>Color: </span><span className="text-black">{pet.color}</span>
-                </li>
-   
-                <li>
-                  <span className='fw-bold'>Especie: </span><span className="text-black">{pet.species}</span>
-                </li>
-              </ul>
-              
-            </div>
-          </Popup>
-        </Marker>
-      )})}
+              <Popup>
+                <div className="card-body h-auto d-flex flex-column align-items-center" style={{ maxWidth: '250px', height: 'auto', wordWrap: 'break-word', textOverflow: 'ellipsis', paddingBottom: '10px' }}>
+                  {/* Contenedor de la img:   -Flor */}
+                  <div className="d-flex justify-content-center mb-2" style={{ width: '100%', height: '120px' }}>
+                    <img className="img-fluid square-img" src={petImage} alt={pet.name} style={{ width: '120px', height: '120px', objectFit: 'cover' }}></img>
+                  </div>
+                  {/* Estado de la mascota:  -Flor */}
+                  <p className={`mt-0 text-center adlam-display-regular text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`} style={{ paddingLeft: '10px', paddingRight: '10px' }}> {pet.pet_status} </p>
+                  {/* Info adicional de mascota:  -Flor */}
+                  <ul className="list-unstyled adlam-display" style={{ marginBottom: '5px' }}>
+                    <li>
+                      <span className=' fw-bold'>Nombre: </span><span className="text-black">{pet.name}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Sexo: </span><span className="text-black">{pet.gender}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Raza: </span><span className="text-black">{pet.breed}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Color: </span><span className="text-black">{pet.color}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Especie: </span><span className="text-black">{pet.species}</span>
+                    </li>
+                    {/* Botón más info */}
+                    <button type="button" className="btn-sm btnStart btn-primary adlam-display-regular mb-3" style={{ width: "auto", maxWidth: "200px", maxHeight: "40px", marginBottom: '10px', marginTop: '10px' }}
+                      onClick={() => navigate(`/petcard/${pet.pet_id}`)}>
+                      Más información
+                    </button>
+                  </ul>
+                </div>
+              </Popup>
+
+            </Marker>
+          );
+        })}
+
       </MarkerClusterGroup>
     </MapContainer>
   )

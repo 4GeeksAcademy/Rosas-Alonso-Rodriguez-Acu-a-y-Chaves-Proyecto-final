@@ -251,6 +251,15 @@ def edit_pet(id):
     pet = Pet.query.get(id) #
     if not pet:
         return jsonify({'msg': 'Mascota no encontrada'}), 404
+    
+    # Accedo a la relación 'post' para obtener la post_description    -Flor 16/12
+    post_description = Post_Description.query.filter_by(pet_id=id).first()
+    
+    if not post_description:
+        return jsonify({'msg': 'No se encontró la publicación asociada a la mascota'}), 404
+    
+    if 'pet_status' in body:
+        post_description.pet_status = body['pet_status']  # esto actualiza el status de la mascota
 
     if 'name' in body:
         pet.name = body['name']
@@ -271,6 +280,58 @@ def edit_pet(id):
     
     db.session.commit()
     return jsonify({'msg': 'Mascota actualizada exitosamente', 'data': pet.serialize()}), 201
+
+#endpoint para traer mascota según su id   -Flor 16/12
+@app.route('/pet/<int:id>', methods=['GET'])
+def get_pet_by_id(id):
+    pet = Pet.query.get(id)
+    if not pet:
+        return jsonify({'msg': 'Mascota no encontrada'}), 404
+
+    # Buscamos la publicación asociada a ese id de mascota
+    post_description = Post_Description.query.filter_by(pet_id=id).first()
+    if not post_description:
+        return jsonify({'msg': 'No se encontró la publicación asociada a la mascota'}), 404
+    species_map = {
+        "1": "Perro",
+        "2": "Gato",
+        "3": "Ave",
+        "4": "Conejo",
+        "5": "Reptil",
+        "6": "Otro"
+    }
+
+    species_value = pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None
+    species_description = species_map.get(species_value, "Desconocido")
+
+    pet_data = {
+        "pet_id": pet.id,
+        "name": pet.name,
+        "breed": pet.breed_relationship.name if pet.breed_relationship else None,
+        "species": species_description,
+        "gender": pet.gender.value if pet.gender else None,
+        "color": pet.color,
+        "photo_1": pet.photo_1,
+        "photo_2": pet.photo_2,
+        "photo_3": pet.photo_3,
+        "photo_4": pet.photo_4,
+        "user_id": pet.user_id,
+        "user_details": {
+            "id": pet.user.id,
+            "email": pet.user.email,
+            "phone": pet.user.phone,
+            "facebook": pet.user.facebook,
+            "instagram": pet.user.instagram
+        } if pet.user else None,
+        "pet_status": post_description.pet_status.value,
+        "latitude": post_description.latitude,
+        "longitude": post_description.longitude,
+        "description": post_description.description,
+        "zone": post_description.zone,  # Zona de la mascota
+        "event_date": post_description.event_date  # Fecha del evento
+    }
+
+    return jsonify({'msg': 'ok', 'data': pet_data}), 200
 
 #Eliminar mascota:
 @app.route('/pet/<int:id>', methods=['DELETE'])
@@ -385,8 +446,19 @@ def get_pet_post():
 
     return jsonify({'msg': 'ok', 'data': pet_data}), 200
 
+#TRAER MASCOTA EN PARTICULAR MATIAS 12/15/2024 FUNCIONA
+@app.route('/pet/<int:id>', methods=['GET'])
+def get_pet(id):
+    post = Post_Description.query.filter_by(pet_id=id).first()
+    if not post:
+        return jsonify({'msg': 'Mascota no encontrada'}), 404
+    
+    # pet = post.pet_relationship  # Relación con la tabla Pet
+    # if not pet:
+    #     return jsonify({'msg': 'Mascota asociada no encontrada'}), 404
+    return jsonify({'msg': 'Mascota traída exitosamente', 'data': post.serialize()}), 200
 
-
+###################
 # any other endpoint will try to serve it like a static file
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):

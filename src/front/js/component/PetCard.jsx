@@ -5,18 +5,56 @@ import { useParams } from "react-router-dom";
 const PetCard = () => {
   const { store } = useContext(Context);
   const { theid } = useParams();
+  console.log("Pet ID from URL:", theid);
   const [detail, setDetail] = useState(null);
   const [mainImage, setMainImage] = useState("https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Imagen principal inicial
 
-  const findDetail = () => {
-    const result = store.petData.find((item) => item.id == theid);
-    setDetail(result);
-    setMainImage(result?.image || "https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Establecemos la imagen principal
+
+  // Función para obtener los datos de la mascota desde el backend
+  const fetchPetData = async (petId) => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/pet/${petId}`);
+      const data = await response.json();
+
+      if (data.msg === 'ok') {
+        const petDetails = data.data;
+        setDetail(petDetails); // Actualiza el estado con los detalles de la mascota
+        setMainImage(petDetails?.photo_1 || "https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Usa la primera foto o la de por defecto
+      } else {
+        console.error('Error fetching pet data:', data.msg);
+      }
+    } catch (error) {
+      console.error('Error fetching pet data:', error);
+    }
   };
 
+  // useEffect que se ejecuta cuando el componente se monta o cuando cambia el `theid`
   useEffect(() => {
-    findDetail();
-  }, [theid]);
+    if (theid) {
+      fetchPetData(theid); // Llama a la API para obtener los detalles de la mascota
+    }
+  }, [theid]); // Solo se vuelve a ejecutar si cambia el ID
+
+  if (!detail) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Cargando...</span> {/* spinner amarillo mientras carga la card */}
+        </div>
+      </div>
+    );
+  }
+
+  //para darle formato a la fecha
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
 
   return (
     <div className="pet-card-container">
@@ -103,7 +141,7 @@ const PetCard = () => {
         <div className="col-md-6 info-section">
           <h3 className="text-primary">{detail?.name}</h3>
           <p className="text-danger" style={{ fontSize: "1.5rem" }}>
-            Perdido/Encontrado el {detail?.lostDate}
+          {detail?.pet_status === "Estoy perdido" ? "Perdido el: " : "Encontrado el: "} {formatDate(detail?.event_date)}
           </p>
           <a
             href="#contactForm"
@@ -132,26 +170,17 @@ const PetCard = () => {
                 <td>{detail?.gender}</td>
               </tr>
               <tr>
-                <th scope="row">EDAD:</th>
-                <td>{detail?.age}</td>
-              </tr>
-              <tr>
-                <th scope="row">TAMAÑO:
-                </th>
-                <td>{detail?.size}</td>
-              </tr>
-              <tr>
                 <th scope="row">COLOR:</th>
                 <td>{detail?.color}</td>
               </tr>
               <tr>
                 <th scope="row">SE PERDIÓ EN:</th>
-                <td>{detail?.location}</td>
+                <td>{detail?.zone}</td>
               </tr>
             </tbody>
           </table>
           <p>
-            <strong>INFORMACIÓN ADICIONAL:</strong> {detail?.additionalInfo}
+            <strong>INFORMACIÓN ADICIONAL:</strong> {detail?.description}
           </p>
         </div>
       </div>
