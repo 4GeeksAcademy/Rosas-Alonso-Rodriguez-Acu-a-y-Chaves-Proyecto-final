@@ -44,7 +44,7 @@ const Login = () => {
         <div className="d-flex justify-content-center align-items-center vh-100">
             <div className="text-center">
                 <div className="container p-5 bg-white shadow rounded" style={{ width: "550px" }}>
-                    <h1 className="mb-4 adlam-display-regular">Iniciar sesión</h1>
+                    <h1 className="mb-4 user-title adlam-display-regular">Iniciar sesión</h1>
                     <form onSubmit={handleSubmit} >
                         <div className="adlam-display-regular form-floating mb-3">
                             <input
