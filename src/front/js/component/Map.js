@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react'
+
+import React, { useState, useEffect, useContext } from 'react'
+
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Icon, divIcon, map } from "leaflet"
+//import { Icon, divIcon, map } from "leaflet"
 import MarkerClusterGroup from 'react-leaflet-cluster';
+
+import { Link } from "react-router-dom";
 import L from "leaflet";
 import lostDogIcon from '/src/front/img/lost-dog-icon.png';
 import foundDogIcon from '/src/front/img/found-dog-icon.png';
+import { Context } from "../store/appContext"
 
 /* 
 Commands: 
@@ -41,20 +46,25 @@ const LostIcon = new L.Icon({
 
 const Map = () => {
 
-  const [pets, setPets] = useState([]);
+  const getStatusClass = (status) => {
+    switch (status) {
+      //       case "Encontrado":
+      //     return "bg-success";
+      case "Estoy perdido":
+        return "bg-danger"; // Rojo
+      //   case "Buscando a su familia":
+      //      return "bg-warning"; // Amarillo
+      //     default:
+      //      return "bg-secondary"; // Gris
+    }
+  };
 
-  const MarcadorDePrueba = { geocode: [-34.90937546329044, -56.17280532526599], popUp: "Hola soy un marcador de prueba" }
-  const MarcadorDePrueba2 = { geocode: [-34.91158014490245, -56.16774456039812], popUp: "Hola soy el  marcador de prueba 2" }
+  // const [pets, setPets] = useState([]);
+  const { store, actions } = useContext(Context);
 
 
   useEffect(() => {
-    fetch(`${process.env.BACKEND_URL}/pet_post`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setPets(data.data);
-      })
-      .catch(error => console.error('Error fetching pets:', error));
+    actions.getAllPetPosts()
   }, []);
 
 
@@ -67,8 +77,9 @@ const Map = () => {
       <MarkerClusterGroup
         chunkedLoading
       // iconCreateFunction={createCustomClusterIcon}
-      > {/* //Esto es para agrupar los markers. chunkedLoading es para la performance */}
-        {pets.map(pet => {
+
+      > {/* Esto es para agrupar los markers. chunkedLoading es para la performance */}
+        {store.fetchedPetPosts.map(pet => {
           //if para determinar el ícono según el estado de la mascota
           let petIcon;
           if (pet.pet_status === "Estoy perdido" || pet.pet_status === "Busco a mi familia") {
@@ -80,14 +91,31 @@ const Map = () => {
           return (
             <Marker key={pet.pet_id} position={[pet.latitude, pet.longitude]} icon={petIcon}>
               <Popup>
-                <h6>Se perdió: <span className='fw-bold'>{pet.name}</span></h6>
-                <ul>
-                  <img src={pet.photo_1} width={100} height={100} alt={pet.name} />
-                  <li><span className='fw-bold'>Raza: </span><span>{pet.breed}</span></li>
-                  <li><span className='fw-bold'>Color: </span><span>{pet.color}</span></li>
-                  <li><span className='fw-bold'>Sexo: </span><span>{pet.gender}</span></li>
-                  <li><span className='fw-bold'>Especie: </span><span>{pet.species}</span></li>
-                </ul>
+                <div className="card-body h-auto">
+                  <div className="rounded" >
+                    <img className="img-fluid" src='https://www.akc.org/wp-content/uploads/2020/07/Golden-Retriever-puppy-standing-outdoors-500x486.jpg'></img>
+                    <Link to="" style={{ textDecoration: 'none' }} ><p className={`mt-0 text-center text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`}>{pet.pet_status}</p></Link>
+                  </div>
+                  <ul className="list adlam-display  ">
+                    <li>
+                      <span className=' fw-bold'>Nombre: </span><span className="text-black">{pet.name}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Sexo: </span><span className="text-black">{pet.gender}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Raza: </span><span className="text-black">{pet.breed}</span>
+                    </li>
+                    <li>
+                      <span className='fw-bold'>Color: </span><span className="text-black">{pet.color}</span>
+                    </li>
+
+                    <li>
+                      <span className='fw-bold'>Especie: </span><span className="text-black">{pet.species}</span>
+                    </li>
+                  </ul>
+
+                </div>
               </Popup>
             </Marker>
           );

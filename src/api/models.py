@@ -73,7 +73,14 @@ class Pet(db.Model):
             "photo_2" : self.photo_2,
             "photo_3": self.photo_3,
             "photo_4" : self.photo_4,
-            "user_id" : self.user_id    
+            "user_id" : self.user_id,
+            "user_details": {
+            "id": self.user.id,
+            "email": self.user.email,
+            "phone": self.user.phone,
+            "facebook": self.user.facebook,
+            "instagram": self.user.instagram
+        } if self.user else None, #Modificado
         }
 
 class Post_Description (db.Model):
@@ -92,6 +99,7 @@ class Post_Description (db.Model):
             return f'<Pet {self.pet_id, self.zone, self.pet_status}>'
 
     def serialize(self):
+            pet = self.pet_relationship #Agregado
             return{    
                 "pet_info": self.pet_id,
                 "pet_details": self.pet_relationship.serialize(),
@@ -99,7 +107,10 @@ class Post_Description (db.Model):
                 "latitude": self.latitude,
                 "description" : self.description,
                 "event_date" : self.event_date,
-                "pet_status" : self.pet_status.value if self.pet_status else None
+                "zone": self.zone,
+                "pet_status" : self.pet_status.value if self.pet_status else None,
+                "gender": pet.gender.value if pet.gender else None, #Agregado
+                "species": pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None #Agregado
             }
 
 class Breed (db.Model):

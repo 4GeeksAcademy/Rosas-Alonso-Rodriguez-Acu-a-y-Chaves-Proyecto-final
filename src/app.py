@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from sqlalchemy.exc import IntegrityError
 from flask_migrate import Migrate
 from flask_swagger import swagger
-from api.utils import APIException, generate_sitemap
+from api.utils import APIException, generate_sitemap 
 from api.models import db
 from api.routes import api
 from api.admin import setup_admin
@@ -22,9 +22,10 @@ from flask_jwt_extended import JWTManager
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../public/')
+
 app = Flask(__name__)
 app.url_map.strict_slashes = False
-CORS(app)
+CORS(app, origins = "*")
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_KEY")
 jwt = JWTManager(app)
 
@@ -94,26 +95,35 @@ def create_user():
     body = request.get_json(silent=True)
     if body is None:
         return jsonify({'msg': 'El cuerpo de la solicitud está vacío'}), 400
-    if 'name' not in body: 
+    if 'name' not in body or not body['name'].strip(): 
         return jsonify({'msg': "El campo 'name' es obligatorio"}), 400
-    if 'email' not in body: 
+    if 'email' not in body or not body['email'].strip(): 
         return jsonify({'msg': "El campo 'email' es obligatorio"}), 400
-    if 'password' not in body:
-        return jsonify({'msg': "El campo 'password' es obligatiro"}), 400
-    if 'security_question' not in body:
+    if 'password' not in body or not body['password'].strip():
+        return jsonify({'msg': "El campo 'password' es obligatorio"}), 400
+    if 'security_question' not in body or not body['security_question'].strip():
         return jsonify({"msg": "El campo 'security_question' es obligatorio"}), 400
+    if 'phone' not in body or not body['phone'].strip():  #si no existe teléfono o es vacío o es un espacio
+        return jsonify({'msg': "El campo 'phone' es obligatorio"}), 400
 
-    new_user = User(
-        name = body['name'],
-        email = body['email'],
-        password= body['password'],
-        is_active=True,
-        security_question=body['security_question']
-    )
+    try:
+        new_user = User(
+            name = body['name'],
+            email = body['email'],
+            password= body['password'],
+            is_active=True,
+            security_question=body['security_question'],
+            phone=body['phone'],  
+            facebook=body.get('facebook', None),  # Obtener si existe o asignar None
+            instagram=body.get('instagram', None),  # Obtener si existe o asignar None
+        )
 
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({'msg':'Usuario creado exitosamente', 'data': new_user.serialize()}), 201
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'msg':'Usuario creado exitosamente', 'data': new_user.serialize()}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'msg': f'Error al crear el usuario: {str(e)}'}), 500
 
 #LOGIN: 
 @app.route('/login', methods=['POST'])
@@ -332,25 +342,45 @@ def get_all_pets():
 #endpoint para obtener la info de los posts, para usarla en el mapa.   -Flor
 @app.route('/pet_post', methods=['GET'])
 def get_pet_post():
-    posts = Post_Description.query.all()
-
+    species_map = {
+        "1": "Perro",
+        "2": "Gato",
+        "3": "Ave",
+        "4": "Conejo",
+        "5": "Reptil",
+        "6": "Otro"
+    }
+    posts = Post_Description.query.all()  
     pet_data = []
     for post in posts:
         pet = post.pet_relationship  # Relación con la mascota (Pet)
-        
+        user = pet.user
+        print("aca esta el objeto 'pet': ", pet.serialize())
+        species_value = pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None
+        species_description = species_map.get(species_value,"Desconocido")
         pet_data.append({
             "pet_id": pet.id,
             "name": pet.name,
             "breed": pet.breed_relationship.name if pet.breed_relationship else None,
+            "species": species_description,  # Se agrego especie
+            "gender": pet.gender.value if pet.gender else None,  # Se agrego género
             "color": pet.color,
             "photo_1": pet.photo_1,
             "photo_2": pet.photo_2,
             "photo_3": pet.photo_3,
             "photo_4": pet.photo_4,
             "user_id": pet.user_id,
+            "user_details": {
+                "id": user.id,
+                "email": user.email,
+                "phone": user.phone,
+                "facebook": user.facebook,
+                "instagram": user.instagram
+            } if user else None, #Modificado
             "pet_status": post.pet_status.value,  # El estado de la mascota desde Post_Description
             "latitude": post.latitude,
-            "longitude": post.longitude
+            "longitude": post.longitude,
+            "description": post.description
         })
 
     return jsonify({'msg': 'ok', 'data': pet_data}), 200

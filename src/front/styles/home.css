@@ -4,6 +4,12 @@
     font-weight: 400;
     font-style: normal;
   }
+.adlam-display{
+  font-family: "ADLaM Display";
+    font-weight: 100;
+    font-style: normal;
+    color: #003459; 
+}
 
   .nunito {
     font-family: "Nunito", sans-serif;
@@ -14,7 +20,7 @@
 
 body {
     background-image: url('/workspaces/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/banner.PNG');
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
     background-size: cover;
   }
 .btnStart{
@@ -190,6 +196,16 @@ color: darkblue;
 font-size: 30px;
 }
 
+.list{
+  list-style-type: none;
+  margin-top: 4%;
+  padding: 0%;
+}
+.leaflet-popup-content-wrapper{
+ border-style: 0px;
+ background: url('/workspaces/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/mapCard.PNG') no-repeat center center;
+ background-size: cover;
+}
 
 .btn-primary:hover {
   background-color: #004a99; /* Azul oscuro más claro al pasar el cursor */
@@ -205,6 +221,34 @@ font-size: 30px;
   border: none; /* Sin recuadro */
   background: none; /* Sin fondo */
   padding: 0;
+}
+
+/* Estilos cuando el mouse pasa sobre el lápiz de editar perfil -Flor */
+/* Estilo por defecto: el texto está oculto */
+.hover-text {
+  display: none;
+  background-color: rgba(0, 123, 255, 0.1); /* Fondo con transparencia */
+  color: #007bff; /* Color azul del texto */
+  padding: 5px 10px; /* Espaciado interno para que el texto no se pegue */
+  border-radius: 5px; /* Bordes redondeados */
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+  white-space: nowrap; /* Evita que el texto se envuelva */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+  transform: translateY(-50%); /* Centra el texto verticalmente */
+  z-index: 10; /* Asegura que el texto se muestre por encima de otros elementos */
+}
+
+.position-relative:hover .hover-text {
+  display: block; /* Muestra el texto cuando el mouse pasa sobre el lápiz */
+}
+
+/* Alineación del texto a la izquierda del ícono */
+.position-relative .hover-text {
+  right: 100%; /* Desplaza el texto completamente a la izquierda del contenedor */
+  left: auto;
+  margin-right: 10px; /* Espaciado entre el texto y el ícono */
+  top: 50%; /* Centrado vertical */
+  transform: translateY(-50%); /* Alineación en el centro vertical */
 }
 
 .texto-grande {
