@@ -48,14 +48,14 @@ const Map = () => {
 
   const getStatusClass = (status) => {
     switch (status) {
-      //       case "Encontrado":
-      //     return "bg-success";
+      case "Encontrado":
+        return "bg-success"; // Fondo verde para "Encontrado"
       case "Estoy perdido":
-        return "bg-danger"; // Rojo
-      //   case "Buscando a su familia":
-      //      return "bg-warning"; // Amarillo
-      //     default:
-      //      return "bg-secondary"; // Gris
+        return "bg-danger";  // Fondo rojo para "Estoy perdido"
+      case "Busco a mi familia":
+        return "bg-warning"; // Fondo amarillo para "Busco a mi familia"
+      default:
+        return "bg-secondary"; // Fondo gris por defecto
     }
   };
 
@@ -88,15 +88,22 @@ const Map = () => {
             petIcon = FoundIcon; // Si está encontrado, usa el ícono de encontrado
           }
 
+          const petImage = pet.photo_1 || 'https://cdn.pixabay.com/photo/2020/03/26/19/50/dog-4971630_1280.png';  // Fallback a una imagen predeterminada si no hay foto
+
           return (
             <Marker key={pet.pet_id} position={[pet.latitude, pet.longitude]} icon={petIcon}>
               <Popup>
-                <div className="card-body h-auto">
-                  <div className="rounded" >
-                    <img className="img-fluid" src='https://www.akc.org/wp-content/uploads/2020/07/Golden-Retriever-puppy-standing-outdoors-500x486.jpg'></img>
-                    <Link to="" style={{ textDecoration: 'none' }} ><p className={`mt-0 text-center text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`}>{pet.pet_status}</p></Link>
+                <div className="card-body h-auto d-flex flex-column align-items-center" style={{ maxWidth: '250px', maxHeight: '300px', wordWrap: 'break-word', textOverflow: 'ellipsis' }}>
+                  {/* Contenedor de la img:   -Flor */}
+                  <div className="d-flex justify-content-center mb-2" style={{ width: '100%', height: '120px' }}>
+                    <img className="img-fluid square-img" src={petImage} alt={pet.name} style={{width: '120px', height: '120px', objectFit: 'cover'}}></img>
                   </div>
-                  <ul className="list adlam-display  ">
+                {/* Estado de la mascota:  -Flor */}
+                    <Link to="" style={{ textDecoration: 'none' }}>
+                      <p className={`mt-0 text-center text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`}>{pet.pet_status}</p>
+                    </Link>
+                {/* Info adicional de mascota:  -Flor */}
+                  <ul className="list-unstyled adlam-display  ">
                     <li>
                       <span className=' fw-bold'>Nombre: </span><span className="text-black">{pet.name}</span>
                     </li>
@@ -109,14 +116,13 @@ const Map = () => {
                     <li>
                       <span className='fw-bold'>Color: </span><span className="text-black">{pet.color}</span>
                     </li>
-
                     <li>
                       <span className='fw-bold'>Especie: </span><span className="text-black">{pet.species}</span>
                     </li>
                   </ul>
-
                 </div>
               </Popup>
+
             </Marker>
           );
         })}
