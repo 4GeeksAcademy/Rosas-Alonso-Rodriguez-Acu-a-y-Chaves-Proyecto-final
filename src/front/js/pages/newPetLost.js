@@ -25,8 +25,8 @@ const NewPetLost = () => {
     "photo_4": "",
     "event_date": "",
     "zone": "",
-    "longitude": "-56.159328",
-    "latitude": "-34.895992",
+    "longitude": "", //Esto contenia -56.159328 y lo saque 
+    "latitude": "", //Esto contenia -34.895992 y lo saque
     "pet_status": "lost"
 
   });
@@ -43,10 +43,9 @@ const NewPetLost = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("enviando post", newPet);
-    actions.addNewPet(newPet);
+    actions.addNewPet(newPet, navigate);
     console.log("enviado");
-    // navigate("/map")
-  };
+    };
 
   const CustomIcon = L.divIcon({
     html: '<i class="fa-solid fa-paw"></i>',
