@@ -3,27 +3,73 @@ import { Context } from "../store/appContext";
 import { useParams } from "react-router-dom";
 
 const PetCard = () => {
-  const { store, actions } = useContext(Context);
-  // const [petinfo, setPetInfo]  = useState(null);
-  let pet = store.fetchedPet //IR CAMBIANDO
+  const { store } = useContext(Context);
   const { theid } = useParams();
+  console.log("Pet ID from URL:", theid);
   const [detail, setDetail] = useState(null);
-  const [mainImage, setMainImage] = useState(null); // Imagen principal inicial
+  const [mainImage, setMainImage] = useState("https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Imagen principal inicial
 
-  useEffect(() => {
-    if (pet?.pet_details?.photo_1) {
-      setMainImage(pet.pet_details.photo_1); // Establece la imagen inicial si está disponible
+
+  // Función para obtener los datos de la mascota desde el backend
+  const fetchPetData = async (petId) => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/pet/${petId}`);
+      const data = await response.json();
+
+      if (data.msg === 'ok') {
+        const petDetails = data.data;
+        setDetail(petDetails); // Actualiza el estado con los detalles de la mascota
+        setMainImage(petDetails?.photo_1 || "https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Usa la primera foto o la de por defecto
+      } else {
+        console.error('Error fetching pet data:', data.msg);
+      }
+    } catch (error) {
+      console.error('Error fetching pet data:', error);
     }
-  }, [pet]); // Este efecto se ejecutará cuando pet cambie
-  
+  };
 
+  // useEffect que se ejecuta cuando el componente se monta o cuando cambia el `theid`
   useEffect(() => {
-    actions.getPet(theid);
-  }, []);
-console.log("OBJETO PETCARD:",pet)
+    if (theid) {
+      fetchPetData(theid); // Llama a la API para obtener los detalles de la mascota
+    }
+  }, [theid]); // Solo se vuelve a ejecutar si cambia el ID
+
+  if (!detail) {
+    return <div>Cargando...</div>; // tamb podríamos agregar un spinner de carga?
+  }
+
+  //para darle formato a la fecha
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
   return (
     <div className="pet-card-container">
       {/* Navigation path */}
+      <div className="d-flex justify-content-end navigation-path mb-3">
+        <a
+          href="https://sturdy-space-invention-q7947gjpqj76fx57r-3000.app.github.dev/"
+          className="text-secondary mx-2"
+        >
+          Home
+        </a>{" "}
+        >{" "}
+        <a
+          href="https://sturdy-space-invention-q7947gjpqj76fx57r-3000.app.github.dev/PetView"
+          className="text-secondary mx-2"
+        >
+          Mascotas
+        </a>{" "}
+         > Más información
+      </div>
+
       <div className="row">
         {/* Imagen y carrousel */}
         <div className="col-md-6 image-section">
@@ -37,37 +83,36 @@ console.log("OBJETO PETCARD:",pet)
           </div>
 
           {/* Miniaturas debajo de la imagen principal */}
-{/* Miniaturas debajo de la imagen principal */}
-<div className="image-thumbnails mt-3 d-flex">
-  <img
-    className="thumbnail img-fluid mx-2"
-    src={pet.pet_details?.photo_1 || "https://via.placeholder.com/150x100"}
-    alt="Thumbnail 1"
-    style={{ width: "80px", height: "auto", cursor: "pointer" }}
-    onClick={() => setMainImage(pet.pet_details?.photo_1 || "https://via.placeholder.com/600x400")}
-  />
-  <img
-    className="thumbnail img-fluid mx-2"
-    src={pet.pet_details?.photo_3 || "https://via.placeholder.com/150x100/ff7f7f"}
-    alt="Thumbnail 2"
-    style={{ width: "80px", height: "auto", cursor: "pointer" }}
-    onClick={() => setMainImage(pet.pet_details?.photo_2 || "https://via.placeholder.com/600x400/ff7f7f")}
-  />
-  <img
-    className="thumbnail img-fluid mx-2"
-    src={pet.pet_details?.photo_4 || "https://via.placeholder.com/150x100/7fff7f"}
-    alt="Thumbnail 3"
-    style={{ width: "80px", height: "auto", cursor: "pointer" }}
-    onClick={() => setMainImage(pet.pet_details?.photo_3 || "https://via.placeholder.com/600x400/7fff7f")}
-  />
-        <img
-          className="thumbnail img-fluid mx-2"
-    src={pet.pet_details?.photo_4 || "https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"}
-    alt="Thumbnail 4"
-    style={{ width: "80px", height: "auto", cursor: "pointer" }}
-    onClick={() => setMainImage(pet.pet_details?.photo_4 || "https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg")}
-  />
-        </div>
+          <div className="image-thumbnails mt-3 d-flex">
+            <img
+              className="thumbnail img-fluid mx-2"
+              src="https://via.placeholder.com/150x100"
+              alt="Thumbnail 1"
+              style={{ width: "80px", height: "auto", cursor: "pointer" }}
+              onClick={() => setMainImage("https://via.placeholder.com/600x400")}
+            />
+            <img
+              className="thumbnail img-fluid mx-2"
+              src="https://via.placeholder.com/150x100/ff7f7f"
+              alt="Thumbnail 2"
+              style={{ width: "80px", height: "auto", cursor: "pointer" }}
+              onClick={() => setMainImage("https://via.placeholder.com/600x400/ff7f7f")}
+            />
+            <img
+              className="thumbnail img-fluid mx-2"
+              src="https://via.placeholder.com/150x100/7fff7f"
+              alt="Thumbnail 3"
+              style={{ width: "80px", height: "auto", cursor: "pointer" }}
+              onClick={() => setMainImage("https://via.placeholder.com/600x400/7fff7f")}
+            />
+            <img
+              className="thumbnail img-fluid mx-2"
+              src="https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"
+              alt="Thumbnail 4"
+              style={{ width: "80px", height: "auto", cursor: "pointer" }}
+              onClick={() => setMainImage("https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg")}
+            />
+          </div>
 
           {/* Botón Share debajo de la carrousel */}
           <div className="share-section mt-3">
@@ -88,12 +133,10 @@ console.log("OBJETO PETCARD:",pet)
 
         {/* Pet details */}
         <div className="col-md-6 info-section">
-          <h2 className="text-primary fw-bolder">{pet.pet_details?.name}</h2>
+          <h3 className="text-primary">{detail?.name}</h3>
           <p className="text-danger" style={{ fontSize: "1.5rem" }}>
-            {pet.pet_status === "Estoy perdido" ? "Perdido el:" : "Encontrado el:"}{" "}
-              <span className="text-dark">{pet.event_date}</span>
-            </p>
-
+          {detail?.pet_status === "Estoy perdido" ? "Perdido el: " : "Encontrado el: "} {formatDate(detail?.event_date)}
+          </p>
           <a
             href="#contactForm"
             className="btn btn-primary mb-3"
@@ -114,89 +157,90 @@ console.log("OBJETO PETCARD:",pet)
             <tbody>
               <tr>
                 <th scope="row">NOMBRE:</th>
-                <td>{pet.pet_details?.name || "No disponible"}</td>
+                <td>{detail?.name}</td>
               </tr>
               <tr>
                 <th scope="row">SEXO:</th>
-                <td>{pet.pet_details?.gender}</td>
+                <td>{detail?.gender}</td>
               </tr>
               <tr>
                 <th scope="row">COLOR:</th>
-                <td>{pet.pet_details?.color}</td>
+                <td>{detail?.color}</td>
               </tr>
               <tr>
                 <th scope="row">SE PERDIÓ EN:</th>
-                <td>{pet.zone}</td>
+                <td>{detail?.zone}</td>
               </tr>
             </tbody>
           </table>
           <p>
-            <strong>INFORMACIÓN ADICIONAL:</strong> {pet.description}
+            <strong>INFORMACIÓN ADICIONAL:</strong> {detail?.description}
           </p>
         </div>
       </div>
 
       {/* Modal para contacto */}
       <div
-  className="modal fade"
-  id="contactModal"
-  tabIndex="-1"
-  aria-labelledby="contactModalLabel"
-  aria-hidden="true"
->
-  <div className="modal-dialog">
-    <div className="modal-content">
-      <div className="modal-header">
-        <h5 className="modal-title" id="contactModalLabel">
-          Contacta al usuario
-        </h5>
-        <button
-          type="button"
-          className="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div className="modal-body">
-        <h5>Sigue al usuario en redes sociales:</h5>
-        <div className="d-flex justify-content-start">
-          <a
-            href={pet.pet_details?.user_details.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-outline-primary mx-2"
-          >
-            <i className="fab fa-facebook"></i> Facebook
-          </a>
-          <a
-            href={`mailto:${pet.pet_details?.user_details.email}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-outline-info mx-2"
-          >
-            <i className="fas fa-envelope"></i> {pet.pet_details?.user_details.email}
-          </a>
-          <a
-            href={pet.pet_details?.user_details.instagram}
-            rel="noopener noreferrer"
-            className="btn btn-outline-danger mx-2"
-          >
-            <i className="fab fa-instagram"></i> Instagram
-          </a>
+        className="modal fade"
+        id="contactModal"
+        tabIndex="-1"
+        aria-labelledby="contactModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="contactModalLabel">
+                Enviar un mensaje
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">
+                    Tu Correo Electrónico
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    placeholder="Tu correo"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="message" className="form-label">
+                    Tu Mensaje
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="message"
+                    rows="3"
+                    placeholder="Escribe tu mensaje aquí"
+                  ></textarea>
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="button" className="btn btn-primary">
+                Enviar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="modal-footer">
-        <button
-          type="button"
-          className="btn btn-secondary"
-          data-bs-dismiss="modal"
-        >
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
     </div>
   );
 };
