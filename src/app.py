@@ -376,8 +376,19 @@ def get_pet_post():
 
     return jsonify({'msg': 'ok', 'data': pet_data}), 200
 
+#TRAER MASCOTA EN PARTICULAR MATIAS 12/15/2024 FUNCIONA
+@app.route('/pet/<int:id>', methods=['GET'])
+def get_pet(id):
+    post = Post_Description.query.filter_by(pet_id=id).first()
+    if not post:
+        return jsonify({'msg': 'Mascota no encontrada'}), 404
+    
+    # pet = post.pet_relationship  # Relación con la tabla Pet
+    # if not pet:
+    #     return jsonify({'msg': 'Mascota asociada no encontrada'}), 404
+    return jsonify({'msg': 'Mascota traída exitosamente', 'data': post.serialize()}), 200
 
-
+###################
 # any other endpoint will try to serve it like a static file
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
