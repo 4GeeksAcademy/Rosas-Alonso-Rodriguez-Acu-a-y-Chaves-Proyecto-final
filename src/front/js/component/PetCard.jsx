@@ -39,7 +39,7 @@ const PetCard = () => {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
         <div className="spinner-border text-warning" role="status">
-          <span className="visually-hidden">Cargando...</span>
+          <span className="visually-hidden">Cargando...</span> {/* spinner amarillo mientras carga la card */}
         </div>
       </div>
     );
