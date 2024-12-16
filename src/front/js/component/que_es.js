@@ -63,7 +63,7 @@ const Que_es = () => {
                     </div>
                 </div>
                 <div className="col-md-6">
-                    <img src="/path/to/your/screenshot3.png" alt="Mapa Patas Perdidas" className="img-fluid rounded" />
+                    <img src={logo} alt="Mapa Patas Perdidas" className="img-fluid rounded" />
                 </div>
             </div>
 
@@ -81,7 +81,7 @@ const Que_es = () => {
                     </div>
                 </div>
                 <div className="col-md-6 order-md-1">
-                    <img src="/path/to/your/screenshot4.png" alt="Contactar usuario" className="img-fluid rounded" />
+                    <img src={logo} alt="Contactar usuario" className="img-fluid rounded" />
                 </div>
             </div>
         </div>
