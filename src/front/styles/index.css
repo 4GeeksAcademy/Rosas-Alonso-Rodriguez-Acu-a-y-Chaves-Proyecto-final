@@ -7,10 +7,40 @@
     font-weight: 400;
     font-size: 16px;
 }
-.pet-form .form-control, .form-select{
-    font-family: 'Aboreto';
-    font-weight: 400;
-    font-size: 12px; 
+
+/* Estilos generales para input y select */
+.pet-form .form-control, 
+.pet-form .form-select {
+  font-family: "Nunito", sans-serif;
+  font-weight: lighter;
+  font-size: 14px;
+  color: #212529; /* Color similar al placeholder */
+}
+
+/* Estilo específico para el placeholder en inputs */
+.pet-form .form-control::placeholder {
+  font-family: "Nunito", sans-serif;
+  font-weight: lighter;
+  font-size: 14px;
+  color: #6c757d; /* Color del texto del placeholder */
+}
+
+/* Estilo para la opción por defecto (deshabilitada) en select */
+.pet-form .form-select option[disabled] {
+  font-family: "Nunito", sans-serif;
+  font-weight: lighter;
+  font-size: 14px;
+  color: #6c757d; /* Color grisáceo como el placeholder */
+}
+
+/* Forzar el color gris en el select cuando no se ha seleccionado ninguna opción */
+.pet-form .form-select:invalid {
+  color: #6c757d; /* Color gris claro similar al placeholder */
+}
+
+/* Evita que el color gris se aplique a opciones válidas seleccionadas */
+.pet-form .form-select option {
+  color: #212529; /* Color oscuro para opciones seleccionadas */
 }
 
 .btn-publicar {
@@ -67,3 +97,11 @@
     height: 400px; 
     width: 100%;
   }
+
+  .file-upload-icon {
+    cursor: pointer; 
+    text-align: left;
+    color: #d5d9dd;
+  }
+  
+ 

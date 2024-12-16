@@ -51,7 +51,7 @@ const NewFoundPet = () => {
           <div className="mb-3">
             <label htmlFor="species" className="form-label">ESPECIE</label>
             <select className="form-select" id="species" aria-label="select species" value={newPet.species} required onChange={handleChange} >
-              <option value="" disabled>Selecciona</option>
+              <option value="" disabled selected>Selecciona</option>
               <option value="perro">Perro</option>
               <option value="gato">Gato</option>
               <option value="conejo">Conejo</option>
@@ -68,7 +68,7 @@ const NewFoundPet = () => {
             <div className="col-md-6">
               <label htmlFor="gender" className="form-label">GENERO</label>
               <select className="form-select" id="gender" aria-label="Selecionar genero" required onChange={handleChange} >
-                <option value="" disabled>Selecciona</option>
+                <option value="" disabled selected>Selecciona</option>
                 <option value="male">Macho</option>
                 <option value="female">Hembra</option>
                 
