@@ -206,7 +206,7 @@ const PetsView = () => {
                       Color: {pet.color} <br />
                       Sexo: {pet.gender}
                     </p>
-                    <Link to={`/petcard/${pet.id}`}>Más información</Link>
+                    <Link to={`/petcard/${pet.pet_id}`}>Más información</Link>
                   </div>
                 </div>
               </div>
