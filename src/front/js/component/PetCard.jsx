@@ -36,7 +36,13 @@ const PetCard = () => {
   }, [theid]); // Solo se vuelve a ejecutar si cambia el ID
 
   if (!detail) {
-    return <div>Cargando...</div>; // tamb podríamos agregar un spinner de carga?
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Cargando...</span> {/* spinner amarillo mientras carga la card */}
+        </div>
+      </div>
+    );
   }
 
   //para darle formato a la fecha
