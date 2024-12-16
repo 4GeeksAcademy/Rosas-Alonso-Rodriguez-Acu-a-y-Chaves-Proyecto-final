@@ -161,6 +161,30 @@ def update_password(id):
     db.session.commit()
     return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
 
+#editar user según id   -Flor 16/12
+@app.route('/update_user/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    user.name = data.get('name', user.name)
+    user.email = data.get('email', user.email)
+    user.phone = data.get('phone', user.phone)
+    user.facebook = data.get('facebook', user.facebook)
+    user.instagram = data.get('instagram', user.instagram)
+    user.is_active = data.get('is_active', user.is_active)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Usuario actualizado correctamente",
+        "user": user.serialize()
+    })
+
 
 #Private access
 @app.route('/private', methods=['GET'])
