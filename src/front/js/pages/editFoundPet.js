@@ -5,22 +5,22 @@ import Cloudinary from "../component/cloudinary";
 import UbicationMap from "../component/ubication_map";
 
 const EditFoundPet = () => {
+
   const navigate = useNavigate();
   const { store, actions } = useContext(Context)
   const { id } = useParams();
 
-  const [petData, setPetData] = useState();
+  const [petData, setPetData] = useState(null);
  
   useEffect(()=>{
-    const existingPet= store.petData.find((id) =>item.id== id);
+    const existingPet= store.pets.find((pet) =>pet.id== id);
     if (existingPet) {
       setPetData(existingPet);
     } else {
-      // Si no está en el store, podrías hacer una llamada a la API
-      console.error("Mascota no encontrada");
-      navigate("/error"); // Redirigir si no se encuentra la mascota
+     
+      navigate("/error");
     }
-  }, [id, store.petData, navigate]);
+  }, [id, store.pets, navigate]);
 
  const handleChange = (e) => {
    setPetData({

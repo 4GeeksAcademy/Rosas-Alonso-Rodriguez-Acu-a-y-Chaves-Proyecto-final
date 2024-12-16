@@ -77,8 +77,8 @@ const Map = () => {
       <MarkerClusterGroup
         chunkedLoading
       // iconCreateFunction={createCustomClusterIcon}
-
- > {/* //Esto es para agrupar los markers. chunkedLoading es para la performance */}
+      > 
+      {/* //Esto es para agrupar los markers. chunkedLoading es para la performance */}
         {store.fetchedPetPosts.map(pet => {
           //if para determinar el ícono según el estado de la mascota
           let petIcon;
@@ -91,10 +91,13 @@ const Map = () => {
           return (
             <Marker key={pet.pet_id} position={[pet.latitude, pet.longitude]} icon={petIcon}>
           <Popup>
-            <div className="card-body h-auto">
+            <div className="card-body ">
        <div classname="rounded" > 
-            <img className="img-fluid" src='https://www.akc.org/wp-content/uploads/2020/07/Golden-Retriever-puppy-standing-outdoors-500x486.jpg'></img>
-            <Link to="" style={{ textDecoration: 'none' }} ><p className={`mt-0 text-center text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`}>{pet.pet_status}</p></Link>
+            <img className="img-fluid mx-auto d-block"  style={{
+    width: "100%",
+    height: "100%",
+  }}src='https://www.akc.org/wp-content/uploads/2020/07/Golden-Retriever-puppy-standing-outdoors-500x486.jpg'></img>
+            <Link to={`/petcard/${pet.id}`} style={{ textDecoration: 'none' }} ><p className={`mt-0 text-center text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`}>{pet.pet_status}</p></Link>
             </div>
               <ul className="list adlam-display  ">
               <li>
@@ -118,7 +121,7 @@ const Map = () => {
             </div>
           </Popup>
         </Marker>
-      ))}
+      )})}
       </MarkerClusterGroup>
     </MapContainer>
   )
