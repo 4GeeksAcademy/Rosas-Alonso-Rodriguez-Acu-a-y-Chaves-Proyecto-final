@@ -37,7 +37,7 @@ export const Navbar = () => {
 	};
 
 	return (
-		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+		<nav className="navbar position-sticky fixed-top navbar-light bg-white shadow-sm">
 			<div className="container ">
 				<Link to="/" className="nav-link">
 					<img width="50" height="50" src={logotipo} alt="logo" />
