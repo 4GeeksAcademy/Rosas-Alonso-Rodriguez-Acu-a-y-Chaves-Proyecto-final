@@ -56,7 +56,7 @@ const NewPetLost = () => {
 
 
   return (
-    <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light p-4 ">
+    <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light mt-2 p-4 ">
       <div className="container ">
         <p className="post-title text-center">Información de la mascota perdida</p>
       </div>

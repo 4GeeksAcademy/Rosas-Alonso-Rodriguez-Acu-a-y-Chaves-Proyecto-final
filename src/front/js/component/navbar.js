@@ -39,7 +39,7 @@ export const Navbar = () => {
 	};
 
 	return (
-		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top py-0">
+		<nav className="navbar navbar-expand-lg navbar-light bg-white position-sticky fixed-top shadow-sm fixed-top py-0">
 			<div className="container ">
 				<Link to="/" className="nav-link">
 					<img  src={logotipo} alt="logo" style={{ height: "90px", width: "auto", objectFit: "contain" }}/>
@@ -68,11 +68,6 @@ export const Navbar = () => {
 								Inicio
 							</Link>
 						</li>
-						{/* <li className="nav-item">
-							<Link to="/que_es" className="adlam-display-regular nav-link  me-2" href="#">
-								¿Qué es?
-							</Link>
-						</li> */}
 						<li className="nav-item">
 							<Link to="/map" className="adlam-display-regular nav-link  me-2" href="#">
 								Mapa
@@ -88,13 +83,13 @@ export const Navbar = () => {
 
 					{/* PRUEBA NAVBAR EDITAR PERFIL Y CERRAR SESIÓN */}
 					{logged ? (
-						<li className="nav-item dropdown">
+						<li className= "nav-item dropdown">
 							<a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								Mi perfil
 							</a>
 							<ul className="dropdown-menu">
 								<li><a className="dropdown-item" href="/user">Editar perfil</a></li>
-								<li><hr className="dropdown-divider" /></li>
+								<li><hr className="dropdown-divider" /></li> 
 								<li>
 									<button className="adlam-display-regular btn nav-item dropdown-item" style={{ "color": "red" }} onClick={handleLogout}>Cerrar sesión</button>
 								</li>
