@@ -75,18 +75,18 @@ def get_users():
         users_serialized.append(user.serialize())
     return jsonify({'msg': 'ok', 'usuarios: ': users_serialized}),200
 
-""" #Traer solo un usuario (autenticado)   -14/12 Flor (para navbar>editar perfil)
+#Traer solo un usuario (autenticado)   -14/12 Flor (para navbar>editar perfil)
 @app.route('/logged_user', methods=['GET'])
 @jwt_required()
 def get_profile():
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)  #busco al usuario por su ID en la base de datos
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()  #busco al usuario por su email en la base de datos
 
     if not user:
         return jsonify({'msg': 'Usuario no encontrado'}), 404
     
     return jsonify({'msg': 'ok', 'usuario': user.serialize()}), 200
-#Lo comento porque esto capaz se hace en Editar perfil """
+#Lo comento porque esto capaz se hace en Editar perfil
 
 
 # Post: nuevo usuario
@@ -137,9 +137,9 @@ def login():
         return jsonify({'msg': 'El campo password es obligatorio'}), 400
     user = User.query.filter_by(email=body['email']).first()
     if user is None:
-        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
+        return jsonify({'msg': "Contraseña o email incorrectos"}), 400 #CAMBIAR por email or password is invalid
     if user.password != body['password']:
-        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
+        return jsonify({'msg': "Contraseña o email incorrectos"}), 400 #CAMBIAR por email or password is invalid
     access_token = create_access_token(identity=user.email) 
     return jsonify({'msg': 'ok', 'token': access_token}), 200 
 
@@ -160,6 +160,30 @@ def update_password(id):
     user.password = body['new_password']
     db.session.commit()
     return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
+
+#editar user según id   -Flor 16/12
+@app.route('/update_user/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    user.name = data.get('name', user.name)
+    user.email = data.get('email', user.email)
+    user.phone = data.get('phone', user.phone)
+    user.facebook = data.get('facebook', user.facebook)
+    user.instagram = data.get('instagram', user.instagram)
+    user.is_active = data.get('is_active', user.is_active)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Usuario actualizado correctamente",
+        "user": user.serialize()
+    })
 
 
 #Private access
