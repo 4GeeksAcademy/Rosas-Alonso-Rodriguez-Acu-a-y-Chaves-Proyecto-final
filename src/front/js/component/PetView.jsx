@@ -62,8 +62,8 @@ const PetsView = () => {
       <div className="row">
         {/* Columna de Filtros */}
         <div className="col-md-3">
-          <div className="filters-container">
-            <h5>Filtrar por:</h5>
+          <div className="filters-container adlam-display-regular">
+            <h5 className="text-primary">Filtrar por:</h5>
             {/* Filtro por sexo */}
             <div className="filter mb-3">
               <label>Sexo:</label>
@@ -213,8 +213,8 @@ const PetsView = () => {
               <div className="col-md-4 mb-3" key={pet.id}>
                 <div className="card">
                   <img src={pet.photo_1} className="card-img-top" alt={pet.name} />
-                  <div className="card-body">
-                    <h5 className="card-title">{pet.name}</h5>
+                  <div className="card-body adlam-display-regular">
+                    <h5 className="card-title user-title">{pet.name}</h5>
                     <p className="card-text">
                       Tipo: {pet.species} <br />
                       Color: {pet.color} <br />
