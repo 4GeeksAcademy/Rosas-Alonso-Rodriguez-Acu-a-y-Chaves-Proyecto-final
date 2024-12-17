@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react'
+import { useNavigate } from "react-router-dom";
 
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
@@ -44,8 +45,9 @@ const LostIcon = new L.Icon({
   popupAnchor: [0, -32] // Ubicación del popup cuando se hace clic
 });
 
-const Map = () => {
 
+const Map = () => {
+  const navigate = useNavigate();
   const getStatusClass = (status) => {
     switch (status) {
       case "Encontrado":
@@ -77,7 +79,6 @@ const Map = () => {
       <MarkerClusterGroup
         chunkedLoading
       // iconCreateFunction={createCustomClusterIcon}
-
       > {/* Esto es para agrupar los markers. chunkedLoading es para la performance */}
         {store.fetchedPetPosts.map(pet => {
           //if para determinar el ícono según el estado de la mascota
@@ -96,11 +97,11 @@ const Map = () => {
                 <div className="card-body h-auto d-flex flex-column align-items-center" style={{ maxWidth: '250px', height: 'auto', wordWrap: 'break-word', textOverflow: 'ellipsis', paddingBottom: '10px' }}>
                   {/* Contenedor de la img:   -Flor */}
                   <div className="d-flex justify-content-center mb-2" style={{ width: '100%', height: '120px' }}>
-                    <img className="img-fluid square-img" src={petImage} alt={pet.name} style={{width: '120px', height: '120px', objectFit: 'cover'}}></img>
+                    <img className="img-fluid square-img" src={petImage} alt={pet.name} style={{ width: '120px', height: '120px', objectFit: 'cover' }}></img>
                   </div>
-                {/* Estado de la mascota:  -Flor */}
-                    <p className={`mt-0 text-center adlam-display-regular text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`} style={{ paddingLeft: '10px', paddingRight: '10px' }}> {pet.pet_status} </p>
-                {/* Info adicional de mascota:  -Flor */}
+                  {/* Estado de la mascota:  -Flor */}
+                  <p className={`mt-0 text-center adlam-display-regular text-light text-uppercase bold ${getStatusClass(pet.pet_status)}`} style={{ paddingLeft: '10px', paddingRight: '10px' }}> {pet.pet_status} </p>
+                  {/* Info adicional de mascota:  -Flor */}
                   <ul className="list-unstyled adlam-display" style={{ marginBottom: '5px' }}>
                     <li>
                       <span className=' fw-bold'>Nombre: </span><span className="text-black">{pet.name}</span>
@@ -117,9 +118,10 @@ const Map = () => {
                     <li>
                       <span className='fw-bold'>Especie: </span><span className="text-black">{pet.species}</span>
                     </li>
-                  {/* Botón más info */}
-                    <button type="submit" className="btn-sm btnStart btn-primary adlam-display-regular mb-3" style={{ width: "auto", maxWidth: "200px", maxHeight:"40px", marginBottom: '10px', marginTop: '10px' }}>
-                            Más información
+                    {/* Botón más info */}
+                    <button type="button" className="btn-sm btnStart btn-primary adlam-display-regular mb-3" style={{ width: "auto", maxWidth: "200px", maxHeight: "40px", marginBottom: '10px', marginTop: '10px' }}
+                      onClick={() => navigate(`/petcard/${pet.pet_id}`)}>
+                      Más información
                     </button>
                   </ul>
                 </div>
@@ -128,6 +130,7 @@ const Map = () => {
             </Marker>
           );
         })}
+
       </MarkerClusterGroup>
     </MapContainer>
   )

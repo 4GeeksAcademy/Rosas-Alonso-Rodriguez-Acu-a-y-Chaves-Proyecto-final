@@ -21,7 +21,7 @@ import Que_es from "./component/que_es";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import NewPetLost from "./pages/newPetLost.js";
-
+import EditFoundPet from "./pages/editFoundPet.js";
 import NewFoundPet from "./pages/newFoundPet.js";
 import UbicationMap from "./component/ubication_map.js";
 
