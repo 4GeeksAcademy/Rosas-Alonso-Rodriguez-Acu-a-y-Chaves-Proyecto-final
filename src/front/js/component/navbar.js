@@ -46,12 +46,12 @@ export const Navbar = () => {
 				</Link>
 				<div className="d-lg-flex gap-2 mt-3 mt-lg-0">
                 <Link to="/newpetlost">
-                    <button className="btn custom-red-button rounded-pill btn-sm shadow">
+                    <button className="btn custom-red-button adlam-display-regular rounded-pill btn-sm shadow">
                         Perdí a mi mascota
                     </button>
                 </Link>
                 <Link to="/newpetfound">
-                    <button className="btn custom-green-button rounded-pill btn-sm shadow">
+                    <button className="btn custom-green-button adlam-display-regular rounded-pill btn-sm shadow">
                         Encontré una mascota
                     </button>
                 </Link>
