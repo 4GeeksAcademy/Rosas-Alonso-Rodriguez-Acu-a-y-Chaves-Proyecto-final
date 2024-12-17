@@ -69,6 +69,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then((response) => {
 						console.log(response);
 						if (!response.ok) {
+							if (response.status === 401) {
+								throw new Error("401"); 
+							}
+
 							throw new Error("Error al realizar el registro")
 						}
 						return response.json()
@@ -87,11 +91,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 					.catch((error) => {
 						console.log(error);
-						Swal.fire({
+						if (error.message === "401") {
+							Swal.fire ({
+								icon: "error",
+								title: "Tu sesión ha expirado",
+								text: "Vuelve a inciar sesión, por favor",})
+								.then(()=>{navigate('/login')});
+						
+							} else {Swal.fire({
 							icon: "error",
 							title: "Oops...",
 							text: "No se pudo realizar el registro. Inténtalo de nuevo",
-						});
+						});}
 					})
 			},
 			getAllPets: async () => {
