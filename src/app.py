@@ -137,9 +137,9 @@ def login():
         return jsonify({'msg': 'El campo password es obligatorio'}), 400
     user = User.query.filter_by(email=body['email']).first()
     if user is None:
-        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
+        return jsonify({'msg': "Contraseña o email incorrectos"}), 400 #CAMBIAR por email or password is invalid
     if user.password != body['password']:
-        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
+        return jsonify({'msg': "Contraseña o email incorrectos"}), 400 #CAMBIAR por email or password is invalid
     access_token = create_access_token(identity=user.email) 
     return jsonify({'msg': 'ok', 'token': access_token}), 200 
 
