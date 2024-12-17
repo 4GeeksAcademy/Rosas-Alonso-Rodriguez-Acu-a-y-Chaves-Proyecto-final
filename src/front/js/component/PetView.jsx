@@ -15,11 +15,13 @@ const PetsView = () => {
     sex: "",   // Sexo de la mascota (macho o hembra)
   });
 
-
+  const [loading, setLoading] = useState(true); // Agregué esto para el spinner  -Flor 17/12
 
   // Simulación de datos o carga desde una API
   useEffect(() => {
-    actions.getAllPetPosts()
+    actions.getAllPetPosts().then(()=> {  //modifiqué solo agregando el .then, para el spinner  -Flor 17/12
+      setLoading(false);
+    })
   }, []);
 
   // Manejar cambios en los filtros
@@ -43,6 +45,18 @@ const PetsView = () => {
     });
     setFilteredPets(filtered);
   }, [filters, pets]);
+
+  // Spinner de carga   -Flor 17/12
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-4">
       <div className="row">
