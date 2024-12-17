@@ -1,13 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { useParams } from "react-router-dom";
+import logo from "../../img/logoTransparentePNG.png";
 
 const PetCard = () => {
   const { store } = useContext(Context);
   const { theid } = useParams();
   console.log("Pet ID from URL:", theid);
   const [detail, setDetail] = useState(null);
-  const [mainImage, setMainImage] = useState("https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Imagen principal inicial
+  const [mainImage, setMainImage] = useState({logo}); // Imagen principal inicial
 
 
   // Función para obtener los datos de la mascota desde el backend
@@ -19,7 +20,7 @@ const PetCard = () => {
       if (data.msg === 'ok') {
         const petDetails = data.data;
         setDetail(petDetails); // Actualiza el estado con los detalles de la mascota
-        setMainImage(petDetails?.photo_1 || "https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"); // Usa la primera foto o la de por defecto
+        setMainImage(petDetails?.photo_1 || {logo}); // Usa la primera foto o la de por defecto
       } else {
         console.error('Error fetching pet data:', data.msg);
       }
@@ -58,22 +59,12 @@ const PetCard = () => {
 
   return (
     <div className="pet-card-container">
-      {/* Navigation path */}
+      {/* Navigation path */} {/* Arreglé links rotos   -Flor 17/12 */}
       <div className="d-flex justify-content-end navigation-path mb-3">
-        <a
-          href="https://sturdy-space-invention-q7947gjpqj76fx57r-3000.app.github.dev/"
-          className="text-secondary mx-2"
-        >
-          Home
-        </a>{" "}
-        >{" "}
-        <a
-          href="https://sturdy-space-invention-q7947gjpqj76fx57r-3000.app.github.dev/PetView"
-          className="text-secondary mx-2"
-        >
-          Mascotas
-        </a>{" "}
-         > Más información
+        <a href="/" className="text-secondary mx-2">
+          Home </a>{" > "}
+        <a href="/PetView" className="text-secondary mx-2">
+          Mascotas </a>{" > Más información"}  
       </div>
 
       <div className="row">
@@ -113,10 +104,10 @@ const PetCard = () => {
             />
             <img
               className="thumbnail img-fluid mx-2"
-              src="https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg"
+              src={logo}
               alt="Thumbnail 4"
               style={{ width: "80px", height: "auto", cursor: "pointer" }}
-              onClick={() => setMainImage("https://cdn.pixabay.com/photo/2023/11/12/17/12/puppy-8383633_1280.jpg")}
+              onClick={() => setMainImage({logo})}  /* Puse que la imagen por defecto sea el logo */
             />
           </div>
 
@@ -139,13 +130,13 @@ const PetCard = () => {
 
         {/* Pet details */}
         <div className="col-md-6 info-section">
-          <h3 className="text-primary">{detail?.name}</h3>
+          <h4 className="text-primary user-title adlam-display-regular">{detail?.name}</h4>
           <p className="text-danger" style={{ fontSize: "1.5rem" }}>
           {detail?.pet_status === "Estoy perdido" ? "Perdido el: " : "Encontrado el: "} {formatDate(detail?.event_date)}
           </p>
           <a
             href="#contactForm"
-            className="btn btn-primary mb-3"
+            className="btn btn-primary mb-3 adlam-display-regular"
             data-bs-toggle="modal"
             data-bs-target="#contactModal"
             style={{
@@ -160,10 +151,18 @@ const PetCard = () => {
             Comunicarse
           </a>
           <table className="table">
-            <tbody>
+            <tbody>   {/* Agregué especie y raza, que faltaban  -Flor 17/12 */}
               <tr>
                 <th scope="row">NOMBRE:</th>
                 <td>{detail?.name}</td>
+              </tr>
+              <tr>
+                <th scope="row">ESPECIE:</th>
+                <td>{detail?.species}</td>
+              </tr>
+              <tr>
+                <th scope="row">RAZA:</th>
+                <td>{detail?.breed}</td>
               </tr>
               <tr>
                 <th scope="row">SEXO:</th>
@@ -179,9 +178,9 @@ const PetCard = () => {
               </tr>
             </tbody>
           </table>
-          <p>
+          <div>
             <strong>INFORMACIÓN ADICIONAL:</strong> {detail?.description}
-          </p>
+          </div>
         </div>
       </div>
 
