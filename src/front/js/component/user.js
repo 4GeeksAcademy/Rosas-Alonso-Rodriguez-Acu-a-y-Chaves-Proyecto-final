@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import mapaIconoVerde from "../../img/mapa_icono_verde.png";
 
 const User = () => {
-    const [showPasswordFields, setShowPasswordFields] = useState(false);
-    const togglePasswordFields = () => {
-        setShowPasswordFields(!showPasswordFields);
-    };
 
     const [isEditable, setIsEditable] = useState(false);
-    const toggleEditMode = () => {
-        setIsEditable(!isEditable);
-    }
-
     const [userPets, setUserPets] = useState([]);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [petToDelete, setPetToDelete] = useState(null);
-
+    const [petToChange, setPetToChange] = useState(null);
+    const [showChangeModal, setShowChangeModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [validationError, setValidationError] = useState('');
     const [userData, setUserData] = useState({
         email: '',
         phone: '',
@@ -42,9 +38,76 @@ const User = () => {
             });
     }, []);
 
+    useEffect(() => {
+        fetch(`${process.env.BACKEND_URL}/pet_post`)
+            .then(response => response.json())
+            .then(data => {
+                // Añadir switchVisible: true a cada mascota
+                const petsWithSwitchVisible = data.data.map(pet => ({
+                    ...pet,
+                    switchVisible: true, // Por defecto, el switch está visible
+                }));
+                setUserPets(petsWithSwitchVisible);
+            })
+            .catch(error => {
+                console.error("Hubo un error al cargar las publicaciones:", error);
+            });
+    }, []);
+
+    // Función para manejar el cambio de estado de la mascota (encendido/apagado)
+    const handleSwitchChange = async (petId, newStatus) => {
+        // Guardamos la mascota cuyo estado va a cambiar y mostramos el modal de confirmación
+        setPetToChange({ petId, newStatus });
+        setShowChangeModal(true);
+    };
+
+    // Función para manejar la confirmación del cambio
+    const handleConfirmChange = () => {
+        if (petToChange) {
+            const { petId, newStatus } = petToChange;
+
+            // Realizamos el cambio en el backend
+            fetch(`${process.env.BACKEND_URL}/pet/${petId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ pet_status: newStatus }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.msg === 'Mascota actualizada exitosamente') {
+                        // Actualizamos el estado en el frontend
+                        setUserPets(prevPets => prevPets.map(pet =>
+                            pet.pet_id === petId ? { ...pet, pet_status: newStatus, switchVisible: false } : pet
+                        ));
+                        setShowChangeModal(false);  // Cerramos el modal
+                    } else {
+                        console.error('Error al actualizar el estado:', data.msg);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al cambiar el estado de la mascota:", error);
+                });
+        }
+    };
+
+    // Función para cancelar el cambio
+    const handleCancelChange = () => {
+        setShowChangeModal(false);  // Cerramos el modal sin realizar el cambio
+    };
+
     // Función para manejar el envío del formulario de actualización
     const handleSave = (e) => {
-        e.preventDefault(); // Evitar que la página se recargue al enviar el formulario
+        e.preventDefault();
+
+        // Validación de campos obligatorios
+        if (!userData.email || !userData.phone) {
+            setValidationError('Por favor, completa todos los campos obligatorios (Email, Teléfono)');
+            return;
+        } else {
+            setValidationError('');
+        }
 
         const updatedData = {
             email: userData.email,
@@ -65,7 +128,7 @@ const User = () => {
             .then(data => {
                 if (data.msg === 'Usuario actualizado correctamente') {
                     setUserData(data.user); // Actualizamos el estado con los datos actualizados
-                    alert('Perfil actualizado exitosamente');
+                    setShowSuccessModal(true);
                 } else {
                     console.error('Error al actualizar el perfil:', data.msg);
                 }
@@ -75,42 +138,9 @@ const User = () => {
             });
     };
 
-    useEffect(() => {
-        fetch(`${process.env.BACKEND_URL}/pet_post`)
-            .then(response => response.json())
-            .then(data => {
-                setUserPets(data.data);
-            })
-            .catch(error => {
-                console.error("Hubo un error al cargar las publicaciones:", error);
-            });
-    }, []);
-
-    // Función para manejar el cambio de estado de la mascota (encendido/apagado)
-    const handleSwitchChange = (petId, newStatus) => {
-        fetch(`${process.env.BACKEND_URL}/pet/${petId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ pet_status: newStatus }),  // cambia el pet status según el switch
-        })
-            .then(response => response.json())
-            .then(data => {
-                // Verificamos si la respuesta fue exitosa
-                if (data.msg === 'Mascota actualizada exitosamente') {
-                    // Actualizamos el estado de la mascota en el frontend
-                    setUserPets(prevPets => prevPets.map(pet =>
-                        pet.pet_id === petId ? { ...pet, pet_status: newStatus } : pet
-                    ));
-                    console.log("Estado actualizado exitosamente")
-                } else {
-                    console.error('Error al actualizar el estado:', data.msg);
-                }
-            })
-            .catch(error => {
-                console.error("Error al cambiar el estado de la mascota:", error);
-            });
+    // Función para cerrar el modal de éxito
+    const handleCloseSuccessModal = () => {
+        setShowSuccessModal(false);
     };
 
     // Función para abrir el modal de eliminación
@@ -152,7 +182,7 @@ const User = () => {
 
     return (
         <div className="container mt-4">
-            <div className="row md-5 p-4 bg-success rounded-1 align-items-start">
+            <div className="row md-5 p-4 bg-success rounded-1 align-items-start" style={{ marginBottom: '20px' }}>
 
                 {/* Título y Tabla de Mi Perfil */}
                 <div className="col-12 col-md-6 mb-4">
@@ -180,47 +210,58 @@ const User = () => {
                     {/* Tabla de Mi Perfil */}
                     <div className="card shadow-sm p-4 rounded-5">
                         <form onSubmit={handleSave}>
+                            {/* Error de validación */}
+                            {validationError && (
+                                <div className="alert alert-danger" role="alert">
+                                    {validationError}
+                                </div>
+                            )}
                             <div className="mb-3">
-                                <label htmlFor="email" className="form-label">Email</label>
+                                <label htmlFor="email" className="form-label adlam-display-regular">Email</label>
                                 <input type="email" id="email" name="email" className="form-control" placeholder="Ingresa tu email" value={userData.email} onChange={handleChange} disabled={!isEditable} />
                             </div>
-                            <div className="mb-3">
-                                <a className="text-primary nunito" onClick={togglePasswordFields} style={{ cursor: 'pointer' }}>Cambiar contraseña</a>
-                            </div>
-                            {/* solo se muestran los campos de contraseña si showPasswordFields es true */}
-                            {showPasswordFields && (
-                                <>
-                                    <div className="mb-3">
-                                        <label htmlFor="current-password" className="form-label">Contraseña actual</label>
-                                        <input type="password" id="current-password" className="form-control" />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label htmlFor="new-password" className="form-label">Nueva contraseña</label>
-                                        <input type="password" id="new-password" className="form-control" />
-                                    </div>
-                                </>
-                            )}
+                            {/* Redes sociales */}
                             <div className="mb-3 user-title adlam-display-regular">
                                 <h5>Información de contacto</h5>
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="phone" className="form-label">Teléfono</label>
+                                <label htmlFor="phone" className="form-label adlam-display-regular">Teléfono</label>
                                 <input type="text" id="phone" name="phone" className="form-control" placeholder="Ingresa tu teléfono" value={userData.phone} onChange={handleChange} disabled={!isEditable} />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="instagram" className="form-label">Instagram</label>
+                                <label htmlFor="instagram" className="form-label adlam-display-regular">Instagram</label>
                                 <input type="text" id="instagram" name="instagram" className="form-control" placeholder="Ingresa tu Instagram" value={userData.instagram !== undefined && userData.instagram !== null ? userData.instagram : ''} onChange={handleChange} disabled={!isEditable} />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="facebook" className="form-label">Facebook</label>
+                                <label htmlFor="facebook" className="form-label adlam-display-regular">Facebook</label>
                                 <input type="text" id="facebook" name="facebook" className="form-control" placeholder="Ingresa tu Facebook" value={userData.facebook !== undefined && userData.facebook !== null ? userData.facebook : ''} onChange={handleChange} disabled={!isEditable} />
                             </div>
                             <div className="d-grid gap-2 col-6 mx-auto">
-                                <button type="submit" className="btn btn-primary rounded-pill btnStart">Guardar</button>
+                                <button type="submit" className="btn btn-primary adlam-display-regular rounded-pill btnStart">Guardar</button>
                             </div>
                         </form>
                     </div>
                 </div>
+
+                {/* Modal de éxito */}
+                {showSuccessModal && (
+                    <div className="modal fade show" tabIndex="-1" style={{ display: 'block' }} aria-hidden="false">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title adlam-display-regular" id="exampleModalLabel">Perfil actualizado exitosamente</h5>
+                                    <button type="button" className="btn-close" onClick={handleCloseSuccessModal}></button>
+                                </div>
+                                <div className="modal-body">
+                                    Los datos de tu perfil han sido actualizados correctamente.
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-primary adlam-display-regular" onClick={handleCloseSuccessModal}>Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Título y Tabla de Mis Publicaciones */}
                 <div className="col-12 col-md-6 mb-4">
@@ -235,23 +276,32 @@ const User = () => {
                         <ul className="list-group">
                             {userPets.map(pet => (
                                 <li className="list-group-item d-flex justify-content-between align-items-center" key={pet.pet_id}>
-                                    <span className="adlam-display-regular">{pet.name}</span>
+                                    <span className="adlam-display-regular" style={{ color: "darkblue" }}>{pet.name}</span>
 
                                     <span className="d-flex align-items-center">
-                                        {/* Switch de estado (Checkbox) */}
-                                        <div className="form-check form-switch">
-                                            <input
-                                                className="form-check-input"
-                                                type="checkbox"
-                                                id={`switch-${pet.pet_id}`}
-                                                style={{ cursor: 'pointer' }}
-                                                checked={pet.pet_status !== "Encontrado"}  // Si no está encontrado, el switch está encendido
-                                                onChange={(e) => handleSwitchChange(pet.pet_id, e.target.checked ? "Estoy perdido" : "Encontrado")}
-                                            />
-                                            <label className="form-check-label" htmlFor={`switch-${pet.pet_id}`}>
-                                                {pet.pet_status === "Encontrado" ? "Mascota encontrada" : "Mascota perdida"}
-                                            </label>
-                                        </div>
+                                        {/* Mostrar el switch solo si la mascota está perdida */}
+                                        {pet.pet_status !== "Encontrado" && pet.switchVisible && (
+                                            <div className="form-check form-switch">
+                                                <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id={`switch-${pet.pet_id}`}
+                                                    style={{ cursor: 'pointer' }}
+                                                    checked={pet.pet_status !== "Encontrado"}  // Si no está encontrado, el switch está encendido
+                                                    onChange={(e) => handleSwitchChange(pet.pet_id, e.target.checked ? "lost" : "joined")}
+                                                />
+                                                <label className="form-check-label adlam-display-regular" htmlFor={`switch-${pet.pet_id}`}>
+                                                    {pet.pet_status === "joined" ? "Mascota encontrada" : "Mascota perdida"}
+                                                </label>
+                                            </div>
+                                        )}
+
+                                        {/* Si la mascota ya está encontrada, solo mostramos el texto */}
+                                        {pet.pet_status === "Encontrado" && (
+                                            <span className="ms-2">
+                                                Mascota encontrada
+                                            </span>
+                                        )}
 
                                         {/* Íconos de acción */}
                                         <i className="fa-regular fa-trash-can" style={{ cursor: 'pointer', paddingLeft: '10px' }} onClick={() => handleDeleteClick(pet)}></i>
@@ -260,6 +310,17 @@ const User = () => {
                             ))}
                         </ul>
                     </div>
+
+                    {/* Card Informativa */}
+                    <div className="col-12 mt-4">
+                            <div className="card shadow-sm p-4 rounded-5 border-primary" style={{ width: '100%' }}>
+                                <h5 className="adlam-display-regular">Si ya encontraste a tu mascota:</h5>
+                                <p>Deshabilita el switch de su publicación. <strong>¡Cuidado! Una vez confirmado que tu mascota fue encontrada, ya no puedes deshacer la acción.</strong></p>
+                                <p>Luego, <strong>¡no hace falta que elimines la publicación!</strong></p>
+                                <p>Tu mascota aparecerá en nuestro mapa como un símbolo verde, ¡que significa que ya te has reunido con ella!</p>
+                                <img src={mapaIconoVerde} alt="Símbolo verde en el mapa" className="img-fluid" />
+                            </div>
+                        </div>
                 </div>
             </div>
             {/* Modal para confirmar eliminación */}
@@ -275,8 +336,31 @@ const User = () => {
                                 ¿Estás seguro de que deseas eliminar esta publicación?
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={handleDeleteCancel}>Cancelar</button>
-                                <button type="button" className="btn btn-danger" onClick={handleDeleteConfirm}>Eliminar</button>
+                                <button type="button" className="btn adlam-display-regular btn-secondary" onClick={handleDeleteCancel}>Cancelar</button>
+                                <button type="button" className="btn adlam-display-regular btn-danger" onClick={handleDeleteConfirm}>Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal para confirmar cambio de estado */}
+            {showChangeModal && (
+                <div className="modal fade show" tabIndex="-1" aria-labelledby="exampleModalLabel" style={{ display: 'block' }} aria-hidden="false">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title adlam-display-regular" id="exampleModalLabel">Confirmar cambio de estado</h5>
+                                <button type="button" className="btn-close" onClick={handleCancelChange}></button>
+                            </div>
+                            <div className="modal-body">
+                                ¿Estás seguro de que deseas cambiar el estado de esta mascota? Esto confirma que tu mascota ya no está perdida.
+                                <hr />
+                                <p>Este cambio no podrá deshacerse.</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn adlam-display-regular btn-secondary" onClick={handleCancelChange}>Cancelar</button>
+                                <button type="button" className="btn adlam-display-regular  btn-primary" onClick={handleConfirmChange}>Confirmar</button>
                             </div>
                         </div>
                     </div>
