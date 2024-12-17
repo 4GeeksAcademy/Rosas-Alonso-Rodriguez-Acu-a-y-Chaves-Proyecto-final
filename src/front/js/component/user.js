@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import mapaIconoVerde from "../../img/mapa_icono_verde.png";
 
 const User = () => {
 
@@ -309,6 +310,17 @@ const User = () => {
                             ))}
                         </ul>
                     </div>
+
+                    {/* Card Informativa */}
+                    <div className="col-12 mt-4">
+                            <div className="card shadow-sm p-4 rounded-5 border-primary" style={{ width: '100%' }}>
+                                <h5 className="adlam-display-regular">Si ya encontraste a tu mascota:</h5>
+                                <p>Deshabilita el switch de su publicación. <strong>¡Cuidado! Una vez confirmado que tu mascota fue encontrada, ya no puedes deshacer la acción.</strong></p>
+                                <p>Luego, <strong>¡no hace falta que elimines la publicación!</strong></p>
+                                <p>Tu mascota aparecerá en nuestro mapa como un símbolo verde, ¡que significa que ya te has reunido con ella!</p>
+                                <img src={mapaIconoVerde} alt="Símbolo verde en el mapa" className="img-fluid" />
+                            </div>
+                        </div>
                 </div>
             </div>
             {/* Modal para confirmar eliminación */}
