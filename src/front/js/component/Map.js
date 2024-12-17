@@ -79,7 +79,6 @@ const Map = () => {
       <MarkerClusterGroup
         chunkedLoading
       // iconCreateFunction={createCustomClusterIcon}
-
       > {/* Esto es para agrupar los markers. chunkedLoading es para la performance */}
         {store.fetchedPetPosts.map(pet => {
           //if para determinar el ícono según el estado de la mascota
@@ -131,6 +130,7 @@ const Map = () => {
             </Marker>
           );
         })}
+
       </MarkerClusterGroup>
     </MapContainer>
   )

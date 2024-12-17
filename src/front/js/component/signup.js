@@ -8,7 +8,7 @@ const Signup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
-    const [security_question, setSecurity_question] = useState("");
+    const [security_questions, setSecurity_questions] = useState("");
     const [securityAnswer, setSecurityAnswer] = useState("");
     const [phone, setPhone] = useState("");
     const [facebook, setFacebook] = useState("");
@@ -24,11 +24,11 @@ const Signup = () => {
             return;
         }
 
-        if (!name || !email || !password || !security_question || !phone) {
+        if (!name || !email || !password || !security_questions || !securityAnswer|| !phone) {
             actions.setMessage("Por favor, completa todos los campos obligatorios.");
             return;
         }
-
+        const security_question = `${security_questions} - ${securityAnswer}`
         try {
             const response = await fetch(`${process.env.BACKEND_URL}/user`, {
                 method: "POST",
@@ -109,16 +109,23 @@ const Signup = () => {
                             />
                             <label htmlFor="floatingPassword2">REPETIR CONTRASEÑA <span className="text-danger">*</span></label>
                         </div>
-                        <div className="form-floating mb-3">
-                            <input
+                        <div className="form-floating questions mb-3">
+                            <select class="form-select" id="floatingInput2" aria-label="Default select example" required  onChange={(e) => setSecurity_questions(e.target.value)}>
+                                <option value="">ESTABLEZCA UNA PREGUNTA DE SEGURIDAD <span className="text-danger">*</span></option>
+                                <option value="1">¿Como se llamaba tu primera mascota?</option>
+                                <option value="2">¿Cual es tu ciudad favorita?</option>
+                                <option value="3">¿Cual es tu película favorita?</option>
+                                <option value="4">¿En qué calle vivías cuando eras niño/a?</option>
+                            </select>
+                            {/* <input
                                 type="text"
                                 className="form-control"
                                 id="floatingInput2"
                                 placeholder="EJ: '¿CUÁL ES MI ANIMAL FAVORITO?'"
                                 value={security_question}
                                 onChange={(e) => setSecurity_question(e.target.value)}
-                            />
-                            <label htmlFor="floatingInput2">ESTABLEZCA UNA PREGUNTA DE SEGURIDAD <span className="text-danger">*</span></label>
+                            /> 
+                            <label htmlFor="floatingInput2">ESTABLEZCA UNA PREGUNTA DE SEGURIDAD <span className="text-danger">*</span></label>*/}
                         </div>
                         <div className="form-floating mb-3">
                             <input

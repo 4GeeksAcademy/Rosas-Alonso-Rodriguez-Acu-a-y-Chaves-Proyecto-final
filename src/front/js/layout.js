@@ -21,7 +21,7 @@ import Que_es from "./component/que_es";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import NewPetLost from "./pages/newPetLost.js";
-
+import EditFoundPet from "./pages/editFoundPet.js";
 import NewFoundPet from "./pages/newFoundPet.js";
 import UbicationMap from "./component/ubication_map.js";
 
@@ -43,29 +43,24 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
-
-                          
+                         
                         <Route element ={<PrivateRoute><NewPetLost /></PrivateRoute>} path="/newpetlost" />
                         <Route element = {<PrivateRoute><NewFoundPet/></PrivateRoute>} path = "/newpetfound"/>
-                        
-
                         <Route element={<Home />} path="/" />
                         <Route element={<Map />} path="/map" />
-                        
                         <Route element={<UbicationMap />} path="/ubicationmap" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<User />} path="/user" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Que_es />} path="/que_es" />
-
                         <Route element={<Signup />} path="/signup" />
-
                         <Route element={<PetView />} path="/petview" />
                         <Route element={<PetCard />} path="/petcard/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<ErrorPage />} path="/error" />
                     </Routes>
+                    <Footer/>
                 </ScrollToTop>
             </BrowserRouter>
         </div>

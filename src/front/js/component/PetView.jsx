@@ -15,11 +15,13 @@ const PetsView = () => {
     sex: "",   // Sexo de la mascota (macho o hembra)
   });
 
-
+  const [loading, setLoading] = useState(true); // Agregué esto para el spinner  -Flor 17/12
 
   // Simulación de datos o carga desde una API
   useEffect(() => {
-    actions.getAllPetPosts()
+    actions.getAllPetPosts().then(()=> {  //modifiqué solo agregando el .then, para el spinner  -Flor 17/12
+      setLoading(false);
+    })
   }, []);
 
   // Manejar cambios en los filtros
@@ -43,13 +45,25 @@ const PetsView = () => {
     });
     setFilteredPets(filtered);
   }, [filters, pets]);
+
+  // Spinner de carga   -Flor 17/12
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-4">
       <div className="row">
         {/* Columna de Filtros */}
         <div className="col-md-3">
-          <div className="filters-container">
-            <h5>Filtrar por:</h5>
+          <div className="filters-container adlam-display-regular">
+            <h5 className="text-primary">Filtrar por:</h5>
             {/* Filtro por sexo */}
             <div className="filter mb-3">
               <label>Sexo:</label>
@@ -199,8 +213,8 @@ const PetsView = () => {
               <div className="col-md-4 mb-3" key={pet.id}>
                 <div className="card">
                   <img src={pet.photo_1} className="card-img-top" alt={pet.name} />
-                  <div className="card-body">
-                    <h5 className="card-title">{pet.name}</h5>
+                  <div className="card-body adlam-display-regular">
+                    <h5 className="card-title user-title">{pet.name}</h5>
                     <p className="card-text">
                       Tipo: {pet.species} <br />
                       Color: {pet.color} <br />
