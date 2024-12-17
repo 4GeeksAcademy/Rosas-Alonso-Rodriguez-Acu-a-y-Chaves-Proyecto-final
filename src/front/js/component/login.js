@@ -41,7 +41,7 @@ const Login = () => {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="d-flex justify-content-center align-items-center prueba-mt vh-100">
             <div className="text-center">
                 <div className="container p-5 bg-white shadow rounded" style={{ width: "550px" }}>
                     <h1 className="mb-4 user-title adlam-display-regular">Iniciar sesión</h1>
