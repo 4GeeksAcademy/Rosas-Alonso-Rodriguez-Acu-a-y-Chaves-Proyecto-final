@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import logotipo from "../../img/PatasperdidasPNG.png"
+import logotipo from "../../img/PatasperdidasPNG.png";
+import "../../styles/navbar.css";
+import "../../styles/home.css";
 
 
 export const Navbar = () => {
@@ -37,26 +39,40 @@ export const Navbar = () => {
 	};
 
 	return (
-		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+		<nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top py-0">
 			<div className="container ">
 				<Link to="/" className="nav-link">
-					<img width="50" height="50" src={logotipo} alt="logo" />
+					<img  src={logotipo} alt="logo" style={{ height: "90px", width: "auto", objectFit: "contain" }}/>
 				</Link>
+				<div className="d-lg-flex gap-2 mt-3 mt-lg-0">
+                <Link to="/newpetlost">
+                    <button className="btn custom-red-button rounded-pill btn-sm shadow">
+                        Perdí a mi mascota
+                    </button>
+                </Link>
+                <Link to="/newpetfound">
+                    <button className="btn custom-green-button rounded-pill btn-sm shadow">
+                        Encontré una mascota
+                    </button>
+                </Link>
+            </div>
 				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<span className="navbar-toggler-icon"></span>
-				</button>
+				</button> 
+				
 				<div className="adlam-display-regular collapse navbar-collapse" id="navbarNav">
+				
 					<ul className="navbar-nav ms-auto ">
 						<li className="nav-item">
 							<Link to="/" className="adlam-display-regular nav-link me-2" href="#">
 								Inicio
 							</Link>
 						</li>
-						<li className="nav-item">
+						{/* <li className="nav-item">
 							<Link to="/que_es" className="adlam-display-regular nav-link  me-2" href="#">
 								¿Qué es?
 							</Link>
-						</li>
+						</li> */}
 						<li className="nav-item">
 							<Link to="/map" className="adlam-display-regular nav-link  me-2" href="#">
 								Mapa
