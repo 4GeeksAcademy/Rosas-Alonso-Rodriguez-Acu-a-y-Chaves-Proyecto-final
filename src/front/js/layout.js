@@ -55,7 +55,6 @@ const Layout = () => {
                         <Route element={<Login />} path="/login" />
                         <Route element={<Que_es />} path="/que_es" />
                         <Route element={<Signup />} path="/signup" />
-                        {/* <Route element = {<EditFoundPet/>} path = "/editpetfound"/> */}
                         <Route element={<PetView />} path="/petview" />
                         <Route element={<PetCard />} path="/petcard/:theid" />
                         <Route element={<h1>Not found!</h1>} />
