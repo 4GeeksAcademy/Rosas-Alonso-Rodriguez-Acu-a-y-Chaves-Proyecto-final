@@ -53,7 +53,7 @@ export const Home = () => {
 
                     <div className=" col">
                         <Link to="/newpetlost">
-                            <button className="btn btn-danger col-6 mx-auto adlam-display-regular  rounded-pill shadow" style={{ height: "50px" }}>Perdí a mi mascota</button>
+                            <button className="btn btn-danger col-6  mx-auto adlam-display-regular  rounded-pill shadow" style={{ height: "50px" }}>Perdí a mi mascota</button>
                         </Link>
                     </div>
                     <div className="col">
