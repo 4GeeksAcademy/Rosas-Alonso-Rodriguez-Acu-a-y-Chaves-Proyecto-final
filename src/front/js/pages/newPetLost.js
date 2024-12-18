@@ -56,7 +56,7 @@ const NewPetLost = () => {
 
 
   return (
-    <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light p-4 ">
+    <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light mt-2 p-4 ">
       <div className="container ">
         <p className="post-title text-center">Información de la mascota perdida</p>
       </div>
@@ -70,7 +70,7 @@ const NewPetLost = () => {
             <label htmlFor="species" className="form-label">ESPECIE</label>
 
             <select className="form-select" id="species" aria-label="Default select example" value={newPet.species} required onChange={handleChange} >
-              <option value="" disabled selected>Selecciona</option>
+              <option value="" disabled>Selecciona</option>
               <option value="perro">Perro</option>
               <option value="gato">Gato</option>
               <option value="conejo">Conejo</option>
@@ -86,10 +86,10 @@ const NewPetLost = () => {
           </div>
           <div className="row g-3 mb-3 ">
             <div className="col-md-6">
-              <label htmlFor="gender" className="form-label">GENERO</label>
+              <label htmlFor="gender" className="form-label">GÉNERO</label>
 
               <select className="form-select" id="gender" aria-label="Selecionar genero" value={newPet.gender} placeholder="Selecciona" required onChange={handleChange} >
-                <option value="" disabled selected>Seleciona</option>
+                <option value="" disabled>Selecciona</option>
                 <option value="male">Macho</option>
                 <option value="female">Hembra</option>
                 

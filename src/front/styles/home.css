@@ -207,7 +207,26 @@ font-size: 30px;
 .leaflet-popup-content-wrapper{
  border-style: 0px;
  background: url('/workspaces/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/mapCard.PNG') no-repeat center center;
- background-size: cover;
+
+}
+/* Estilo personalizado para Leaflet Popup 
+.leaflet-popup-content-wrapper {
+  width: 10vw !important; /* 10% del ancho de la ventana 
+  height: 40vh !important; /* 10% del alto de la ventana 
+  padding: 0px !important; /* Reduce espacio interno 
+  font-size: 0.7rem; /* Reduce el tamaño del texto 
+  box-sizing: border-box;
+  justify-content: center;
+}*/
+
+.leaflet-popup-content {
+  margin: 0 !important; /* Elimina margen extra */
+  line-height: 1.2; /* Ajusta la altura de línea */
+  justify-content: center;
+}
+
+.leaflet-popup-tip {
+  display: none; /* Opcional: oculta el "pico" del popup */
 }
 
 .btn-primary:hover {

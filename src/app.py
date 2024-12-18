@@ -18,6 +18,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -28,6 +29,7 @@ app.url_map.strict_slashes = False
 CORS(app, origins = "*")
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_KEY")
 jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
 
 
 # database condiguration
@@ -75,18 +77,18 @@ def get_users():
         users_serialized.append(user.serialize())
     return jsonify({'msg': 'ok', 'usuarios: ': users_serialized}),200
 
-""" #Traer solo un usuario (autenticado)   -14/12 Flor (para navbar>editar perfil)
+#Traer solo un usuario (autenticado)   -14/12 Flor (para navbar>editar perfil)
 @app.route('/logged_user', methods=['GET'])
 @jwt_required()
 def get_profile():
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)  #busco al usuario por su ID en la base de datos
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()  #busco al usuario por su email en la base de datos
 
     if not user:
         return jsonify({'msg': 'Usuario no encontrado'}), 404
     
     return jsonify({'msg': 'ok', 'usuario': user.serialize()}), 200
-#Lo comento porque esto capaz se hace en Editar perfil """
+#Lo comento porque esto capaz se hace en Editar perfil
 
 
 # Post: nuevo usuario
@@ -110,7 +112,7 @@ def create_user():
         new_user = User(
             name = body['name'],
             email = body['email'],
-            password= body['password'],
+            password= bcrypt.generate_password_hash(body['password']).decode('utf-8'),
             is_active=True,
             security_question=body['security_question'],
             phone=body['phone'],  
@@ -137,8 +139,10 @@ def login():
         return jsonify({'msg': 'El campo password es obligatorio'}), 400
     user = User.query.filter_by(email=body['email']).first()
     if user is None:
+
         return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
-    if user.password != body['password']:
+    crypted_password = bcrypt.check_password_hash(user.password, body['password'])
+    if not crypted_password:
         return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
     access_token = create_access_token(identity=user.email) 
     return jsonify({'msg': 'ok', 'token': access_token}), 200 
@@ -160,6 +164,30 @@ def update_password(id):
     user.password = body['new_password']
     db.session.commit()
     return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
+
+#editar user según id   -Flor 16/12
+@app.route('/update_user/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    user.name = data.get('name', user.name)
+    user.email = data.get('email', user.email)
+    user.phone = data.get('phone', user.phone)
+    user.facebook = data.get('facebook', user.facebook)
+    user.instagram = data.get('instagram', user.instagram)
+    user.is_active = data.get('is_active', user.is_active)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Usuario actualizado correctamente",
+        "user": user.serialize()
+    })
 
 
 #Private access
@@ -252,7 +280,9 @@ def edit_pet(id):
     if not pet:
         return jsonify({'msg': 'Mascota no encontrada'}), 404
 
+
       # Accedo a la relación 'post' para obtener la post_description    -Flor 16/12
+
     post_description = Post_Description.query.filter_by(pet_id=id).first()
     
     if not post_description:
@@ -260,6 +290,8 @@ def edit_pet(id):
     
     if 'pet_status' in body:
         post_description.pet_status = body['pet_status']  # esto actualiza el status de la mascota
+
+
     if 'name' in body:
         pet.name = body['name']
     if 'breed' in body:
@@ -279,6 +311,58 @@ def edit_pet(id):
     
     db.session.commit()
     return jsonify({'msg': 'Mascota actualizada exitosamente', 'data': pet.serialize()}), 201
+
+#endpoint para traer mascota según su id   -Flor 16/12
+@app.route('/pet/<int:id>', methods=['GET'])
+def get_pet_by_id(id):
+    pet = Pet.query.get(id)
+    if not pet:
+        return jsonify({'msg': 'Mascota no encontrada'}), 404
+
+    # Buscamos la publicación asociada a ese id de mascota
+    post_description = Post_Description.query.filter_by(pet_id=id).first()
+    if not post_description:
+        return jsonify({'msg': 'No se encontró la publicación asociada a la mascota'}), 404
+    species_map = {
+        "1": "Perro",
+        "2": "Gato",
+        "3": "Ave",
+        "4": "Conejo",
+        "5": "Reptil",
+        "6": "Otro"
+    }
+
+    species_value = pet.breed_relationship.species.value if pet.breed_relationship and pet.breed_relationship.species else None
+    species_description = species_map.get(species_value, "Desconocido")
+
+    pet_data = {
+        "pet_id": pet.id,
+        "name": pet.name,
+        "breed": pet.breed_relationship.name if pet.breed_relationship else None,
+        "species": species_description,
+        "gender": pet.gender.value if pet.gender else None,
+        "color": pet.color,
+        "photo_1": pet.photo_1,
+        "photo_2": pet.photo_2,
+        "photo_3": pet.photo_3,
+        "photo_4": pet.photo_4,
+        "user_id": pet.user_id,
+        "user_details": {
+            "id": pet.user.id,
+            "email": pet.user.email,
+            "phone": pet.user.phone,
+            "facebook": pet.user.facebook,
+            "instagram": pet.user.instagram
+        } if pet.user else None,
+        "pet_status": post_description.pet_status.value,
+        "latitude": post_description.latitude,
+        "longitude": post_description.longitude,
+        "description": post_description.description,
+        "zone": post_description.zone,  # Zona de la mascota
+        "event_date": post_description.event_date  # Fecha del evento
+    }
+
+    return jsonify({'msg': 'ok', 'data': pet_data}), 200
 
 #Eliminar mascota:
 @app.route('/pet/<int:id>', methods=['DELETE'])
