@@ -62,14 +62,14 @@ def handle_invalid_usage(error):
 
 # generate sitemap with all your endpoints
 
-@app.route('/')
+@app.route('/api/')
 def sitemap():
     if ENV == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 
 #Traer usuarios
-@app.route('/users', methods=['GET'])
+@app.route('/api/users', methods=['GET'])
 def get_users():
     users = User.query.all()
     users_serialized = []
@@ -78,7 +78,7 @@ def get_users():
     return jsonify({'msg': 'ok', 'usuarios: ': users_serialized}),200
 
 #Traer solo un usuario (autenticado)   -14/12 Flor (para navbar>editar perfil)
-@app.route('/logged_user', methods=['GET'])
+@app.route('/api/logged_user', methods=['GET'])
 @jwt_required()
 def get_profile():
     current_user = get_jwt_identity()
@@ -92,7 +92,7 @@ def get_profile():
 
 
 # Post: nuevo usuario
-@app.route('/user', methods=['POST'])
+@app.route('/api/user', methods=['POST'])
 def create_user():
     body = request.get_json(silent=True)
     if body is None:
@@ -128,7 +128,7 @@ def create_user():
         return jsonify({'msg': f'Error al crear el usuario: {str(e)}'}), 500
 
 #LOGIN: 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     body = request.get_json(silent=True)
     if body is None:
@@ -148,7 +148,7 @@ def login():
     return jsonify({'msg': 'ok', 'token': access_token}), 200 
 
 #Update password
-@app.route('/user/<int:id>', methods=['PUT'])
+@app.route('/api/user/<int:id>', methods=['PUT'])
 def update_password(id):
     body= request.get_json(silent=True)
     if body is None:
@@ -166,7 +166,7 @@ def update_password(id):
     return jsonify({'msg': 'la contraseña ha sido cambiada exitosamente'})
 
 #editar user según id   -Flor 16/12
-@app.route('/update_user/<int:user_id>', methods=['PUT'])
+@app.route('/api/update_user/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     data = request.get_json()
 
@@ -191,7 +191,7 @@ def update_user(user_id):
 
 
 #Private access
-@app.route('/private', methods=['GET'])
+@app.route('/api/private', methods=['GET'])
 @jwt_required()
 def private():
     current_user = get_jwt_identity()
@@ -203,7 +203,7 @@ def private():
 
 #PET
 #Creación de nueva mascota:
-@app.route('/create_pet', methods=['POST'])
+@app.route('/api/create_pet', methods=['POST'])
 @jwt_required()
 def create_pet():
     try:
@@ -270,7 +270,7 @@ def create_pet():
 
 
 #Editar mascota:
-@app.route('/pet/<int:id>', methods=['PUT'])
+@app.route('/api/pet/<int:id>', methods=['PUT'])
 #@jwt_required()  para q sea accesible solo si el usuario tiene un token válido?
 def edit_pet(id):
     body = request.get_json(silent=True)
@@ -313,7 +313,7 @@ def edit_pet(id):
     return jsonify({'msg': 'Mascota actualizada exitosamente', 'data': pet.serialize()}), 201
 
 #endpoint para traer mascota según su id   -Flor 16/12
-@app.route('/pet/<int:id>', methods=['GET'])
+@app.route('/api/pet/<int:id>', methods=['GET'])
 def get_pet_by_id(id):
     pet = Pet.query.get(id)
     if not pet:
@@ -365,7 +365,7 @@ def get_pet_by_id(id):
     return jsonify({'msg': 'ok', 'data': pet_data}), 200
 
 #Eliminar mascota:
-@app.route('/pet/<int:id>', methods=['DELETE'])
+@app.route('/api/pet/<int:id>', methods=['DELETE'])
 #@jwt_required()  para q sea accesible solo si el usuario tiene un token válido?
 def delete_pet(id):
     pet = Pet.query.get(id)
@@ -381,7 +381,7 @@ def delete_pet(id):
 ##########
 
 #Creación de un nuevo post con la descripción de la mascota:
-@app.route('/post_description', methods=['POST'])
+@app.route('/api/post_description', methods=['POST'])
 def create_post_description():
     body = request.get_json(silent=True)
     if body is None: 
@@ -423,7 +423,7 @@ def create_post_description():
 #######
 
 #GET All pets Matias 17:46PM 3/12/24..Update: working 11:43AM 4/12/24
-@app.route('/pets', methods=['GET'])
+@app.route('/api/pets', methods=['GET'])
 def get_all_pets():
     pets = Pet.query.all()
     pets_serialized = []
@@ -432,7 +432,7 @@ def get_all_pets():
     return jsonify({'msg': 'ok', 'data': pets_serialized}), 200
 
 #endpoint para obtener la info de los posts, para usarla en el mapa.   -Flor
-@app.route('/pet_post', methods=['GET'])
+@app.route('/api/pet_post', methods=['GET'])
 def get_pet_post():
     species_map = {
         "1": "Perro",
@@ -478,7 +478,7 @@ def get_pet_post():
     return jsonify({'msg': 'ok', 'data': pet_data}), 200
 
 #TRAER MASCOTA EN PARTICULAR MATIAS 12/15/2024 FUNCIONA
-@app.route('/pet/<int:id>', methods=['GET'])
+@app.route('/api/pet/<int:id>', methods=['GET'])
 def get_pet(id):
     post = Post_Description.query.filter_by(pet_id=id).first()
     if not post:
