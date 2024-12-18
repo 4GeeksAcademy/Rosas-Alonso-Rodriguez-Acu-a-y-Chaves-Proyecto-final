@@ -67,7 +67,7 @@ const NewFoundPet = () => {
           <div className="row g-3 mb-3 ">
             <div className="col-md-6">
               <label htmlFor="gender" className="form-label">GENERO</label>
-              <select className="form-select" id="gender" placeholder="Selecciona"  aria-label="Selecionar genero" required onChange={handleChange} >
+              <select className="form-select" id="gender" placeholder="Selecciona"  aria-label="Selecionar genero" value={newPet.gender} required onChange={handleChange} >
                 <option value="" disabled>Selecciona</option>
                 <option value="male">Macho</option>
                 <option value="female">Hembra</option>
