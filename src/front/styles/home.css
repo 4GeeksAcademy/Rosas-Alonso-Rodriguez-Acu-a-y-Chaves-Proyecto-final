@@ -17,9 +17,9 @@
     font-style: normal;
   }
   
-
+/*/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/banner.png*/
 body {
-    background-image: url('/workspaces/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/banner.png');
+    background-image: url('../img/banner.png');
     background-repeat: repeat-y;
     background-size: cover;
   }
@@ -205,8 +205,8 @@ font-size: 30px;
   padding: 0%;
 }
 .leaflet-popup-content-wrapper{
- border-style: 0px;
- background: url('/workspaces/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/mapCard.png') no-repeat center center;
+ border-style: 0px; /*../../Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/mapCard.png */
+ background: url('../img/mapCard.png') no-repeat center center;
 
 }
 /* Estilo personalizado para Leaflet Popup 
