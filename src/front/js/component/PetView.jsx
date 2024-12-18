@@ -43,7 +43,7 @@ useEffect(() => {
       (
         filters.color === "" || 
         (filters.color === "otro" && !["blanco", "negro", "gris"].includes(pet.color.toLowerCase())) ||
-        (filters.color !== "otro" && pet.color === filters.color)
+        (filters.color !== "otro" && pet.color.toLowerCase() === filters.color.toLowerCase())
       )
     );
   });
