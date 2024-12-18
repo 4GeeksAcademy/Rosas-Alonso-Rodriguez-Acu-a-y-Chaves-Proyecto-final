@@ -104,20 +104,21 @@ const Map = () => {
                   {/* Info adicional de mascota:  -Flor */}
                   <ul className="list-unstyled adlam-display" style={{ marginBottom: '5px' }}>
                     <li>
-                      <span className=' fw-bold'>Nombre: </span><span className="text-black">{pet.name}</span>
+                      <span className=' fw-bold'>Nombre: </span><span className="text-black text-capitalize">{pet.name}</span>
                     </li>
                     <li>
-                      <span className='fw-bold'>Sexo: </span><span className="text-black">{pet.gender}</span>
+                      <span className='fw-bold'>Especie: </span><span className="text-black text-capitalize">{pet.species}</span>
                     </li>
                     <li>
-                      <span className='fw-bold'>Raza: </span><span className="text-black">{pet.breed}</span>
+                      <span className='fw-bold'>Raza: </span><span className="text-black text-capitalize">{pet.breed}</span>
                     </li>
                     <li>
-                      <span className='fw-bold'>Color: </span><span className="text-black">{pet.color}</span>
+                      <span className='fw-bold'>Sexo: </span><span className="text-black text-capitalize">{pet.gender}</span>
                     </li>
                     <li>
-                      <span className='fw-bold'>Especie: </span><span className="text-black">{pet.species}</span>
+                      <span className='fw-bold'>Color: </span><span className="text-black text-capitalize">{pet.color}</span>
                     </li>
+                   
                     {/* Botón más info */}
                     <button type="button" className="btn-sm btnStart btn-primary adlam-display-regular mb-3" style={{ width: "auto", maxWidth: "200px", maxHeight: "40px", marginBottom: '10px', marginTop: '10px' }}
                       onClick={() => navigate(`/petcard/${pet.pet_id}`)}>
