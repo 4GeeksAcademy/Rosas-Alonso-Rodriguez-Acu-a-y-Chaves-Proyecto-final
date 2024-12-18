@@ -55,7 +55,7 @@ const Cloudinary = ({ updatePhotos }) => {
                 multiple onChange={(e => uploadPhoto(e))} />
             <div>
                 <label htmlFor="formFileMultiple" className="file-upload-icon d-inline">
-                    <i className="fa-solid fa-arrow-up-from-bracket"></i>
+                    <i className="fa-solid fa-arrow-up-from-bracket" style={{ fontSize: "40px", color: "#0056b3" }}></i>
                     {/* Icono personalizado */}
                 </label>
                 {loading ? (<h6>Cargando imágenes...</h6>) :

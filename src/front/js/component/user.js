@@ -274,12 +274,45 @@ const User = () => {
                     {/* Tabla de Mis Publicaciones */}
                     <div className="card shadow-sm p-4 rounded-5">
                         <ul className="list-group">
-                            {userPets.map(pet => (
+                        {
+                                userPets.filter(fItem => fItem.user_details.email == sessionStorage.getItem("usuario logueado")).map(pet => (
+                                    <li className="list-group-item d-flex justify-content-between align-items-center" key={pet.pet_id}>
+                                        <span className="adlam-display-regular" style={{ color: "darkblue" }}>{pet.name}</span>
+                                        <span className="d-flex align-items-center">
+                                            {/* Mostrar el switch solo si la mascota está perdida */}
+                                            {pet.pet_status !== "Encontrado" && pet.switchVisible && (
+                                                <div className="form-check form-switch">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        id={`switch-${pet.pet_id}`}
+                                                        style={{ cursor: 'pointer' }}
+                                                        checked={pet.pet_status !== "Encontrado"}  // Si no está encontrado, el switch está encendido
+                                                        onChange={(e) => handleSwitchChange(pet.pet_id, e.target.checked ? "lost" : "joined")}
+                                                    />
+                                                    <label className="form-check-label adlam-display-regular" htmlFor={`switch-${pet.pet_id}`}>
+                                                        {pet.pet_status === "joined" ? "Mascota encontrada" : "Mascota perdida"}
+                                                    </label>
+                                                </div>
+                                            )}
+                                            {/* Si la mascota ya está encontrada, solo mostramos el texto */}
+                                            {pet.pet_status === "Encontrado" && (
+                                                <span className="ms-2">
+                                                    Mascota encontrada
+                                                </span>
+                                            )}
+                                            {/* Íconos de acción */}
+                                            <i className="fa-regular fa-trash-can" style={{ cursor: 'pointer', paddingLeft: '10px' }} onClick={() => handleDeleteClick(pet)}></i>
+                                        </span>
+                                    </li>
+                                ))
+                            }
+                            {/*{userPets.map(pet => (
                                 <li className="list-group-item d-flex justify-content-between align-items-center" key={pet.pet_id}>
                                     <span className="adlam-display-regular" style={{ color: "darkblue" }}>{pet.name}</span>
 
                                     <span className="d-flex align-items-center">
-                                        {/* Mostrar el switch solo si la mascota está perdida */}
+                                        {/* Mostrar el switch solo si la mascota está perdida }
                                         {pet.pet_status !== "Encontrado" && pet.switchVisible && (
                                             <div className="form-check form-switch">
                                                 <input
@@ -296,18 +329,18 @@ const User = () => {
                                             </div>
                                         )}
 
-                                        {/* Si la mascota ya está encontrada, solo mostramos el texto */}
+                                        {/* Si la mascota ya está encontrada, solo mostramos el texto }
                                         {pet.pet_status === "Encontrado" && (
                                             <span className="ms-2">
                                                 Mascota encontrada
                                             </span>
                                         )}
 
-                                        {/* Íconos de acción */}
+                                        {/* Íconos de acción 
                                         <i className="fa-regular fa-trash-can" style={{ cursor: 'pointer', paddingLeft: '10px' }} onClick={() => handleDeleteClick(pet)}></i>
                                     </span>
                                 </li>
-                            ))}
+                            ))}*/ }
                         </ul>
                     </div>
 
