@@ -19,7 +19,7 @@
   
 
 body {
-    background-image: url('/workspaces/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/banner.PNG');
+    background-image: url('../img/banner.PNG');
     background-repeat: repeat-y;
     background-size: cover;
   }
@@ -206,7 +206,7 @@ font-size: 30px;
 }
 .leaflet-popup-content-wrapper{
  border-style: 0px;
- background: url('/workspaces/Rosas-Alonso-Rodriguez-Acu-a-y-Chaves-Proyecto-final/src/front/img/mapCard.PNG') no-repeat center center;
+ background: url('../img/mapCard.PNG') no-repeat center center;
 
 }
 /* Estilo personalizado para Leaflet Popup 
