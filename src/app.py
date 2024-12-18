@@ -18,6 +18,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -28,6 +29,7 @@ app.url_map.strict_slashes = False
 CORS(app, origins = "*")
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_KEY")
 jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
 
 
 # database condiguration
@@ -110,7 +112,7 @@ def create_user():
         new_user = User(
             name = body['name'],
             email = body['email'],
-            password= body['password'],
+            password= bcrypt.generate_password_hash(body['password']).decode('utf-8'),
             is_active=True,
             security_question=body['security_question'],
             phone=body['phone'],  
@@ -137,9 +139,11 @@ def login():
         return jsonify({'msg': 'El campo password es obligatorio'}), 400
     user = User.query.filter_by(email=body['email']).first()
     if user is None:
-        return jsonify({'msg': "Contraseña o email incorrectos"}), 400 #CAMBIAR por email or password is invalid
-    if user.password != body['password']:
-        return jsonify({'msg': "Contraseña o email incorrectos"}), 400 #CAMBIAR por email or password is invalid
+
+        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
+    crypted_password = bcrypt.check_password_hash(user.password, body['password'])
+    if not crypted_password:
+        return jsonify({'msg': "invalid email or password"}), 400 #CAMBIAR por email or password is invalid
     access_token = create_access_token(identity=user.email) 
     return jsonify({'msg': 'ok', 'token': access_token}), 200 
 
@@ -275,8 +279,10 @@ def edit_pet(id):
     pet = Pet.query.get(id) #
     if not pet:
         return jsonify({'msg': 'Mascota no encontrada'}), 404
-    
-    # Accedo a la relación 'post' para obtener la post_description    -Flor 16/12
+
+
+      # Accedo a la relación 'post' para obtener la post_description    -Flor 16/12
+
     post_description = Post_Description.query.filter_by(pet_id=id).first()
     
     if not post_description:
@@ -284,6 +290,7 @@ def edit_pet(id):
     
     if 'pet_status' in body:
         post_description.pet_status = body['pet_status']  # esto actualiza el status de la mascota
+
 
     if 'name' in body:
         pet.name = body['name']

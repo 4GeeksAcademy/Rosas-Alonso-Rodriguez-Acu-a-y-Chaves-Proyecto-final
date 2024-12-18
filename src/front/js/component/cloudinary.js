@@ -47,7 +47,6 @@ const Cloudinary = ({ updatePhotos }) => {
     };
 
 
-
     return (
         <div className="mb-3">
             <label htmlFor="formFileMultiple" className="form-label">¿TIENES FOTOS?</label>
@@ -55,13 +54,14 @@ const Cloudinary = ({ updatePhotos }) => {
                 type="file" id="formFileMultiple"
                 multiple onChange={(e => uploadPhoto(e))} />
             <div>
-            <label htmlFor="formFileMultiple" className="file-upload-icon d-inline">
-            <FaCloudUploadAlt size={50} color="#007bff" /> {/* Icono personalizado */}
-            </label>
-            {loading ? (<h6>Cargando imágenes...</h6>) :
-                <div className="container d-inline mb-3 image-preview">
-                    {image.map((url, index) => (<img key={index} src={url} alt={`imagen ${index + 1}`} />))}
-                </div>}
+                <label htmlFor="formFileMultiple" className="file-upload-icon d-inline">
+                    <i className="fa-solid fa-arrow-up-from-bracket"></i>
+                    {/* Icono personalizado */}
+                </label>
+                {loading ? (<h6>Cargando imágenes...</h6>) :
+                    <div className="container d-inline mb-3 image-preview">
+                        {image.map((url, index) => (<img key={index} src={url} alt={`imagen ${index + 1}`} />))}
+                    </div>}
             </div>
         </div>)
 

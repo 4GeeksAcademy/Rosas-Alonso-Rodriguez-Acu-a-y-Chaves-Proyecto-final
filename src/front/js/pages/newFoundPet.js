@@ -39,10 +39,10 @@ const NewFoundPet = () => {
     e.preventDefault();
     console.log("enviando post", newPet);
     actions.addNewPet(newPet, navigate);
-     };
+  };
 
   return (
-    <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light p-4">
+    <div className="container col-sm-10, col-md-8, col-lg-6 border rounded pet-form bg-light mt-2 p-4">
       <div className="container ">
         <p className="post-title text-center">Información de la mascota encontrada</p>
       </div>
@@ -51,7 +51,7 @@ const NewFoundPet = () => {
           <div className="mb-3">
             <label htmlFor="species" className="form-label">ESPECIE</label>
             <select className="form-select" id="species" aria-label="select species" value={newPet.species} required onChange={handleChange} >
-              <option value="" disabled selected>Selecciona</option>
+              <option value="" disabled>Selecciona</option>
               <option value="perro">Perro</option>
               <option value="gato">Gato</option>
               <option value="conejo">Conejo</option>
@@ -68,10 +68,10 @@ const NewFoundPet = () => {
             <div className="col-md-6">
               <label htmlFor="gender" className="form-label">GENERO</label>
               <select className="form-select" id="gender" aria-label="Selecionar genero" required onChange={handleChange} >
-                <option value="" disabled selected>Selecciona</option>
+                <option value="" disabled>Selecciona</option>
                 <option value="male">Macho</option>
                 <option value="female">Hembra</option>
-                
+
               </select>
             </div>
             <div className="col-md-6">

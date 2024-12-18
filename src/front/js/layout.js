@@ -36,6 +36,7 @@ const Layout = () => {
     const basename = process.env.BASENAME || "";
 
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
+    // <Route element = {<EditFoundPet/>} path = "/editpetfound"/>
 
     return (
         <div>
@@ -43,22 +44,17 @@ const Layout = () => {
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
-
-                          
+                         
                         <Route element ={<PrivateRoute><NewPetLost /></PrivateRoute>} path="/newpetlost" />
                         <Route element = {<PrivateRoute><NewFoundPet/></PrivateRoute>} path = "/newpetfound"/>
-                        
-
                         <Route element={<Home />} path="/" />
                         <Route element={<Map />} path="/map" />
-                        
                         <Route element={<UbicationMap />} path="/ubicationmap" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<User />} path="/user" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Que_es />} path="/que_es" />
-
                         <Route element={<Signup />} path="/signup" />
 
                         <Route element={<PetView />} path="/petview" />
@@ -66,6 +62,7 @@ const Layout = () => {
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<ErrorPage />} path="/error" />
                     </Routes>
+                    <Footer/>
                 </ScrollToTop>
             </BrowserRouter>
         </div>
