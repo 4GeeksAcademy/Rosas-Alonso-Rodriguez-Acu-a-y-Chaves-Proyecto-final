@@ -279,8 +279,10 @@ def edit_pet(id):
     pet = Pet.query.get(id) #
     if not pet:
         return jsonify({'msg': 'Mascota no encontrada'}), 404
-    
-    # Accedo a la relación 'post' para obtener la post_description    -Flor 16/12
+
+
+      # Accedo a la relación 'post' para obtener la post_description    -Flor 16/12
+
     post_description = Post_Description.query.filter_by(pet_id=id).first()
     
     if not post_description:
@@ -288,6 +290,7 @@ def edit_pet(id):
     
     if 'pet_status' in body:
         post_description.pet_status = body['pet_status']  # esto actualiza el status de la mascota
+
 
     if 'name' in body:
         pet.name = body['name']

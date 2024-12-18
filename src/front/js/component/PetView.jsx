@@ -33,19 +33,24 @@ const PetsView = () => {
     });
   };
 
-  // Filtrar mascotas
-  useEffect(() => {
-    const filtered = pets.filter((pet) => {
-      return (
-        (filters.type === "" || pet.species === filters.type) &&
-        (filters.color === "" || pet.color === filters.color) &&
-        (filters.size === "" || pet.size === filters.size) &&
-        (filters.sex === "" || pet.gender === filters.sex)
-      );
-    });
-    setFilteredPets(filtered);
-  }, [filters, pets]);
+ // Filtrar mascotas
+useEffect(() => {
+  const filtered = pets.filter((pet) => {
+    return (
+      (filters.type === "" || pet.species === filters.type) &&
+      (filters.size === "" || pet.size === filters.size) &&
+      (filters.sex === "" || pet.gender === filters.sex) &&
+      (
+        filters.color === "" || 
+        (filters.color === "otro" && !["blanco", "negro", "gris"].includes(pet.color.toLowerCase())) ||
+        (filters.color !== "otro" && pet.color === filters.color)
+      )
+    );
+  });
+  setFilteredPets(filtered);
+}, [filters, pets]);
 
+  
   // Spinner de carga   -Flor 17/12
   if (loading) {
     return (
@@ -56,6 +61,7 @@ const PetsView = () => {
       </div>
     );
   }
+
 
   return (
     <div className="container mt-4">
@@ -164,7 +170,7 @@ const PetsView = () => {
                   <input
                     type="radio"
                     name="color"
-                    value="multicolor"
+                    value="otro"
                     className="form-check-input"
                     onChange={handleFilterChange}
                   />
@@ -178,28 +184,9 @@ const PetsView = () => {
                       borderRadius: '50%',
                     }}
                   ></span>
-                  <span className="ms-2">Multicolor</span>
+                  <span className="ms-2">Otro</span>
                 </label>
 
-                <label className="d-flex align-items-center mb-2">
-                  <input
-                    type="radio"
-                    name="color"
-                    value="marron"
-                    className="form-check-input"
-                    onChange={handleFilterChange}
-                  />
-                  <span
-                    className="ms-2"
-                    style={{
-                      backgroundColor: 'brown',
-                      width: '15px',
-                      height: '15px',
-                      borderRadius: '50%',
-                    }}
-                  ></span>
-                  <span className="ms-2">Marrón</span>
-                </label>
               </div>
             </div>
             {/* Filtro por tamaño */}

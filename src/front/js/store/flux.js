@@ -134,7 +134,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.log("Error en intentar traer la mascota solicitada: ", error)
 				}
-			}
+			},
+			updatePet: (petid, updatedPetObject) => {
+				fetch(`${process.env.BACKEND_URL}pet/${petid}`, {
+				  method: "PUT", // Método HTTP PUT para actualizar
+				  body: JSON.stringify(updatedPetObject), // Convierte el objeto a JSON
+				  headers: {
+					"Content-Type": "application/json", // Indica el tipo de contenido
+				  },
+				})
+				  .then((response) => {
+					if (!response.ok) {
+					  throw new Error("Error al actualizar la información de la mascota");
+					}
+					return response.json(); // Devuelve la respuesta en JSON
+				  })
+				  .then((data) => {
+					console.log("Mascota actualizada con éxito:", data);
+					getActions().getPet(petid)
+					// setStore({ fetchedPet: data }); // Actualiza el estado global con la respuesta
+				  })
+				  .catch((error) => console.error("Error al actualizar la mascota:", error));
+			  },
 		}
 	};
 

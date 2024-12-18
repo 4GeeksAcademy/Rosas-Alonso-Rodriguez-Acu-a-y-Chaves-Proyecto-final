@@ -36,6 +36,7 @@ const Layout = () => {
     const basename = process.env.BASENAME || "";
 
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
+    // <Route element = {<EditFoundPet/>} path = "/editpetfound"/>
 
     return (
         <div>
@@ -55,6 +56,7 @@ const Layout = () => {
                         <Route element={<Login />} path="/login" />
                         <Route element={<Que_es />} path="/que_es" />
                         <Route element={<Signup />} path="/signup" />
+
                         <Route element={<PetView />} path="/petview" />
                         <Route element={<PetCard />} path="/petcard/:theid" />
                         <Route element={<h1>Not found!</h1>} />

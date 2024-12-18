@@ -8,7 +8,8 @@ const PetCard = () => {
   const { theid } = useParams();
   console.log("Pet ID from URL:", theid);
   const [detail, setDetail] = useState(null);
-  const [mainImage, setMainImage] = useState({logo}); // Imagen principal inicial
+  const [mainImage, setMainImage] = useState({ logo }); // Imagen principal inicial
+  const [userInfo, setUserInfo] = useState(null);
 
 
   // Función para obtener los datos de la mascota desde el backend
@@ -19,8 +20,11 @@ const PetCard = () => {
 
       if (data.msg === 'ok') {
         const petDetails = data.data;
+        const userDetails = petDetails.user_details;
         setDetail(petDetails); // Actualiza el estado con los detalles de la mascota
-        setMainImage(petDetails?.photo_1 || {logo}); // Usa la primera foto o la de por defecto
+        setMainImage(petDetails?.photo_1 || { logo }); // Usa la primera foto o la de por defecto
+        setUserInfo(userDetails);
+
       } else {
         console.error('Error fetching pet data:', data.msg);
       }
@@ -64,7 +68,7 @@ const PetCard = () => {
         <a href="/" className="text-secondary mx-2">
           Home </a>{" > "}
         <a href="/PetView" className="text-secondary mx-2">
-          Mascotas </a>{" > Más información"}  
+          Mascotas </a>{" > Más información"}
       </div>
 
       <div className="row">
@@ -80,34 +84,34 @@ const PetCard = () => {
           </div>
 
           {/* Miniaturas debajo de la imagen principal */}
-          <div className="image-thumbnails mt-3 d-flex">
+          <div className="image-thumbnails mt-3 ">
             <img
-              className="thumbnail img-fluid mx-2"
-              src="https://via.placeholder.com/150x100"
+              className="thumbnail img-fluid m-2"
+              src={detail?.photo_1}
               alt="Thumbnail 1"
               style={{ width: "80px", height: "auto", cursor: "pointer" }}
-              onClick={() => setMainImage("https://via.placeholder.com/600x400")}
+              onClick={() => setMainImage(detail.photo_1)}
             />
             <img
-              className="thumbnail img-fluid mx-2"
-              src="https://via.placeholder.com/150x100/ff7f7f"
+              className="thumbnail img-fluid m-2"
+              src={detail?.photo_2 || logo}
               alt="Thumbnail 2"
               style={{ width: "80px", height: "auto", cursor: "pointer" }}
-              onClick={() => setMainImage("https://via.placeholder.com/600x400/ff7f7f")}
+              onClick={() => setMainImage(detail.photo_2)}
             />
             <img
-              className="thumbnail img-fluid mx-2"
-              src="https://via.placeholder.com/150x100/7fff7f"
+              className="thumbnail img-fluid m-2"
+              src={detail?.photo_3 || logo}
               alt="Thumbnail 3"
               style={{ width: "80px", height: "auto", cursor: "pointer" }}
-              onClick={() => setMainImage("https://via.placeholder.com/600x400/7fff7f")}
+              onClick={() => setMainImage(detail.photo_3)}
             />
             <img
-              className="thumbnail img-fluid mx-2"
-              src={logo}
+              className="thumbnail img-fluid m-2"
+              src={detail?.photo_4 || logo}
               alt="Thumbnail 4"
               style={{ width: "80px", height: "auto", cursor: "pointer" }}
-              onClick={() => setMainImage({logo})}  /* Puse que la imagen por defecto sea el logo */
+              onClick={() => setMainImage(detail.photo_4)}  /* Puse que la imagen por defecto sea el logo */
             />
           </div>
 
@@ -132,7 +136,7 @@ const PetCard = () => {
         <div className="col-md-6 info-section">
           <h4 className="text-primary user-title adlam-display-regular">{detail?.name}</h4>
           <p className="text-danger" style={{ fontSize: "1.5rem" }}>
-          {detail?.pet_status === "Estoy perdido" ? "Perdido el: " : "Encontrado el: "} {formatDate(detail?.event_date)}
+            {detail?.pet_status === "Estoy perdido" ? "Perdido el: " : "Encontrado el: "} {formatDate(detail?.event_date)}
           </p>
           <a
             href="#contactForm"
@@ -151,31 +155,13 @@ const PetCard = () => {
             Comunicarse
           </a>
           <table className="table">
-            <tbody>   {/* Agregué especie y raza, que faltaban  -Flor 17/12 */}
-              <tr>
-                <th scope="row">NOMBRE:</th>
-                <td>{detail?.name}</td>
-              </tr>
-              <tr>
-                <th scope="row">ESPECIE:</th>
-                <td>{detail?.species}</td>
-              </tr>
-              <tr>
-                <th scope="row">RAZA:</th>
-                <td>{detail?.breed}</td>
-              </tr>
-              <tr>
-                <th scope="row">SEXO:</th>
-                <td>{detail?.gender}</td>
-              </tr>
-              <tr>
-                <th scope="row">COLOR:</th>
-                <td>{detail?.color}</td>
-              </tr>
-              <tr>
-                <th scope="row">SE PERDIÓ EN:</th>
-                <td>{detail?.zone}</td>
-              </tr>
+            <tbody>
+              <tr><th scope="row">NOMBRE:</th><td>{detail?.name}</td></tr>
+              <tr><th scope="row">ESPECIE:</th><td>{detail?.species}</td></tr>
+              <tr><th scope="row">RAZA:</th><td>{detail?.breed}</td></tr>
+              <tr><th scope="row">SEXO:</th><td>{detail?.gender}</td></tr>
+              <tr><th scope="row">COLOR:</th><td>{detail?.color}</td></tr>
+              <tr><th scope="row">SE PERDIÓ EN:</th><td>{detail?.zone}</td></tr>
             </tbody>
           </table>
           <div>
@@ -184,6 +170,7 @@ const PetCard = () => {
         </div>
       </div>
 
+      {/* Modal para contacto */}
       {/* Modal para contacto */}
       <div
         className="modal fade"
@@ -196,7 +183,7 @@ const PetCard = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="contactModalLabel">
-                Enviar un mensaje
+                Medios de contacto:
               </h5>
               <button
                 type="button"
@@ -205,44 +192,32 @@ const PetCard = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">
+            <div className=" nunito modal-body container">
               <form>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    Tu Correo Electrónico
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    placeholder="Tu correo"
-                  />
+                <div className=" align-items-start container-fluid .adlam-display">
+                  <i className="fa-regular fa-envelope mb-4"></i>{" "}<a>{userInfo?.email}</a>
                 </div>
-                <div className="mb-3">
-                  <label htmlFor="message" className="form-label">
-                    Tu Mensaje
-                  </label>
-                  <textarea
-                    className="form-control"
-                    id="message"
-                    rows="3"
-                    placeholder="Escribe tu mensaje aquí"
-                  ></textarea>
+                <div className="align-items-start container-fluid ">
+                  <i className="fa-brands fa-square-facebook mb-4"></i>{" "}<a className="text-decoration-none" href={`https://www.facebook.com/${userInfo?.facebook}`}>{userInfo?.facebook}</a>
                 </div>
+                <div className="align-items-start container-fluid ">
+                  <i className="fa-brands fa-instagram mb-4"></i>{" "}<a className="text-decoration-none" href={`https://www.instagram.com/${userInfo?.instagram}`}>{userInfo?.instagram}</a>
+                </div>
+
               </form>
             </div>
-            <div className="modal-footer">
+            {/* <div className="modal-footer">
               <button
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
-                Cancelar
+                Cerrar
               </button>
               <button type="button" className="btn btn-primary">
                 Enviar
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
