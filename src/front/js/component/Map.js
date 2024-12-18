@@ -71,7 +71,7 @@ const Map = () => {
 
 
   return (
-    <MapContainer center={[-34.91709426939976, -56.16318765994477]} zoom={13} style={{ width: "100vw", height: "100vh" }}> {/* //Asi se centra el mapa en un lugar: -34.91709426939976, -56.16318765994477 */}
+    <MapContainer center={[-32.818055555556, -56.506388888889]} zoom={5} style={{ width: "100vw", height: "100vh" }}> {/* //Asi se centra el mapa en un lugar: -34.91709426939976, -56.16318765994477 */}
       <TileLayer
         url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png'
       >
