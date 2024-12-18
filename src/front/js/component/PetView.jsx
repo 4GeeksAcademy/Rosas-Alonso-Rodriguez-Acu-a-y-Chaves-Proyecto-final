@@ -197,7 +197,7 @@ useEffect(() => {
         <div className="col-md-9">
           <div className="row">
             {filteredPets.map((pet) => (
-              <div className="col-md-4 mb-3" key={pet.id}>
+              <div className="col-md-4 mb-3" key={pet.pet_id}>
                 <div className="card">
                   <img src={pet.photo_1} className="card-img-top" alt={pet.name} />
                   <div className="card-body adlam-display-regular">
