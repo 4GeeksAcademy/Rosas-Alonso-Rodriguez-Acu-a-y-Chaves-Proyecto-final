@@ -6,6 +6,7 @@ import "../../styles/home.css";
 import logo from "../../img/logoTransparentePNG.png";
 import gifPostPet from "../../img/gif_publicar_mascota.gif";
 import gifMapa from "../../img/gif_interaccion_mapa.gif";
+import gifContacto from "../../img/gif_contacto.gif";
 
 export const Home = () => {
     const { store, actions } = useContext(Context);
@@ -100,7 +101,7 @@ export const Home = () => {
                     </div>
                 </div>
                 <div className="col-md-6 order-md-1">
-                    <img src={logo} alt="Contactar usuario" className="img-fluid rounded" />
+                    <img src={gifContacto} alt="Contactar usuario" className="img-fluid rounded" />
                 </div>
             </div>
         </div>
